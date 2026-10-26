@@ -32,4 +32,44 @@ public class SearchTests
     [InlineData(new[] { 2, 0, 0, 0 }, "YES")]
     public void SherlockAndArray_Samples(int[] arr, string expected) =>
         Assert.Equal(expected, SherlockAndArray.Solve(arr));
+
+    [Theory]
+    [InlineData(new[] { 5L, 10L, 3L }, 2L)]
+    [InlineData(new[] { 20L, 7L, 8L, 2L, 5L }, 2L)]
+    public void MinimumLoss_Samples(long[] price, long expected) =>
+        Assert.Equal(expected, MinimumLoss.Solve(price));
+
+    [Fact]
+    public void ConnectedCellsInAGrid_FindsLargestRegion()
+    {
+        int[][] matrix =
+        [
+            [1, 1, 0, 0],
+            [0, 1, 1, 0],
+            [0, 0, 1, 0],
+            [1, 0, 0, 0],
+        ];
+
+        Assert.Equal(5, ConnectedCellsInAGrid.Solve(matrix));
+    }
+
+    [Fact]
+    public void ConnectedCellsInAGrid_ConnectsDiagonally()
+    {
+        int[][] matrix =
+        [
+            [1, 0, 1],
+            [0, 1, 0],
+            [1, 0, 1],
+        ];
+
+        Assert.Equal(5, ConnectedCellsInAGrid.Solve(matrix));
+    }
+
+    [Theory]
+    [InlineData(1, new[] { 1, 2, 3, 4, 5 }, 2)]
+    [InlineData(2, new[] { 7, 2, 4, 6, 5, 9, 12, 11 }, 3)]
+    [InlineData(5, new[] { 1 }, 1)]
+    public void HackerlandRadioTransmitters_Samples(int k, int[] x, int expected) =>
+        Assert.Equal(expected, HackerlandRadioTransmitters.Solve(k, x));
 }

@@ -59,4 +59,52 @@ public class GreedyTests
         int[][] orders = [[1, 3], [2, 3], [3, 3]];
         Assert.Equal([1, 2, 3], JimAndTheOrders.Solve(orders));
     }
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4 }, new[] { 1, 2, 3, 3 }, 4)]
+    [InlineData(new[] { 3, 5, 7, 11, 5, 8 }, new[] { 5, 7, 11, 10, 5, 8 }, 6)]
+    [InlineData(new[] { 1, 2 }, new[] { 1, 2 }, 1)]
+    public void BeautifulPairs_Samples(int[] a, int[] b, int expected) =>
+        Assert.Equal(expected, BeautifulPairs.Solve(a, b));
+
+    [Theory]
+    [InlineData(1, "-1")]
+    [InlineData(3, "555")]
+    [InlineData(5, "33333")]
+    [InlineData(11, "55555533333")]
+    public void SherlockAndTheBeast_Samples(int n, string expected) =>
+        Assert.Equal(expected, SherlockAndTheBeast.Solve(n));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4, 5, 10, 11, 12, 13 }, 2)]
+    [InlineData(new[] { 1, 2, 3, 21, 7, 12, 14, 21 }, 4)]
+    public void PriyankaAndToys_Samples(int[] w, int expected) =>
+        Assert.Equal(expected, PriyankaAndToys.Solve(w));
+
+    [Theory]
+    [InlineData(10, new[] { 2, 1, 3 }, new[] { 7, 8, 9 }, "YES")]
+    [InlineData(5, new[] { 1, 2, 2, 1 }, new[] { 3, 3, 3, 4 }, "NO")]
+    public void PermutingTwoArrays_Samples(int k, int[] a, int[] b, string expected) =>
+        Assert.Equal(expected, PermutingTwoArrays.Solve(k, a, b));
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 2 }, 11L)]
+    [InlineData(new[] { 7, 4, 9, 6 }, 79L)]
+    public void MarcsCakewalk_Samples(int[] calorie, long expected) =>
+        Assert.Equal(expected, MarcsCakewalk.Solve(calorie));
+
+    [Theory]
+    [InlineData(1, new[] { 4, 2, 3, 5, 1 }, new[] { 5, 2, 3, 4, 1 })]
+    [InlineData(1, new[] { 2, 1, 3 }, new[] { 3, 1, 2 })]
+    [InlineData(1, new[] { 2, 1 }, new[] { 2, 1 })]
+    [InlineData(5, new[] { 1, 2, 3, 4 }, new[] { 4, 3, 2, 1 })]
+    public void LargestPermutation_Samples(int k, int[] arr, int[] expected) =>
+        Assert.Equal(expected, LargestPermutation.Solve(k, arr));
+
+    [Theory]
+    [InlineData(new[] { 3, 4, 3, 2, 4 }, 4L)]
+    [InlineData(new[] { 4, 4, 4 }, 4L)]
+    [InlineData(new[] { 1, 6, 4 }, 3L)]
+    public void ChiefHopper_Samples(int[] arr, long expected) =>
+        Assert.Equal(expected, ChiefHopper.Solve(arr));
 }

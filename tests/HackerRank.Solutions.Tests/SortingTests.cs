@@ -37,4 +37,39 @@ public class SortingTests
     [InlineData(new[] { 10, 20, 30, 40, 50 }, 3, 1)]
     public void FraudulentActivityNotifications_Samples(int[] expenditure, int d, int expected) =>
         Assert.Equal(expected, FraudulentActivityNotifications.Solve(expenditure, d));
+
+    [Fact]
+    public void CountingSort1_CountsFrequencies()
+    {
+        var counts = CountingSort1.Solve([1, 1, 3, 2, 1]);
+
+        Assert.Equal(100, counts.Length);
+        Assert.Equal([0, 3, 1, 1, 0], counts[..5]);
+    }
+
+    [Theory]
+    [InlineData(new[] { 7, 15, 12, 3 }, 2)]
+    [InlineData(new[] { 2, 5, 3, 1 }, 2)]
+    [InlineData(new[] { 3, 4, 2, 5, 1 }, 2)]
+    [InlineData(new[] { 1, 2, 3 }, 0)]
+    public void LilysHomework_Samples(int[] arr, int expected) =>
+        Assert.Equal(expected, LilysHomework.Solve(arr));
+
+    [Theory]
+    [InlineData(new[] { 2, 1, 3, 1, 2 }, 4)]
+    [InlineData(new[] { 1, 2, 3 }, 0)]
+    [InlineData(new[] { 3, 2, 1 }, 3)]
+    public void RunningTimeOfAlgorithms_Samples(int[] arr, int expected) =>
+        Assert.Equal(expected, RunningTimeOfAlgorithms.Solve(arr));
+
+    [Fact]
+    public void QuicksortPartition_KeepsRelativeOrder() =>
+        Assert.Equal([3, 2, 4, 5, 7], QuicksortPartition.Solve([4, 5, 3, 7, 2]));
+
+    [Theory]
+    [InlineData(4, new[] { 1, 4, 5, 7, 9, 12 }, 1)]
+    [InlineData(12, new[] { 1, 4, 5, 7, 9, 12 }, 5)]
+    [InlineData(6, new[] { 1, 4, 5, 7, 9, 12 }, -1)]
+    public void IntroToTutorialChallenges_Samples(int v, int[] arr, int expected) =>
+        Assert.Equal(expected, IntroToTutorialChallenges.Solve(v, arr));
 }

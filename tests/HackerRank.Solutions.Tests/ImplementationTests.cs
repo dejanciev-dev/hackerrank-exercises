@@ -407,4 +407,74 @@ public class ImplementationTests
         int[][] third = [[5, 3, 4], [1, 5, 8], [6, 4, 2]];
         Assert.Equal(7, FormingAMagicSquare.Solve(third));
     }
+
+    [Theory]
+    [InlineData(6, 2, 1)]
+    [InlineData(5, 4, 0)]
+    [InlineData(6, 5, 1)]
+    [InlineData(1, 1, 0)]
+    public void DrawingBook_Samples(int n, int p, int expected) =>
+        Assert.Equal(expected, DrawingBook.Solve(n, p));
+
+    [Fact]
+    public void SurfaceArea3D_Samples()
+    {
+        int[][] single = [[1]];
+        Assert.Equal(6, SurfaceArea3D.Solve(single));
+
+        int[][] grid = [[1, 3, 4], [2, 2, 3], [1, 2, 4]];
+        Assert.Equal(60, SurfaceArea3D.Solve(grid));
+    }
+
+    [Theory]
+    [InlineData(new[] { 4, 2 }, new[] { "yes", "swap 1 2" })]
+    [InlineData(new[] { 3, 1, 2 }, new[] { "no" })]
+    [InlineData(new[] { 1, 5, 4, 3, 2, 6 }, new[] { "yes", "reverse 2 5" })]
+    [InlineData(new[] { 1, 2, 3 }, new[] { "yes" })]
+    [InlineData(new[] { 1, 6, 3, 4, 5, 2 }, new[] { "yes", "swap 2 6" })]
+    public void AlmostSorted_Samples(int[] arr, string[] expected) =>
+        Assert.Equal(expected, AlmostSorted.Solve(arr));
+
+    [Theory]
+    [InlineData(2, 1, new[] { 2, 1 })]
+    [InlineData(3, 0, new[] { 1, 2, 3 })]
+    [InlineData(3, 2, new[] { -1 })]
+    [InlineData(4, 2, new[] { 3, 4, 1, 2 })]
+    public void AbsolutePermutation_Samples(int n, int k, int[] expected) =>
+        Assert.Equal(expected, AbsolutePermutation.Solve(n, k));
+
+    [Fact]
+    public void TheGridSearch_FindsPattern() =>
+        Assert.Equal("YES", TheGridSearch.Solve(
+            ["7283455864", "6731158619", "8988242643", "3830589324", "2229505813",
+             "5633845374", "6473530293", "7053106601", "0834282956", "4607924137"],
+            ["9505", "3845", "3530"]));
+
+    [Theory]
+    [InlineData(new[] { "23", "68" }, "NO")]
+    [InlineData(new[] { "34", "78" }, "YES")]
+    [InlineData(new[] { "1234", "5678" }, "YES")]
+    public void TheGridSearch_SmallGrid(string[] pattern, string expected) =>
+        Assert.Equal(expected, TheGridSearch.Solve(["1234", "5678"], pattern));
+
+    [Theory]
+    [InlineData(new[] { 3, 1, 2 }, "YES")]
+    [InlineData(new[] { 1, 3, 4, 2 }, "YES")]
+    [InlineData(new[] { 1, 2, 3, 5, 4 }, "NO")]
+    public void LarrysArray_Samples(int[] a, string expected) =>
+        Assert.Equal(expected, LarrysArray.Solve(a));
+
+    [Theory]
+    [InlineData(5, 47, "thirteen minutes to six")]
+    [InlineData(3, 0, "three o' clock")]
+    [InlineData(7, 15, "quarter past seven")]
+    [InlineData(5, 30, "half past five")]
+    [InlineData(5, 45, "quarter to six")]
+    [InlineData(5, 1, "one minute past five")]
+    [InlineData(5, 10, "ten minutes past five")]
+    [InlineData(5, 28, "twenty eight minutes past five")]
+    [InlineData(5, 40, "twenty minutes to six")]
+    [InlineData(12, 59, "one minute to one")]
+    public void TheTimeInWords_Samples(int h, int m, string expected) =>
+        Assert.Equal(expected, TheTimeInWords.Solve(h, m));
 }

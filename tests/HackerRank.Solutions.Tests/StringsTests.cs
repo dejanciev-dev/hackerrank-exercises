@@ -183,4 +183,31 @@ public class StringsTests
     [InlineData("a", 0)]
     public void TwoCharacters_Samples(string s, int expected) =>
         Assert.Equal(expected, TwoCharacters.Solve(s));
+
+    [Theory]
+    [InlineData("3943", 1, "3993")]
+    [InlineData("092282", 3, "992299")]
+    [InlineData("0011", 1, "-1")]
+    [InlineData("1231", 3, "9339")]
+    [InlineData("777", 0, "777")]
+    [InlineData("5", 1, "9")]
+    [InlineData("12321", 1, "12921")]
+    public void HighestValuePalindrome_Samples(string s, int k, string expected) =>
+        Assert.Equal(expected, HighestValuePalindrome.Solve(s, k));
+
+    [Theory]
+    [InlineData("asasd", 7L)]
+    [InlineData("abcbaba", 10L)]
+    [InlineData("aaaa", 10L)]
+    [InlineData("mnonopoo", 12L)]
+    public void SpecialStringAgain_Samples(string s, long expected) =>
+        Assert.Equal(expected, SpecialStringAgain.Solve(s));
+
+    [Theory]
+    [InlineData("GAAATAAA", 5)]
+    [InlineData("ACTGAAAG", 2)]
+    [InlineData("ACGT", 0)]
+    [InlineData("AAAAAAAA", 6)]
+    public void BearAndSteadyGene_Samples(string gene, int expected) =>
+        Assert.Equal(expected, BearAndSteadyGene.Solve(gene));
 }

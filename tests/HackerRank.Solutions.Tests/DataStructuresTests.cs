@@ -100,4 +100,46 @@ public class DataStructuresTests
     [InlineData(new[] { 11, 11, 10, 10, 10 }, 50L)]
     public void LargestRectangle_Samples(int[] h, long expected) =>
         Assert.Equal(expected, LargestRectangle.Solve(h));
+
+    [Fact]
+    public void SimpleTextEditor_SupportsUndo() =>
+        Assert.Equal(
+            ["c", "y", "a"],
+            SimpleTextEditor.Solve(["1 abc", "3 3", "2 3", "1 xy", "3 2", "4", "4", "3 1"]));
+
+    [Theory]
+    [InlineData(7L, new[] { 1, 2, 3, 9, 10, 12 }, 2)]
+    [InlineData(9L, new[] { 2, 7, 3, 6, 4, 6 }, 4)]
+    [InlineData(10L, new[] { 1, 1 }, -1)]
+    [InlineData(1L, new[] { 5, 6 }, 0)]
+    public void JesseAndCookies_Samples(long k, int[] a, int expected) =>
+        Assert.Equal(expected, JesseAndCookies.Solve(k, a));
+
+    [Fact]
+    public void Qheap1_PrintsMinimum() =>
+        Assert.Equal([4, 9], Qheap1.Solve(["1 4", "1 9", "3", "2 4", "3"]));
+
+    [Fact]
+    public void TruckTour_FindsStartingPump()
+    {
+        int[][] pumps = [[1, 5], [10, 3], [3, 4]];
+        Assert.Equal(1, TruckTour.Solve(pumps));
+    }
+
+    [Fact]
+    public void Contacts_CountsPrefixMatches() =>
+        Assert.Equal([2, 0], Contacts.Solve(["add hack", "add hackerrank", "find hac", "find hak"]));
+
+    [Fact]
+    public void ArrayManipulation_Samples()
+    {
+        int[][] first = [[1, 2, 100], [2, 5, 100], [3, 4, 100]];
+        Assert.Equal(200L, ArrayManipulation.Solve(5, first));
+
+        int[][] second = [[1, 5, 3], [4, 8, 7], [6, 9, 1]];
+        Assert.Equal(10L, ArrayManipulation.Solve(10, second));
+
+        int[][] third = [[2, 6, 8], [3, 5, 7], [1, 8, 1], [5, 9, 15]];
+        Assert.Equal(31L, ArrayManipulation.Solve(10, third));
+    }
 }
