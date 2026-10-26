@@ -181,4 +181,230 @@ public class ImplementationTests
     [Fact]
     public void EqualizeTheArray_CountsDeletions() =>
         Assert.Equal(2, EqualizeTheArray.Solve([3, 3, 2, 1, 3]));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3 }, 2, new[] { 0, 1, 2 }, new[] { 2, 3, 1 })]
+    [InlineData(new[] { 3, 4, 5 }, 2, new[] { 1, 2 }, new[] { 5, 3 })]
+    [InlineData(new[] { 1, 2, 3 }, 7, new[] { 0 }, new[] { 3 })] // k larger than n
+    public void CircularArrayRotation_Samples(int[] a, int k, int[] queries, int[] expected) =>
+        Assert.Equal(expected, CircularArrayRotation.Solve(a, k, queries));
+
+    [Theory]
+    [InlineData(new[] { 5, 2, 1, 3, 4 }, new[] { 4, 2, 5, 1, 3 })]
+    [InlineData(new[] { 2, 3, 1 }, new[] { 2, 3, 1 })]
+    [InlineData(new[] { 4, 3, 5, 1, 2 }, new[] { 1, 3, 5, 4, 2 })]
+    public void SequenceEquation_Samples(int[] p, int[] expected) =>
+        Assert.Equal(expected, SequenceEquation.Solve(p));
+
+    [Fact]
+    public void JumpingOnTheCloudsRevisited_ReturnsRemainingEnergy() =>
+        Assert.Equal(92, JumpingOnTheCloudsRevisited.Solve([0, 0, 1, 0, 0, 1, 1, 0], 2));
+
+    [Theory]
+    [InlineData(new[] { 5, 4, 4, 2, 2, 8 }, new[] { 6, 4, 2, 1 })]
+    [InlineData(new[] { 1, 2, 3, 4, 3, 3, 2, 1 }, new[] { 8, 6, 4, 1 })]
+    public void CutTheSticks_Samples(int[] arr, int[] expected) =>
+        Assert.Equal(expected, CutTheSticks.Solve(arr));
+
+    [Theory]
+    [InlineData(3, new[] { 1, 7, 2, 4 }, 3)]
+    [InlineData(4, new[] { 19, 10, 12, 10, 24, 25, 22 }, 3)]
+    [InlineData(1, new[] { 1, 2, 3 }, 1)]
+    public void NonDivisibleSubset_Samples(int k, int[] s, int expected) =>
+        Assert.Equal(expected, NonDivisibleSubset.Solve(k, s));
+
+    [Fact]
+    public void AcmIcpcTeam_FindsBestTeams() =>
+        Assert.Equal([5, 2], AcmIcpcTeam.Solve(["10101", "11100", "11010", "00101"]));
+
+    [Theory]
+    [InlineData(10, 10, 1, 1, 1, 20)]
+    [InlineData(5, 9, 2, 3, 4, 37)]
+    [InlineData(3, 6, 9, 1, 1, 12)]
+    [InlineData(7, 7, 4, 2, 1, 35)]
+    [InlineData(3, 3, 1, 9, 2, 12)]
+    public void TaumAndBday_Samples(long b, long w, long bc, long wc, long z, long expected) =>
+        Assert.Equal(expected, TaumAndBday.Solve(b, w, bc, wc, z));
+
+    [Fact]
+    public void ModifiedKaprekarNumbers_FindsNumbersInRange() =>
+        Assert.Equal([1, 9, 45, 55, 99], ModifiedKaprekarNumbers.Solve(1, 100));
+
+    [Fact]
+    public void ModifiedKaprekarNumbers_ReturnsEmptyForInvalidRange() =>
+        Assert.Empty(ModifiedKaprekarNumbers.Solve(400, 700));
+
+    [Theory]
+    [InlineData(3, new[] { 1, 2, 4, 5, 7, 8, 10 }, 3)]
+    [InlineData(1, new[] { 2, 2, 3, 4, 5 }, 3)]
+    public void BeautifulTriplets_Samples(int d, int[] arr, long expected) =>
+        Assert.Equal(expected, BeautifulTriplets.Solve(d, arr));
+
+    [Theory]
+    [InlineData(new[] { 7, 1, 3, 4, 1, 7 }, 3)]
+    [InlineData(new[] { 1, 2, 3, 4, 10 }, -1)]
+    public void MinimumDistances_Samples(int[] a, int expected) =>
+        Assert.Equal(expected, MinimumDistances.Solve(a));
+
+    [Theory]
+    [InlineData(20, 3, 6, 80, 6)]
+    [InlineData(20, 3, 6, 85, 7)]
+    [InlineData(20, 3, 6, 19, 0)]
+    public void HalloweenSale_Samples(int p, int d, int m, int s, int expected) =>
+        Assert.Equal(expected, HalloweenSale.Solve(p, d, m, s));
+
+    [Theory]
+    [InlineData(10, 2, 5, 6)]
+    [InlineData(12, 4, 4, 3)]
+    [InlineData(6, 2, 2, 5)]
+    public void ChocolateFeast_Samples(int n, int c, int m, int expected) =>
+        Assert.Equal(expected, ChocolateFeast.Solve(n, c, m));
+
+    [Fact]
+    public void ServiceLane_FindsNarrowestWidth()
+    {
+        int[][] cases = [[0, 3], [4, 6], [6, 7], [3, 5], [0, 7]];
+        Assert.Equal([1, 2, 3, 2, 1], ServiceLane.Solve([2, 3, 1, 2, 3, 2, 3, 3], cases));
+    }
+
+    [Fact]
+    public void LisasWorkbook_CountsSpecialProblems() =>
+        Assert.Equal(4, LisasWorkbook.Solve(3, [4, 2, 6, 1, 10]));
+
+    [Theory]
+    [InlineData(5, new[] { 0, 4 }, 2)]
+    [InlineData(6, new[] { 0, 1, 2, 4, 3, 5 }, 0)]
+    [InlineData(20, new[] { 13, 1, 11, 10, 6 }, 6)]
+    public void FlatlandSpaceStations_Samples(int n, int[] c, int expected) =>
+        Assert.Equal(expected, FlatlandSpaceStations.Solve(n, c));
+
+    [Theory]
+    [InlineData(new[] { 2, 3, 4, 5, 6 }, "4")]
+    [InlineData(new[] { 1, 2 }, "NO")]
+    [InlineData(new[] { 4, 5, 6, 7 }, "4")]
+    public void FairRations_Samples(int[] b, string expected) =>
+        Assert.Equal(expected, FairRations.Solve(b));
+
+    [Fact]
+    public void CavityMap_MarksCavities() =>
+        Assert.Equal(
+            ["1112", "1X12", "18X2", "1234"],
+            CavityMap.Solve(["1112", "1912", "1892", "1234"]));
+
+    [Theory]
+    [InlineData(3, 1, 2, new[] { 2, 3, 4 })]
+    [InlineData(4, 10, 100, new[] { 30, 120, 210, 300 })]
+    [InlineData(3, 5, 5, new[] { 10 })]
+    public void ManasaAndStones_Samples(int n, int a, int b, int[] expected) =>
+        Assert.Equal(expected, ManasaAndStones.Solve(n, a, b));
+
+    [Theory]
+    [InlineData("RBY_YBR", "YES")]
+    [InlineData("X_Y__X", "NO")]
+    [InlineData("__", "YES")]
+    [InlineData("B_RRBR", "YES")]
+    [InlineData("AABBC", "NO")]
+    [InlineData("AABBC_C", "YES")]
+    [InlineData("_", "YES")]
+    [InlineData("DD__FQ_QQF", "YES")]
+    [InlineData("AABCBC", "NO")]
+    public void HappyLadybugs_Samples(string b, string expected) =>
+        Assert.Equal(expected, HappyLadybugs.Solve(b));
+
+    [Theory]
+    [InlineData(1L, 3L)]
+    [InlineData(3L, 1L)]
+    [InlineData(4L, 6L)]
+    [InlineData(10L, 12L)]
+    [InlineData(21L, 1L)]
+    public void StrangeCounter_Samples(long t, long expected) =>
+        Assert.Equal(expected, StrangeCounter.Solve(t));
+
+    [Theory]
+    [InlineData(1, "1")]
+    [InlineData(5, "120")]
+    [InlineData(25, "15511210043330985984000000")]
+    public void ExtraLongFactorials_Samples(int n, string expected) =>
+        Assert.Equal(expected, ExtraLongFactorials.Solve(n));
+
+    [Theory]
+    [InlineData(9, 6, 2015, 6, 6, 2015, 45)]
+    [InlineData(14, 7, 2018, 5, 7, 2018, 135)]
+    [InlineData(1, 8, 2018, 31, 6, 2018, 1000)]
+    [InlineData(1, 1, 2019, 31, 12, 2018, 10000)]
+    [InlineData(2, 7, 1014, 1, 1, 1015, 0)]
+    public void LibraryFine_Samples(int d1, int m1, int y1, int d2, int m2, int y2, int expected) =>
+        Assert.Equal(expected, LibraryFine.Solve(d1, m1, y1, d2, m2, y2));
+
+    [Theory]
+    [InlineData("ab", "ba")]
+    [InlineData("bb", "no answer")]
+    [InlineData("hefg", "hegf")]
+    [InlineData("dhck", "dhkc")]
+    [InlineData("dkhc", "hcdk")]
+    [InlineData("lmno", "lmon")]
+    [InlineData("dcba", "no answer")]
+    [InlineData("dcbb", "no answer")]
+    [InlineData("abdc", "acbd")]
+    [InlineData("abcd", "abdc")]
+    [InlineData("fedcbabcd", "fedcbabdc")]
+    public void BiggerIsGreater_Samples(string w, string expected) =>
+        Assert.Equal(expected, BiggerIsGreater.Solve(w));
+
+    [Fact]
+    public void OrganizingContainers_Possible()
+    {
+        int[][] container = [[1, 1], [1, 1]];
+        Assert.Equal("Possible", OrganizingContainers.Solve(container));
+
+        int[][] second = [[0, 2, 1], [1, 1, 1], [2, 0, 0]];
+        Assert.Equal("Possible", OrganizingContainers.Solve(second));
+    }
+
+    [Fact]
+    public void OrganizingContainers_Impossible()
+    {
+        int[][] container = [[0, 2], [1, 1]];
+        Assert.Equal("Impossible", OrganizingContainers.Solve(container));
+
+        int[][] second = [[1, 3, 1], [2, 1, 2], [3, 3, 3]];
+        Assert.Equal("Impossible", OrganizingContainers.Solve(second));
+    }
+
+    [Theory]
+    [InlineData("haveaniceday", "hae and via ecy")]
+    [InlineData("feedthedog", "fto ehg ee dd")]
+    [InlineData("chillout", "clu hlt io")]
+    [InlineData("if man was meant to stay on the ground god would have given us roots",
+        "imtgdvs fearwer mayoogo anouuio ntnnlvt wttddes aohghn sseoau")]
+    public void Encryption_Samples(string s, string expected) =>
+        Assert.Equal(expected, Encryption.Solve(s));
+
+    [Fact]
+    public void QueensAttackII_EmptyBoard() =>
+        Assert.Equal(9, QueensAttackII.Solve(4, 4, 4, []));
+
+    [Fact]
+    public void QueensAttackII_WithObstacles()
+    {
+        int[][] obstacles = [[5, 5], [4, 2], [2, 3]];
+        Assert.Equal(10, QueensAttackII.Solve(5, 4, 3, obstacles));
+    }
+
+    [Fact]
+    public void QueensAttackII_SingleSquareBoard() =>
+        Assert.Equal(0, QueensAttackII.Solve(1, 1, 1, []));
+
+    [Fact]
+    public void FormingAMagicSquare_Samples()
+    {
+        int[][] first = [[4, 9, 2], [3, 5, 7], [8, 1, 5]];
+        Assert.Equal(1, FormingAMagicSquare.Solve(first));
+
+        int[][] second = [[4, 8, 2], [4, 5, 7], [6, 1, 6]];
+        Assert.Equal(4, FormingAMagicSquare.Solve(second));
+
+        int[][] third = [[5, 3, 4], [1, 5, 8], [6, 4, 2]];
+        Assert.Equal(7, FormingAMagicSquare.Solve(third));
+    }
 }

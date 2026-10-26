@@ -147,4 +147,40 @@ public class StringsTests
         Assert.Equal(
             ["Yes", "Yes", "Yes", "Yes", "No", "No"],
             WeightedUniformStrings.Solve("abccddde", [1, 3, 12, 5, 9, 10]));
+
+    [Theory]
+    [InlineData("aabbcd", "NO")]
+    [InlineData("aabbccddeefghi", "NO")]
+    [InlineData("abcdefghhgfedecba", "YES")]
+    [InlineData("abc", "YES")]
+    [InlineData("abcc", "YES")]
+    [InlineData("aabbc", "YES")]
+    [InlineData("aabbcccc", "NO")]
+    public void SherlockAndTheValidString_Samples(string s, string expected) =>
+        Assert.Equal(expected, SherlockAndTheValidString.Solve(s));
+
+    [Theory]
+    [InlineData("abba", 4)]
+    [InlineData("abcd", 0)]
+    [InlineData("ifailuhkqq", 3)]
+    [InlineData("kkkk", 10)]
+    [InlineData("cdcd", 5)]
+    public void SherlockAndAnagrams_Samples(string s, int expected) =>
+        Assert.Equal(expected, SherlockAndAnagrams.Solve(s));
+
+    [Theory]
+    [InlineData("HARRY", "SALLY", 2)]
+    [InlineData("AA", "BB", 0)]
+    [InlineData("SHINCHAN", "NOHARAAA", 3)]
+    [InlineData("ABCDEF", "FBDAMN", 2)]
+    public void CommonChild_Samples(string s1, string s2, int expected) =>
+        Assert.Equal(expected, CommonChild.Solve(s1, s2));
+
+    [Theory]
+    [InlineData("beabeefeab", 5)]
+    [InlineData("asdcbsdcagfsdbgdfanfghbsfdab", 8)]
+    [InlineData("asvkugfiugsalddlasguifgukvsa", 0)]
+    [InlineData("a", 0)]
+    public void TwoCharacters_Samples(string s, int expected) =>
+        Assert.Equal(expected, TwoCharacters.Solve(s));
 }
