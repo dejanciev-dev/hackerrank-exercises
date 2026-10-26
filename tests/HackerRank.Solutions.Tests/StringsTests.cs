@@ -1,0 +1,150 @@
+using HackerRank.Solutions.Strings;
+
+namespace HackerRank.Solutions.Tests;
+
+public class StringsTests
+{
+    [Theory]
+    [InlineData("saveChangesInTheEditor", 5)]
+    [InlineData("one", 1)]
+    public void CamelCase_CountsWords(string s, int expected) =>
+        Assert.Equal(expected, CamelCase.Solve(s));
+
+    [Theory]
+    [InlineData("middle-Outz", 2, "okffng-Qwvb")]
+    [InlineData("Always-Look-on-the-Bright-Side-of-Life", 5, "Fqbfdx-Qttp-ts-ymj-Gwnlmy-Xnij-tk-Qnkj")]
+    [InlineData("www.abc.xy", 87, "fff.jkl.gh")]
+    public void CaesarCipher_Samples(string s, int k, string expected) =>
+        Assert.Equal(expected, CaesarCipher.Solve(s, k));
+
+    [Theory]
+    [InlineData("acxz", "Funny")]
+    [InlineData("bcxz", "Not Funny")]
+    public void FunnyString_Samples(string s, string expected) =>
+        Assert.Equal(expected, FunnyString.Solve(s));
+
+    [Theory]
+    [InlineData("aaabbbb", "YES")]
+    [InlineData("cdefghmnopqrstuvw", "NO")]
+    [InlineData("cdcdcdcdeeeef", "YES")]
+    public void GameOfThronesI_Samples(string s, string expected) =>
+        Assert.Equal(expected, GameOfThronesI.Solve(s));
+
+    [Fact]
+    public void Gemstones_CountsCommonMinerals() =>
+        Assert.Equal(2, Gemstones.Solve(["abcdde", "baccd", "eeabg"]));
+
+    [Theory]
+    [InlineData("hereiamstackerrank", "YES")]
+    [InlineData("hackerworld", "NO")]
+    [InlineData("hhaacckkekraraannk", "YES")]
+    [InlineData("rhbaasdndfsdskgbfefdbrsdfhuyatrjtcrtyytktjjt", "NO")]
+    public void HackerRankInAString_Samples(string s, string expected) =>
+        Assert.Equal(expected, HackerRankInAString.Solve(s));
+
+    [Theory]
+    [InlineData("SOSSPSSQSSOR", 3)]
+    [InlineData("SOSSOT", 1)]
+    [InlineData("SOSSOSSOS", 0)]
+    public void MarsExploration_Samples(string s, int expected) =>
+        Assert.Equal(expected, MarsExploration.Solve(s));
+
+    [Theory]
+    [InlineData("We promptly judged antique ivory buckles for the next prize", "pangram")]
+    [InlineData("We promptly judged antique ivory buckles for the prize", "not pangram")]
+    public void Pangrams_Samples(string s, string expected) =>
+        Assert.Equal(expected, Pangrams.Solve(s));
+
+    [Theory]
+    [InlineData("1234", "YES 1")]
+    [InlineData("91011", "YES 9")]
+    [InlineData("99100", "YES 99")]
+    [InlineData("101103", "NO")]
+    [InlineData("010203", "NO")]
+    [InlineData("13", "NO")]
+    [InlineData("1", "NO")]
+    [InlineData("99910001001", "YES 999")]
+    [InlineData("7891011", "YES 7")]
+    [InlineData("9899100", "YES 98")]
+    [InlineData("999100010001", "NO")]
+    public void SeparateTheNumbers_Samples(string s, string expected) =>
+        Assert.Equal(expected, SeparateTheNumbers.Solve(s));
+
+    [Theory]
+    [InlineData("abcd", 4)]
+    [InlineData("abab", 2)]
+    public void StringConstruction_Samples(string s, int expected) =>
+        Assert.Equal(expected, StringConstruction.Solve(s));
+
+    [Theory]
+    [InlineData("Ab1", 3)]
+    [InlineData("#HackerRank", 1)]
+    [InlineData("2bbbb", 2)]
+    [InlineData("2bb#A", 1)]
+    public void StrongPassword_Samples(string password, int expected) =>
+        Assert.Equal(expected, StrongPassword.Solve(password.Length, password));
+
+    [Theory]
+    [InlineData("aaabccddd", "abd")]
+    [InlineData("aa", "Empty String")]
+    [InlineData("baab", "Empty String")]
+    public void SuperReducedString_Samples(string s, string expected) =>
+        Assert.Equal(expected, SuperReducedString.Solve(s));
+
+    [Theory]
+    [InlineData("abc", 2)]
+    [InlineData("abcba", 0)]
+    [InlineData("abcd", 4)]
+    [InlineData("cba", 2)]
+    public void TheLoveLetterMystery_Samples(string s, int expected) =>
+        Assert.Equal(expected, TheLoveLetterMystery.Solve(s));
+
+    [Theory]
+    [InlineData("hello", "world", "YES")]
+    [InlineData("hi", "world", "NO")]
+    public void TwoStrings_Samples(string s1, string s2, string expected) =>
+        Assert.Equal(expected, TwoStrings.Solve(s1, s2));
+
+    [Theory]
+    [InlineData("AAAA", 3)]
+    [InlineData("BBBBB", 4)]
+    [InlineData("ABABABAB", 0)]
+    [InlineData("BABABA", 0)]
+    [InlineData("AAABBB", 4)]
+    public void AlternatingCharacters_Samples(string s, int expected) =>
+        Assert.Equal(expected, AlternatingCharacters.Solve(s));
+
+    [Theory]
+    [InlineData("0101010", 2)]
+    [InlineData("01100", 0)]
+    [InlineData("0100101010", 3)]
+    public void BeautifulBinaryString_Samples(string b, int expected) =>
+        Assert.Equal(expected, BeautifulBinaryString.Solve(b));
+
+    [Fact]
+    public void MakingAnagrams_CountsDeletions() =>
+        Assert.Equal(4, MakingAnagrams.Solve("cde", "abc"));
+
+    [Theory]
+    [InlineData("aaabbb", 3)]
+    [InlineData("ab", 1)]
+    [InlineData("abc", -1)]
+    [InlineData("mnop", 2)]
+    [InlineData("xyyx", 0)]
+    [InlineData("xaxbbbxx", 1)]
+    public void Anagram_Samples(string s, int expected) =>
+        Assert.Equal(expected, Anagram.Solve(s));
+
+    [Theory]
+    [InlineData("aaab", 3)]
+    [InlineData("baa", 0)]
+    [InlineData("aaa", -1)]
+    public void PalindromeIndex_Samples(string s, int expected) =>
+        Assert.Equal(expected, PalindromeIndex.Solve(s));
+
+    [Fact]
+    public void WeightedUniformStrings_AnswersQueries() =>
+        Assert.Equal(
+            ["Yes", "Yes", "Yes", "Yes", "No", "No"],
+            WeightedUniformStrings.Solve("abccddde", [1, 3, 12, 5, 9, 10]));
+}
