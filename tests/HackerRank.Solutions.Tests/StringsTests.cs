@@ -394,6 +394,92 @@ public class StringsTests
         }
     }
 
+    [Theory]
+    [InlineData(4, 5, "aabaacaba", 26L)]
+    [InlineData(8, 9, "bacbacacb", 42L)]
+    [InlineData(1, 100, "abc", 3L)]
+    public void BuildAString_Samples(int a, int b, string s, long expected) =>
+        Assert.Equal(expected, BuildAString.Solve(a, b, s));
+
+    [Fact]
+    public void BuildAString_MatchesSubstringSearch()
+    {
+        var random = new Random(97);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            string s = new(Enumerable.Range(0, random.Next(1, 14)).Select(_ => "ab"[random.Next(2)]).ToArray());
+            int a = random.Next(1, 6), b = random.Next(1, 10);
+
+            var best = new long[s.Length + 1];
+            Array.Fill(best, long.MaxValue);
+            best[0] = 0;
+            for (int i = 0; i < s.Length; i++)
+            {
+                best[i + 1] = Math.Min(best[i + 1], best[i] + a);
+                for (int length = 1; i + length <= s.Length; length++)
+                {
+                    if (s[..i].Contains(s.Substring(i, length), StringComparison.Ordinal))
+                    {
+                        best[i + length] = Math.Min(best[i + length], best[i] + b);
+                    }
+                }
+            }
+
+            Assert.Equal(best[s.Length], BuildAString.Solve(a, b, s));
+        }
+    }
+
+    [Fact]
+    public void CircularPalindromes_Sample() =>
+        Assert.Equal([12, 12, 10, 8, 8, 9, 11, 13, 11, 9, 8, 8, 10], CircularPalindromes.Solve("aaaaabbbbaaaa"));
+
+    [Fact]
+    public void CircularPalindromes_MatchesBruteForce()
+    {
+        var random = new Random(101);
+        for (int trial = 0; trial < 40; trial++)
+        {
+            string s = new(Enumerable.Range(0, random.Next(1, 10)).Select(_ => "ab"[random.Next(2)]).ToArray());
+            var expected = Enumerable.Range(0, s.Length).Select(k =>
+            {
+                string rotation = s[k..] + s[..k];
+                return Enumerable.Range(0, rotation.Length)
+                    .SelectMany(i => Enumerable.Range(1, rotation.Length - i).Select(l => rotation.Substring(i, l)))
+                    .Where(sub => sub.SequenceEqual(sub.Reverse()))
+                    .Max(sub => sub.Length);
+            }).ToArray();
+
+            Assert.Equal(expected, CircularPalindromes.Solve(s));
+        }
+    }
+
+    [Fact]
+    public void FindStrings_Sample() =>
+        Assert.Equal(["aab", "c", "INVALID"], FindStrings.Solve(["aab", "aac"], [3, 8, 23]));
+
+    [Fact]
+    public void FindStrings_MatchesBruteForce()
+    {
+        var random = new Random(103);
+        for (int trial = 0; trial < 30; trial++)
+        {
+            var words = Enumerable.Range(0, random.Next(1, 4))
+                .Select(_ => new string(Enumerable.Range(0, random.Next(1, 6)).Select(_ => "abc"[random.Next(3)]).ToArray()))
+                .ToArray();
+
+            var sorted = words
+                .SelectMany(w => Enumerable.Range(0, w.Length).SelectMany(i => Enumerable.Range(1, w.Length - i).Select(l => w.Substring(i, l))))
+                .Distinct()
+                .Order(StringComparer.Ordinal)
+                .ToArray();
+
+            var queries = Enumerable.Range(1, sorted.Length + 2).Select(k => (long)k).ToArray();
+            var expected = queries.Select(k => k <= sorted.Length ? sorted[k - 1] : "INVALID").ToArray();
+
+            Assert.Equal(expected, FindStrings.Solve(words, queries));
+        }
+    }
+
     [Fact]
     public void MaximumPalindromes_CountsArrangementsOfPairs() =>
         // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.

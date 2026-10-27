@@ -382,6 +382,55 @@ public class DynamicProgrammingTests
         Assert.Equal(expected, WetSharkAndTwoSubsequences.Solve(x, r, s));
 
     [Fact]
+    public void PrimeXor_Sample() =>
+        Assert.Equal(4L, PrimeXor.Solve([3511, 3671, 4153]));
+
+    [Fact]
+    public void PrimeXor_MatchesBruteForce()
+    {
+        static bool IsPrime(int v) => v >= 2 && Enumerable.Range(2, (int)Math.Sqrt(v) - 1).All(d => v % d != 0);
+
+        var random = new Random(109);
+        for (int trial = 0; trial < 20; trial++)
+        {
+            var a = Enumerable.Range(0, random.Next(1, 9)).Select(_ => random.Next(3500, 3510)).ToArray();
+
+            // Distinct multisets: choose a count 0..c for each distinct value.
+            var groups = a.GroupBy(v => v).Select(g => (Value: g.Key, Count: g.Count())).ToArray();
+            long expected = 0;
+            void Enumerate(int index, int xor)
+            {
+                if (index == groups.Length)
+                {
+                    expected += IsPrime(xor) ? 1 : 0;
+                    return;
+                }
+
+                for (int take = 0; take <= groups[index].Count; take++)
+                {
+                    Enumerate(index + 1, take % 2 == 1 ? xor ^ groups[index].Value : xor);
+                }
+            }
+
+            Enumerate(0, 0);
+            Assert.Equal(expected, PrimeXor.Solve(a));
+        }
+    }
+
+    [Fact]
+    public void CoinOnTheTable_Samples()
+    {
+        Assert.Equal(0, CoinOnTheTable.Solve(3, ["RD", "*L"]));
+        Assert.Equal(1, CoinOnTheTable.Solve(1, ["RD", "*L"]));
+        Assert.Equal(0, CoinOnTheTable.Solve(5, ["*"]));
+    }
+
+    [Fact]
+    public void CoinOnTheTable_MayNeedSeveralChanges() =>
+        // Every arrow points away; the shortest route down the left column changes 2 arrows.
+        Assert.Equal(2, CoinOnTheTable.Solve(2, ["UR", "LR", "*R"]));
+
+    [Fact]
     public void WetSharkAndTwoSubsequences_MatchesBruteForce()
     {
         int[] x = [1, 2, 2, 3, 1, 4];

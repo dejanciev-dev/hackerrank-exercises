@@ -264,6 +264,99 @@ public class GraphTheoryTests
     }
 
     [Fact]
+    public void JourneyScheduling_MatchesSimulation()
+    {
+        var random = new Random(113);
+        for (int trial = 0; trial < 40; trial++)
+        {
+            int n = random.Next(1, 12);
+            var roads = Enumerable.Range(2, n - 1).Select(v => new[] { random.Next(1, v), v }).ToArray();
+            var journeys = Enumerable.Range(0, 5).Select(_ => new[] { random.Next(1, n + 1), random.Next(1, 5) }).ToArray();
+
+            int[] Bfs(int start)
+            {
+                var d = Enumerable.Repeat(-1, n + 1).ToArray();
+                d[start] = 0;
+                var queue = new Queue<int>([start]);
+                while (queue.Count > 0)
+                {
+                    int u = queue.Dequeue();
+                    foreach (var r in roads)
+                    {
+                        int v = r[0] == u ? r[1] : r[1] == u ? r[0] : 0;
+                        if (v != 0 && d[v] == -1) { d[v] = d[u] + 1; queue.Enqueue(v); }
+                    }
+                }
+
+                return d;
+            }
+
+            var expected = journeys.Select(j =>
+            {
+                long total = 0;
+                int at = j[0];
+                for (int step = 0; step < j[1]; step++)
+                {
+                    var d = Bfs(at);
+                    at = Enumerable.Range(1, n).MaxBy(v => d[v]);
+                    total += d[at];
+                }
+
+                return total;
+            }).ToArray();
+
+            Assert.Equal(expected, JourneyScheduling.Solve(n, roads, journeys));
+        }
+    }
+
+    [Fact]
+    public void HackerCountry_Sample() =>
+        Assert.Equal("3/2", HackerCountry.Solve([[0, 1], [2, 0]]));
+
+    [Fact]
+    public void HackerCountry_MatchesSimpleCycleSearch()
+    {
+        var random = new Random(127);
+        for (int trial = 0; trial < 40; trial++)
+        {
+            int n = random.Next(2, 6);
+            var tolls = Enumerable.Range(0, n).Select(i => Enumerable.Range(0, n).Select(j => i == j ? 0 : random.Next(1, 20)).ToArray()).ToArray();
+
+            // Every simple cycle, as (total, length); the minimum mean cycle is always simple.
+            (long Total, long Length)? best = null;
+            void Extend(int start, int at, int visited, long total, int length)
+            {
+                for (int next = 0; next < n; next++)
+                {
+                    if (next == at) continue;
+                    if (next == start && length >= 1)
+                    {
+                        (long Total, long Length) cycle = (total + tolls[at][next], length + 1);
+                        if (best is not { } b || cycle.Total * b.Length < b.Total * cycle.Length) best = cycle;
+                    }
+                    else if (next > start && (visited & (1 << next)) == 0)
+                    {
+                        Extend(start, next, visited | (1 << next), total + tolls[at][next], length + 1);
+                    }
+                }
+            }
+
+            for (int start = 0; start < n; start++)
+            {
+                Extend(start, start, 1 << start, 0, 0);
+            }
+
+            var (cycleTotal, cycleLength) = best!.Value;
+            long g = (long)System.Numerics.BigInteger.GreatestCommonDivisor(cycleTotal, cycleLength);
+            Assert.Equal($"{cycleTotal / g}/{cycleLength / g}", HackerCountry.Solve(tolls));
+        }
+    }
+
+    [Fact]
+    public void ComputerGame_Sample() =>
+        Assert.Equal(3, ComputerGame.Solve([2, 5, 6, 7], [4, 9, 10, 23]));
+
+    [Fact]
     public void Liars_Samples()
     {
         Assert.Equal([1, 2], Liars.Solve(3, [[1, 2, 1], [2, 3, 1]]));

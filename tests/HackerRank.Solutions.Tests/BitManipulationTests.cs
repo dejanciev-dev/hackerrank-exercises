@@ -154,6 +154,84 @@ public class BitManipulationTests
         Assert.Equal(expected, TwosComplement.Solve(a, b));
 
     [Fact]
+    public void XorAndSum_Sample() =>
+        Assert.Equal(489_429_555L, XorAndSum.Solve("10", "1010"));
+
+    [Fact]
+    public void XorAndSum_MatchesBigInteger()
+    {
+        var random = new Random(139);
+        for (int trial = 0; trial < 30; trial++)
+        {
+            string a = "1" + new string(Enumerable.Range(0, random.Next(0, 12)).Select(_ => "01"[random.Next(2)]).ToArray());
+            string b = "1" + new string(Enumerable.Range(0, random.Next(0, 12)).Select(_ => "01"[random.Next(2)]).ToArray());
+            int shifts = random.Next(0, 40);
+
+            var valueA = a.Aggregate(System.Numerics.BigInteger.Zero, (v, c) => v * 2 + (c - '0'));
+            var valueB = b.Aggregate(System.Numerics.BigInteger.Zero, (v, c) => v * 2 + (c - '0'));
+
+            var expected = System.Numerics.BigInteger.Zero;
+            for (int i = 0; i <= shifts; i++)
+            {
+                expected += valueA ^ (valueB << i);
+            }
+
+            Assert.Equal((long)(expected % 1_000_000_007), XorAndSum.Solve(a, b, shifts));
+        }
+    }
+
+    [Fact]
+    public void XorMatrix_Sample() =>
+        Assert.Equal([1L, 6L, 2L, 5L], XorMatrix.Solve(2, [6, 7, 1, 3]));
+
+    [Fact]
+    public void XorMatrix_MatchesRowByRow()
+    {
+        long[] first = [3, 9, 27, 1, 8, 15, 0];
+        var row = (long[])first.Clone();
+
+        for (long m = 1; m <= 60; m++)
+        {
+            Assert.Equal(row, XorMatrix.Solve(m, first));
+            row = row.Select((v, j) => v ^ row[(j + 1) % row.Length]).ToArray();
+        }
+    }
+
+    [Fact]
+    public void AOrB_Samples()
+    {
+        Assert.Equal(["8", "58"], AOrB.Solve(8, "2B", "9F", "58"));
+        Assert.Equal(["18", "42"], AOrB.Solve(5, "B9", "40", "5A"));
+        Assert.Equal(["-1"], AOrB.Solve(2, "91", "BE", "A8"));
+    }
+
+    [Fact]
+    public void AOrB_MatchesBruteForce()
+    {
+        var random = new Random(149);
+        for (int trial = 0; trial < 200; trial++)
+        {
+            int a = random.Next(16), b = random.Next(16), c = random.Next(16), k = random.Next(0, 6);
+            string[] expected = ["-1"];
+
+            for (int newA = 0; newA < 16 && expected[0] == "-1"; newA++)
+            {
+                for (int newB = 0; newB < 16; newB++)
+                {
+                    int changes = System.Numerics.BitOperations.PopCount((uint)(a ^ newA)) + System.Numerics.BitOperations.PopCount((uint)(b ^ newB));
+                    if ((newA | newB) == c && changes <= k)
+                    {
+                        expected = [newA.ToString("X"), newB.ToString("X")];
+                        break;
+                    }
+                }
+            }
+
+            Assert.Equal(expected, AOrB.Solve(k, a.ToString("X"), b.ToString("X"), c.ToString("X")));
+        }
+    }
+
+    [Fact]
     public void TwosComplement_MatchesPopCount()
     {
         for (long a = -40; a <= 40; a += 3)

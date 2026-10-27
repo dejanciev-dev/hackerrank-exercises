@@ -533,6 +533,135 @@ public class MathematicsTests
     public void SumarAndTheFloatingRocks_Samples(long x1, long y1, long x2, long y2, long expected) =>
         Assert.Equal(expected, SumarAndTheFloatingRocks.Solve(x1, y1, x2, y2));
 
+    [Theory]
+    [InlineData(2, 2, 2L)]
+    [InlineData(3, 2, 4L)]
+    [InlineData(3, 3, 24L)]
+    [InlineData(1, 5, 1L)]
+    public void SuperHumbleMatrix_Samples(int n, int m, long expected) =>
+        Assert.Equal(expected, SuperHumbleMatrix.Solve(n, m));
+
+    [Theory]
+    [InlineData(2L, 1L, 2, 1L)]
+    [InlineData(2L, 1L, 5, 3L)]
+    [InlineData(5L, 2L, 3, 2L)]
+    public void AjobSubsequence_Samples(long n, long k, int p, long expected) =>
+        Assert.Equal(expected, AjobSubsequence.Solve(n, k, p));
+
+    [Fact]
+    public void AjobSubsequence_MatchesBigInteger()
+    {
+        var random = new Random(131);
+        foreach (int p in new[] { 2, 3, 5, 7, 13, 101 })
+        {
+            for (int trial = 0; trial < 30; trial++)
+            {
+                long n = random.Next(0, 400);
+                long k = random.Next(0, (int)n + 1);
+                var binomial = System.Numerics.BigInteger.One;
+                for (long i = 0; i < k + 1; i++)
+                {
+                    binomial = binomial * (n + 1 - i) / (i + 1);
+                }
+
+                Assert.Equal((long)(binomial % p), AjobSubsequence.Solve(n, k, p));
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(1L, 100L, 8L)]
+    [InlineData(1L, 1L, 0L)]
+    [InlineData(2L, 7L, 4L)]
+    public void MegaprimeNumbers_Samples(long first, long last, long expected) =>
+        Assert.Equal(expected, MegaprimeNumbers.Solve(first, last));
+
+    [Fact]
+    public void MegaprimeNumbers_MatchesTrialDivision()
+    {
+        static bool IsPrime(long v) => v >= 2 && Enumerable.Range(2, (int)Math.Sqrt(v) - 1).All(d => v % d != 0);
+        long expected = Enumerable.Range(1, 50_000)
+            .Count(v => v.ToString().All(c => c is '2' or '3' or '5' or '7') && IsPrime(v));
+
+        Assert.Equal(expected, MegaprimeNumbers.Solve(1, 50_000));
+        Assert.Equal(expected - 4, MegaprimeNumbers.Solve(8, 50_000));
+    }
+
+    [Fact]
+    public void JimAndTheJokes_Samples()
+    {
+        Assert.Equal(1L, JimAndTheJokes.Solve([[10, 25], [8, 31]]));
+        Assert.Equal(0L, JimAndTheJokes.Solve([[2, 25], [2, 25]]));
+        Assert.Equal(1L, JimAndTheJokes.Solve([[11, 10], [10, 11]]));
+        Assert.Equal(3L, JimAndTheJokes.Solve([[10, 7], [8, 7], [12, 7]]));
+    }
+
+    [Theory]
+    [InlineData(1, 1L)]
+    [InlineData(2, 3L)]
+    [InlineData(3, 9L)]
+    [InlineData(32327, 656502L)]
+    public void Equations_Samples(int n, long expected) =>
+        Assert.Equal(expected, Equations.Solve(n));
+
+    [Fact]
+    public void SalaryBlues_MatchesBruteForce()
+    {
+        var random = new Random(137);
+        var a = Enumerable.Range(0, 6).Select(_ => (long)random.Next(1, 1000) * 6).ToArray();
+        var queries = Enumerable.Range(0, 20).Select(_ => (long)random.Next(0, 100)).ToArray();
+        var expected = queries.Select(k => a.Aggregate(0L, (g, v) => (long)System.Numerics.BigInteger.GreatestCommonDivisor(g, v + k))).ToArray();
+
+        Assert.Equal(expected, SalaryBlues.Solve(a, queries));
+    }
+
+    [Theory]
+    [InlineData(1L, 1L)]
+    [InlineData(2L, 8L)]
+    [InlineData(3L, 27L)]
+    public void NumberGroups_Samples(long k, long expected) =>
+        Assert.Equal(expected, NumberGroups.Solve(k));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3 }, 4.333333)]
+    [InlineData(new[] { 3, 3, 3 }, 3.0)]
+    [InlineData(new[] { 2, 2, 3 }, 4.0)]
+    [InlineData(new[] { 10, 2, 4, 4 }, 6.0)]
+    [InlineData(new[] { 10, 10, 10, 5, 10 }, 5.8)]
+    public void VerticalSticks_Samples(int[] y, double expected) =>
+        Assert.Equal(expected, VerticalSticks.Solve(y), 5);
+
+    [Fact]
+    public void VerticalSticks_MatchesAllOrderings()
+    {
+        int[] y = [1, 1, 2, 3];
+        var orders = Permutations(Enumerable.Range(0, y.Length).ToArray()).ToArray();
+        double total = 0;
+
+        foreach (var order in orders)
+        {
+            for (int i = 0; i < order.Length; i++)
+            {
+                int j = i - 1;
+                while (j >= 0 && y[order[j]] < y[order[i]]) j--;
+                total += i - j;
+            }
+        }
+
+        Assert.Equal(total / orders.Length, VerticalSticks.Solve(y), 9);
+
+        static IEnumerable<int[]> Permutations(int[] items) => items.Length <= 1
+            ? [items]
+            : items.SelectMany((x, i) => Permutations(items.Where((_, j) => j != i).ToArray()).Select(rest => new[] { x }.Concat(rest).ToArray()));
+    }
+
+    [Theory]
+    [InlineData(new[] { 2L, 3L, 5L }, 1L)]
+    [InlineData(new[] { 3L, 6L, 9L }, 2L)]
+    [InlineData(new[] { 12L, 24L }, 144L)]
+    public void FibonacciGcd_Samples(long[] a, long expected) =>
+        Assert.Equal(expected, FibonacciGcd.Solve(a));
+
     [Fact]
     public void EvenOddQuery_Samples()
     {

@@ -67,6 +67,68 @@ public class TreeTests
     }
 
     [Fact]
+    public void SelfBalancingTree_StaysBalancedAndSorted()
+    {
+        var random = new Random(107);
+        for (int trial = 0; trial < 50; trial++)
+        {
+            AvlNode? root = null;
+            var values = Enumerable.Range(0, random.Next(1, 60)).Select(_ => random.Next(0, 100)).ToArray();
+            foreach (var value in values)
+            {
+                root = SelfBalancingTree.Insert(root, value);
+            }
+
+            var inorder = new List<int>();
+            int Check(AvlNode? node)
+            {
+                if (node is null)
+                {
+                    return -1;
+                }
+
+                int left = Check(node.Left);
+                inorder.Add(node.Value);
+                int right = Check(node.Right);
+
+                Assert.InRange(left - right, -1, 1);
+                Assert.Equal(1 + Math.Max(left, right), node.Height);
+                return node.Height;
+            }
+
+            Check(root);
+            Assert.Equal(values.Order(), inorder);
+        }
+    }
+
+    [Fact]
+    public void SelfBalancingTree_RotatesOnAscendingInserts()
+    {
+        AvlNode? root = null;
+        foreach (var value in new[] { 3, 2, 4, 5, 6 })
+        {
+            root = SelfBalancingTree.Insert(root, value);
+        }
+
+        Assert.Equal(3, root!.Value);
+        Assert.Equal(5, root.Right!.Value);
+        Assert.Equal(2, root.Height);
+    }
+
+    [Fact]
+    public void HuffmanDecoding_Sample()
+    {
+        // A = 1, B = 00, C = 01, the tree for "ABACA".
+        var root = new HuffmanNode
+        {
+            Left = new HuffmanNode { Left = new HuffmanNode('B'), Right = new HuffmanNode('C') },
+            Right = new HuffmanNode('A'),
+        };
+
+        Assert.Equal("ABACA", HuffmanDecoding.Solve(root, "1001011"));
+    }
+
+    [Fact]
     public void TopView_ShowsTopmostNodePerColumn()
     {
         Assert.Equal([1, 2, 5, 6], TopView.Solve(Build.Bst(1, 2, 5, 3, 6, 4)));

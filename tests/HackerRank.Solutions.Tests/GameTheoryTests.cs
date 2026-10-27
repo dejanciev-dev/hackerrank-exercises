@@ -597,6 +597,43 @@ public class GameTheoryTests
         }
     }
 
+    [Theory]
+    [InlineData(new[] { 1, 2 }, 1)]
+    [InlineData(new[] { 1, 2, 3 }, 2)]
+    [InlineData(new[] { 1 }, 2)]
+    public void TowerBreakersAgain_Samples(int[] h, int expected) =>
+        Assert.Equal(expected, TowerBreakersAgain.Solve(h));
+
+    [Fact]
+    public void TowerBreakersAgain_MatchesStoneDivisionWithEveryDivisor()
+    {
+        for (int height = 1; height <= 40; height++)
+        {
+            var divisors = Enumerable.Range(2, Math.Max(0, height - 1)).Select(d => (long)d).ToArray();
+            string stoneDivision = StoneDivision.Solve(height, divisors);
+            Assert.Equal(stoneDivision == "First" ? 1 : 2, TowerBreakersAgain.Solve([height]));
+        }
+    }
+
+    [Theory]
+    [InlineData(new[] { 2, 3 }, 1)]
+    [InlineData(new[] { 1, 1 }, 0)]
+    [InlineData(new[] { 3, 4, 5 }, 1)]
+    public void ChocolateInBox_Samples(int[] a, int expected) =>
+        Assert.Equal(expected, ChocolateInBox.Solve(a));
+
+    [Fact]
+    public void ChocolateInBox_CountsMovesThatZeroTheNimSum()
+    {
+        foreach (var piles in AllPiles(count: 3, max: 6))
+        {
+            int expected = Enumerable.Range(0, piles.Length).Count(i =>
+                Enumerable.Range(0, piles[i]).Any(left => piles.Select((p, j) => j == i ? left : p).Aggregate(0, (x, v) => x ^ v) == 0));
+
+            Assert.Equal(expected, ChocolateInBox.Solve(piles));
+        }
+    }
+
     private static IEnumerable<int[]> AllPiles(int count, int max)
     {
         if (count == 0)
