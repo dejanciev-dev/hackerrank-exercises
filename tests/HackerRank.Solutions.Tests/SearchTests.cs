@@ -134,4 +134,38 @@ public class SearchTests
         Assert.Equal(["Impossible"], RedKnightsShortestPath.Solve(6, 5, 1, 0, 5));
         Assert.Equal(["2", "LR LL"], RedKnightsShortestPath.Solve(7, 0, 3, 4, 3));
     }
+
+    [Fact]
+    public void BikeRacers_Sample() =>
+        Assert.Equal(40000L, BikeRacers.Solve([[0, 1], [0, 2], [0, 3]], [[100, 1], [200, 2], [300, 3]], 2));
+
+    [Fact]
+    public void BikeRacers_NeedsMatchingNotJustNearestBikes() =>
+        // Both bikers are nearest to (0, 1); one must take the far bike, best from (1, 0): 9².
+        Assert.Equal(81L, BikeRacers.Solve([[0, 0], [1, 0]], [[0, 1], [10, 0]], 2));
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 5 }, new[] { 2, 3 }, new[] { 1, 2, 3 }, 8L)]
+    [InlineData(new[] { 1, 4, 5 }, new[] { 2, 3, 3 }, new[] { 1, 2, 3 }, 5L)]
+    [InlineData(new[] { 1, 3, 5, 7 }, new[] { 5, 7, 9 }, new[] { 7, 9, 11, 13 }, 12L)]
+    public void TripleSum_Samples(int[] a, int[] b, int[] c, long expected) =>
+        Assert.Equal(expected, TripleSum.Solve(a, b, c));
+
+    [Theory]
+    [InlineData(new[] { 2L, 3L }, 5L, 6L)]
+    [InlineData(new[] { 1L, 3L, 4L }, 10L, 7L)]
+    [InlineData(new[] { 4L, 5L, 6L }, 12L, 20L)]
+    public void MinimumTimeRequired_Samples(long[] machines, long goal, long expected) =>
+        Assert.Equal(expected, MinimumTimeRequired.Solve(machines, goal));
+
+    [Fact]
+    public void SimilarPair_Sample() =>
+        Assert.Equal(4L, SimilarPair.Solve(5, 2, [[3, 2], [3, 1], [1, 4], [1, 5]]));
+
+    [Fact]
+    public void SimilarPair_HandlesDeepChains()
+    {
+        var chain = Enumerable.Range(1, 99_999).Select(i => new[] { i, i + 1 }).ToArray();
+        Assert.Equal(99_999L, SimilarPair.Solve(100_000, 1, chain));
+    }
 }

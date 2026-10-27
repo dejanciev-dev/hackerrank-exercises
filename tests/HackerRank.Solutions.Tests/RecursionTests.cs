@@ -128,4 +128,39 @@ public class RecursionTests
     [InlineData(new[] { 5 }, 0)]
     public void NikitaAndTheGame_Samples(int[] arr, int expected) =>
         Assert.Equal(expected, NikitaAndTheGame.Solve(arr));
+
+    [Theory]
+    [InlineData(12L, new[] { 2L, 3L, 4L }, new[] { 1L, 3L, 12L })]
+    [InlineData(15L, new[] { 2L, 10L, 6L, 9L, 11L }, new[] { -1L })]
+    [InlineData(72L, new[] { 2L, 4L, 6L, 9L, 3L, 7L, 16L, 10L, 5L }, new[] { 1L, 2L, 8L, 72L })]
+    [InlineData(1L, new[] { 2L }, new[] { 1L })]
+    public void KFactorization_Samples(long n, long[] a, long[] expected) =>
+        Assert.Equal(expected, KFactorization.Solve(n, a));
+
+    [Theory]
+    [InlineData(new[] { 22, 79, 21 })]
+    [InlineData(new[] { 55, 3, 45, 33, 25 })]
+    [InlineData(new[] { 101 })]
+    [InlineData(new[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 })]
+    public void ArithmeticExpressions_ProducesAMultipleOf101(int[] arr)
+    {
+        string expression = ArithmeticExpressions.Solve(arr);
+
+        var numbers = expression.Split('+', '-', '*').Select(int.Parse).ToArray();
+        var ops = expression.Where(c => c is '+' or '-' or '*').ToArray();
+        Assert.Equal(arr, numbers);
+
+        long value = numbers[0];
+        for (int i = 0; i < ops.Length; i++)
+        {
+            value = ops[i] switch
+            {
+                '+' => value + numbers[i + 1],
+                '-' => value - numbers[i + 1],
+                _ => value * numbers[i + 1],
+            } % 101;
+        }
+
+        Assert.Equal(0, value % 101);
+    }
 }

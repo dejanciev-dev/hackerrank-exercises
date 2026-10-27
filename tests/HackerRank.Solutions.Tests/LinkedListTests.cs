@@ -120,4 +120,16 @@ public class LinkedListTests
     [InlineData(new int[0], 4, new[] { 4 })]
     public void SortedInsertDoublyLinkedList_KeepsOrderAndLinks(int[] values, int data, int[] expected) =>
         Assert.Equal(expected, Build.ToArray(SortedInsertDoublyLinkedList.Solve(Build.DoublyList(values), data)));
+
+    [Theory]
+    [InlineData(new[] { 141, 302 }, 164, new[] { 141, 302, 164 })]
+    [InlineData(new int[0], 7, new[] { 7 })]
+    public void InsertNodeAtTail_Appends(int[] values, int data, int[] expected) =>
+        Assert.Equal(expected, Build.ToArray(InsertNodeAtTail.Solve(Build.List(values), data)));
+
+    [Theory]
+    [InlineData(new[] { 383, 484 }, 392, new[] { 392, 383, 484 })]
+    [InlineData(new int[0], 7, new[] { 7 })]
+    public void InsertNodeAtHead_Prepends(int[] values, int data, int[] expected) =>
+        Assert.Equal(expected, Build.ToArray(InsertNodeAtHead.Solve(Build.List(values), data)));
 }

@@ -241,4 +241,45 @@ public class DataStructuresTests
     [Fact]
     public void MergingCommunities_Sample() =>
         Assert.Equal([1, 2, 3, 3], MergingCommunities.Solve(3, ["Q 1", "M 1 2", "Q 2", "M 2 3", "Q 3", "Q 2"]));
+
+    [Fact]
+    public void MedianUpdates_Sample() =>
+        Assert.Equal(
+            ["Wrong!", "1", "1.5", "1", "1.5", "1", "Wrong!"],
+            MedianUpdates.Solve(["r 1", "a 1", "a 2", "a 1", "r 1", "r 2", "r 1"]));
+
+    [Fact]
+    public void MedianUpdates_HandlesNegativeHalves() =>
+        Assert.Equal(["-3", "-2.5", "-2", "-0.5", "Wrong!"], MedianUpdates.Solve(["a -3", "a -2", "a 1", "r -3", "r 7"]));
+
+    [Theory]
+    [InlineData(new[] { 1, 0, 0 }, 2)]
+    [InlineData(new[] { 0, 1, 2 }, 1)]
+    [InlineData(new[] { 5, 5, 5 }, 1)]
+    public void KindergartenAdventures_Samples(int[] t, int expected) =>
+        Assert.Equal(expected, KindergartenAdventures.Solve(t));
+
+    [Fact]
+    public void KindergartenAdventures_MatchesBruteForce()
+    {
+        var random = new Random(5);
+        for (int trial = 0; trial < 200; trial++)
+        {
+            var t = Enumerable.Range(0, random.Next(1, 9)).Select(_ => random.Next(0, 10)).ToArray();
+            int n = t.Length;
+
+            int Finished(int start) => Enumerable.Range(0, n).Count(i => (i - start + n) % n >= t[i]);
+            int expected = Enumerable.Range(0, n).OrderByDescending(Finished).ThenBy(s => s).First() + 1;
+
+            Assert.Equal(expected, KindergartenAdventures.Solve(t));
+        }
+    }
+
+    [Fact]
+    public void KunduAndTree_Sample() =>
+        Assert.Equal(4L, KunduAndTree.Solve(5, ["1 2 b", "2 3 r", "3 4 r", "4 5 b"]));
+
+    [Fact]
+    public void KunduAndTree_AllRedCountsEveryTriplet() =>
+        Assert.Equal(10L, KunduAndTree.Solve(5, ["1 2 r", "2 3 r", "3 4 r", "4 5 r"]));
 }

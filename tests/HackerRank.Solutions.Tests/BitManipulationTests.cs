@@ -143,4 +143,31 @@ public class BitManipulationTests
 
         Assert.Equal(expected, XoringNinja.Solve(arr));
     }
+
+    [Theory]
+    [InlineData(-2L, 0L, 63L)]
+    [InlineData(-3L, 4L, 99L)]
+    [InlineData(-1L, 4L, 37L)]
+    [InlineData(-2_147_483_648L, -2_147_483_648L, 1L)]
+    [InlineData(-2_147_483_648L, 2_147_483_647L, 68_719_476_736L)]
+    public void TwosComplement_Samples(long a, long b, long expected) =>
+        Assert.Equal(expected, TwosComplement.Solve(a, b));
+
+    [Fact]
+    public void TwosComplement_MatchesPopCount()
+    {
+        for (long a = -40; a <= 40; a += 3)
+        {
+            for (long b = a; b <= 40; b += 5)
+            {
+                long expected = 0;
+                for (long v = a; v <= b; v++)
+                {
+                    expected += System.Numerics.BitOperations.PopCount((uint)(int)v);
+                }
+
+                Assert.Equal(expected, TwosComplement.Solve(a, b));
+            }
+        }
+    }
 }

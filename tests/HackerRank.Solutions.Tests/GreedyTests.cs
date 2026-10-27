@@ -182,4 +182,30 @@ public class GreedyTests
     [InlineData(1L, 1L, 1_000_000_000_000L, 1_000_000_000_000L, 1_000_000_000_000L)]
     public void MakingCandies_Samples(long m, long w, long p, long n, long expected) =>
         Assert.Equal(expected, MakingCandies.Solve(m, w, p, n));
+
+    [Fact]
+    public void CloudyDay_Sample() =>
+        Assert.Equal(110L, CloudyDay.Solve([10, 100], [5, 100], [4], [1]));
+
+    [Fact]
+    public void CloudyDay_MatchesBruteForce()
+    {
+        var random = new Random(17);
+        for (int trial = 0; trial < 200; trial++)
+        {
+            int towns = random.Next(1, 7);
+            int clouds = random.Next(1, 5);
+            var p = Enumerable.Range(0, towns).Select(_ => (long)random.Next(1, 50)).ToArray();
+            var x = Enumerable.Range(0, towns).Select(_ => (long)random.Next(1, 30)).ToArray();
+            var y = Enumerable.Range(0, clouds).Select(_ => (long)random.Next(1, 30)).ToArray();
+            var r = Enumerable.Range(0, clouds).Select(_ => (long)random.Next(0, 6)).ToArray();
+
+            long expected = Enumerable.Range(0, clouds).Max(removed =>
+                Enumerable.Range(0, towns)
+                    .Where(t => Enumerable.Range(0, clouds).All(c => c == removed || Math.Abs(x[t] - y[c]) > r[c]))
+                    .Sum(t => p[t]));
+
+            Assert.Equal(expected, CloudyDay.Solve(p, x, y, r));
+        }
+    }
 }

@@ -262,6 +262,50 @@ public class StringsTests
         }
     }
 
+    [Theory]
+    [InlineData("aaabbbb", 3L)]
+    [InlineData("cdcdcdcdeeeef", 90L)]
+    [InlineData("a", 1L)]
+    public void GameOfThronesII_Samples(string s, long expected) =>
+        Assert.Equal(expected, GameOfThronesII.Solve(s));
+
+    [Fact]
+    public void DeterminingDnaHealth_Sample() =>
+        Assert.Equal(
+            [0L, 19L],
+            DeterminingDnaHealth.Solve(["a", "b", "c", "aa", "d", "b"], [1, 2, 3, 4, 5, 6], ["1 5 caaab", "0 4 xyz", "2 4 bcdybc"]));
+
+    [Fact]
+    public void DeterminingDnaHealth_MatchesBruteForce()
+    {
+        var random = new Random(23);
+        string[] genes = ["a", "ab", "b", "ba", "aba", "bb", "a", "ab", "c"];
+        int[] health = [3, 1, 4, 1, 5, 9, 2, 6, 5];
+        var strands = new List<string>();
+        var expected = new List<long>();
+
+        for (int trial = 0; trial < 40; trial++)
+        {
+            int first = random.Next(genes.Length);
+            int last = random.Next(first, genes.Length);
+            string d = new(Enumerable.Range(0, random.Next(1, 12)).Select(_ => "abc"[random.Next(3)]).ToArray());
+            strands.Add($"{first} {last} {d}");
+
+            long total = 0;
+            for (int i = first; i <= last; i++)
+            {
+                for (int at = d.IndexOf(genes[i], StringComparison.Ordinal); at >= 0; at = d.IndexOf(genes[i], at + 1, StringComparison.Ordinal))
+                {
+                    total += health[i];
+                }
+            }
+
+            expected.Add(total);
+        }
+
+        Assert.Equal([expected.Min(), expected.Max()], DeterminingDnaHealth.Solve(genes, health, strands));
+    }
+
     [Fact]
     public void MaximumPalindromes_CountsArrangementsOfPairs() =>
         // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.

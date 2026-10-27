@@ -232,6 +232,214 @@ public class GameTheoryTests
         }
     }
 
+    [Theory]
+    [InlineData("IXXI", "LOSE")]
+    [InlineData("XIIX", "WIN")]
+    [InlineData("IIXII", "LOSE")]
+    [InlineData("III", "WIN")]
+    public void BowlingPins_Samples(string config, string expected) =>
+        Assert.Equal(expected, BowlingPins.Solve(config));
+
+    [Fact]
+    public void BowlingPins_MatchesBruteForce()
+    {
+        var memo = new Dictionary<string, bool>();
+
+        bool Wins(string pins)
+        {
+            if (memo.TryGetValue(pins, out bool known))
+            {
+                return known;
+            }
+
+            bool wins = false;
+            for (int i = 0; i < pins.Length && !wins; i++)
+            {
+                if (pins[i] != 'I')
+                {
+                    continue;
+                }
+
+                wins = !Wins(pins[..i] + "X" + pins[(i + 1)..]);
+                if (!wins && i + 1 < pins.Length && pins[i + 1] == 'I')
+                {
+                    wins = !Wins(pins[..i] + "XX" + pins[(i + 2)..]);
+                }
+            }
+
+            return memo[pins] = wins;
+        }
+
+        for (int mask = 1; mask < 1 << 10; mask++)
+        {
+            string pins = new(Enumerable.Range(0, 10).Select(i => (mask & (1 << i)) != 0 ? 'I' : 'X').ToArray());
+            Assert.Equal(Wins(pins) ? "WIN" : "LOSE", BowlingPins.Solve(pins));
+        }
+    }
+
+    [Fact]
+    public void ChessboardGameAgain_SingleCoinMatchesChessboardGame()
+    {
+        for (int x = 1; x <= 15; x++)
+        {
+            for (int y = 1; y <= 15; y++)
+            {
+                Assert.Equal(ChessboardGame.Solve(x, y), ChessboardGameAgain.Solve([[x, y]]));
+            }
+        }
+    }
+
+    [Fact]
+    public void ChessboardGameAgain_IdenticalCoinsCancel() =>
+        Assert.Equal("Second", ChessboardGameAgain.Solve([[5, 3], [5, 3]]));
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 2 }, "Alice")]
+    [InlineData(new[] { 5, 3, 2, 1, 4 }, "Bob")]
+    [InlineData(new[] { 2, 1 }, "Alice")]
+    public void PermutationGame_Samples(int[] arr, string expected) =>
+        Assert.Equal(expected, PermutationGame.Solve(arr));
+
+    [Fact]
+    public void PowersGame_MatchesBruteForce()
+    {
+        for (int n = 1; n <= 16; n++)
+        {
+            var powers = Enumerable.Range(1, n).Select(i => (int)System.Numerics.BigInteger.ModPow(2, i, 17)).ToArray();
+            var memo = new Dictionary<(int, int), bool>();
+
+            // Whether the first player wins, given the unsigned powers and the sum so far mod 17.
+            bool FirstWins(int unsigned, int sum)
+            {
+                if (unsigned == 0)
+                {
+                    return sum != 0;
+                }
+
+                if (memo.TryGetValue((unsigned, sum), out bool known))
+                {
+                    return known;
+                }
+
+                bool firstToMove = (n - System.Numerics.BitOperations.PopCount((uint)unsigned)) % 2 == 0;
+                var outcomes = new List<bool>();
+
+                for (int i = 0; i < n; i++)
+                {
+                    if ((unsigned & (1 << i)) != 0)
+                    {
+                        int rest = unsigned & ~(1 << i);
+                        outcomes.Add(FirstWins(rest, (sum + powers[i]) % 17));
+                        outcomes.Add(FirstWins(rest, (sum - powers[i] + 17) % 17));
+                    }
+                }
+
+                return memo[(unsigned, sum)] = firstToMove ? outcomes.Any(o => o) : outcomes.All(o => o);
+            }
+
+            Assert.Equal(FirstWins((1 << n) - 1, 0) ? "First" : "Second", PowersGame.Solve(n));
+        }
+    }
+
+    [Fact]
+    public void KittyAndKatty_MatchesBruteForce()
+    {
+        var memo = new Dictionary<(int, int, int, bool), bool>();
+
+        // Residue counts mod 3; returns whether Kitty wins with `kittyToMove` to play.
+        bool KittyWins(int c0, int c1, int c2, bool kittyToMove)
+        {
+            if (c0 + c1 + c2 == 1)
+            {
+                // The last mover is the one who isn't to move now.
+                return c1 == 1 || (c0 == 1 && !kittyToMove);
+            }
+
+            if (memo.TryGetValue((c0, c1, c2, kittyToMove), out bool known))
+            {
+                return known;
+            }
+
+            int[] counts = [c0, c1, c2];
+            bool kittyCanWin = false;
+            bool kattyCanWin = false;
+
+            for (int a = 0; a < 3; a++)
+            {
+                for (int b = 0; b < 3; b++)
+                {
+                    var next = (int[])counts.Clone();
+                    if (--next[a] < 0 || --next[b] < 0)
+                    {
+                        continue;
+                    }
+
+                    next[((a - b) % 3 + 3) % 3]++;
+                    bool result = KittyWins(next[0], next[1], next[2], !kittyToMove);
+                    kittyCanWin |= result;
+                    kattyCanWin |= !result;
+                }
+            }
+
+            return memo[(c0, c1, c2, kittyToMove)] = kittyToMove ? kittyCanWin : !kattyCanWin;
+        }
+
+        for (int n = 1; n <= 14; n++)
+        {
+            int[] counts = new int[3];
+            for (int v = 1; v <= n; v++)
+            {
+                counts[v % 3]++;
+            }
+
+            Assert.Equal(KittyWins(counts[0], counts[1], counts[2], true) ? "Kitty" : "Katty", KittyAndKatty.Solve(n));
+        }
+    }
+
+    [Fact]
+    public void NewYearGame_MatchesBruteForce()
+    {
+        var memo = new Dictionary<(int, int, int, int, bool), bool>();
+
+        // Remaining residue counts, Balsa minus Koca mod 3; returns whether Balsa wins.
+        bool BalsaWins(int c0, int c1, int c2, int difference, bool balsaToMove)
+        {
+            if (c0 + c1 + c2 == 0)
+            {
+                return difference != 0;
+            }
+
+            if (memo.TryGetValue((c0, c1, c2, difference, balsaToMove), out bool known))
+            {
+                return known;
+            }
+
+            int[] counts = [c0, c1, c2];
+            var outcomes = new List<bool>();
+
+            for (int r = 0; r < 3; r++)
+            {
+                if (counts[r] == 0)
+                {
+                    continue;
+                }
+
+                var next = (int[])counts.Clone();
+                next[r]--;
+                int nextDifference = ((difference + (balsaToMove ? r : -r)) % 3 + 3) % 3;
+                outcomes.Add(BalsaWins(next[0], next[1], next[2], nextDifference, !balsaToMove));
+            }
+
+            return memo[(c0, c1, c2, difference, balsaToMove)] = balsaToMove ? outcomes.Any(o => o) : outcomes.All(o => o);
+        }
+
+        foreach (var counts in AllPiles(count: 3, max: 5).Where(c => c.Sum() > 0))
+        {
+            var numbers = Enumerable.Repeat(3, counts[0]).Concat(Enumerable.Repeat(1, counts[1])).Concat(Enumerable.Repeat(2, counts[2])).ToArray();
+            Assert.Equal(BalsaWins(counts[0], counts[1], counts[2], 0, true) ? "Balsa" : "Koca", NewYearGame.Solve(numbers));
+        }
+    }
+
     private static IEnumerable<int[]> AllPiles(int count, int max)
     {
         if (count == 0)

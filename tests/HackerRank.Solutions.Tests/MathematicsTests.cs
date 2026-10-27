@@ -210,4 +210,239 @@ public class MathematicsTests
     [InlineData(2_000_000_000L, 5L, 9_999_999_999L)]
     public void StrangeGrid_Samples(long r, long c, long expected) =>
         Assert.Equal(expected, StrangeGrid.Solve(r, c));
+
+    [Fact]
+    public void MostDistant_Samples()
+    {
+        Assert.Equal(2.0, MostDistant.Solve([[-1, 0], [1, 0], [0, 1], [0, -1]]), 9);
+        Assert.Equal(5.0, MostDistant.Solve([[0, 3], [4, 0]]), 9);
+    }
+
+    [Fact]
+    public void MostDistant_MatchesBruteForce()
+    {
+        var random = new Random(3);
+        for (int trial = 0; trial < 200; trial++)
+        {
+            var points = Enumerable.Range(0, random.Next(2, 8))
+                .Select(_ => random.Next(2) == 0 ? new[] { random.Next(-50, 51), 0 } : new[] { 0, random.Next(-50, 51) })
+                .ToArray();
+
+            double expected = points.SelectMany(p => points.Select(q => Math.Sqrt(Math.Pow(p[0] - q[0], 2) + Math.Pow(p[1] - q[1], 2)))).Max();
+            Assert.Equal(expected, MostDistant.Solve(points), 9);
+        }
+    }
+
+    [Fact]
+    public void BusStation_Sample() =>
+        Assert.Equal([3L, 4L, 6L, 12L], BusStation.Solve([1, 2, 1, 1, 1, 2, 1, 3]));
+
+    [Fact]
+    public void BusStation_MatchesBruteForce()
+    {
+        int[] groups = [2, 2, 1, 3, 1, 1, 2, 4];
+        long total = groups.Sum();
+        var expected = new List<long>();
+
+        for (long x = 1; x <= total; x++)
+        {
+            long load = 0;
+            bool ok = true;
+            foreach (var g in groups)
+            {
+                load += g;
+                if (load == x) load = 0;
+                else if (load > x) ok = false;
+            }
+
+            if (ok && load == 0)
+            {
+                expected.Add(x);
+            }
+        }
+
+        Assert.Equal(expected, BusStation.Solve(groups));
+    }
+
+    [Theory]
+    [InlineData(1, 1, 1L)]
+    [InlineData(2, 3, 6L)]
+    [InlineData(0, 4, 1L)]
+    public void SherlockAndPermutations_Samples(int n, int m, long expected) =>
+        Assert.Equal(expected, SherlockAndPermutations.Solve(n, m));
+
+    [Theory]
+    [InlineData(2, 2, 2L)]
+    [InlineData(3, 3, 6L)]
+    [InlineData(1, 5, 1L)]
+    [InlineData(4, 5, 35L)]
+    public void MatrixTracing_Samples(int m, int n, long expected) =>
+        Assert.Equal(expected, MatrixTracing.Solve(m, n));
+
+    [Fact]
+    public void NcrTable_SmallRows()
+    {
+        Assert.Equal([1L, 2L, 1L], NcrTable.Solve(2));
+        Assert.Equal([1L, 4L, 6L, 4L, 1L], NcrTable.Solve(4));
+    }
+
+    [Fact]
+    public void NcrTable_MatchesBigInteger()
+    {
+        var row = NcrTable.Solve(1000);
+        var exact = System.Numerics.BigInteger.One;
+
+        for (int k = 0; k <= 1000; k++)
+        {
+            Assert.Equal((long)(exact % 1_000_000_000), row[k]);
+            exact = exact * (1000 - k) / (k + 1);
+        }
+    }
+
+    [Theory]
+    [InlineData(4, 1, 4L)]
+    [InlineData(2, 3, 4L)]
+    [InlineData(10, 3, 220L)]
+    public void KCandyStore_Samples(int n, int k, long expected) =>
+        Assert.Equal(expected, KCandyStore.Solve(n, k));
+
+    [Theory]
+    [InlineData(new[] { 1, 2 }, 1L)]
+    [InlineData(new[] { 1, 2, 3 }, 3L)]
+    [InlineData(new[] { 2, 4 }, 3L)]
+    [InlineData(new[] { 1 }, 0L)]
+    public void ChocolateFiesta_Samples(int[] a, long expected) =>
+        Assert.Equal(expected, ChocolateFiesta.Solve(a));
+
+    [Theory]
+    [InlineData(1L, 2L, 3L, 1L)]
+    [InlineData(3L, 4L, 2L, 1L)]
+    [InlineData(4L, -1L, 5L, 4L)]
+    [InlineData(2L, 10L, 1000L, 24L)]
+    public void LittlePandaPower_Samples(long a, long b, long x, long expected) =>
+        Assert.Equal(expected, LittlePandaPower.Solve(a, b, x));
+
+    [Fact]
+    public void LittlePandaPower_NegativeExponentInvertsPositive()
+    {
+        for (long x = 2; x < 60; x++)
+        {
+            for (long a = 1; a < x; a++)
+            {
+                if (System.Numerics.BigInteger.GreatestCommonDivisor(a, x) != 1)
+                {
+                    continue;
+                }
+
+                long inverse = LittlePandaPower.Solve(a, -3, x);
+                Assert.Equal(1 % x, inverse * LittlePandaPower.Solve(a, 3, x) % x);
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(5L, 7L, "NO")]
+    [InlineData(4L, 7L, "YES")]
+    [InlineData(0L, 7L, "YES")]
+    [InlineData(1L, 2L, "YES")]
+    public void EulersCriterion_Samples(long a, long m, string expected) =>
+        Assert.Equal(expected, EulersCriterion.Solve(a, m));
+
+    [Fact]
+    public void EulersCriterion_MatchesSquaresModP()
+    {
+        foreach (long p in new long[] { 3, 5, 7, 11, 13, 101 })
+        {
+            var squares = Enumerable.Range(0, (int)p).Select(x => (long)x * x % p).ToHashSet();
+            for (long a = 0; a < p; a++)
+            {
+                Assert.Equal(squares.Contains(a) ? "YES" : "NO", EulersCriterion.Solve(a, p));
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(7L, new[] { 3L, 2L })]
+    [InlineData(13L, new[] { 2L, 4L })]
+    [InlineData(23L, new[] { 5L, 10L })]
+    public void PrimitiveProblem_Samples(long p, long[] expected) =>
+        Assert.Equal(expected, PrimitiveProblem.Solve(p));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3 }, new[] { 1L, 2L, 6L, 3L })]
+    [InlineData(new[] { 5, 10 }, new[] { 5L, 10L, 10L })]
+    public void JohnAndGcdList_Samples(int[] a, long[] expected) =>
+        Assert.Equal(expected, JohnAndGcdList.Solve(a));
+
+    [Theory]
+    [InlineData(5L, new[] { 2L, 6L, 4L }, 4L)]
+    [InlineData(10L, new[] { 15L, 45L }, 10L)]
+    [InlineData(20L, new[] { 7L, 14L }, 14L)]
+    public void EasyGcd_Samples(long k, long[] a, long expected) =>
+        Assert.Equal(expected, EasyGcd.Solve(k, a));
+
+    [Fact]
+    public void PointsOnALine_Samples()
+    {
+        Assert.Equal("YES", PointsOnALine.Solve([[1, 1], [2, 1], [3, 1]]));
+        Assert.Equal("YES", PointsOnALine.Solve([[4, 1], [4, -2], [4, 9]]));
+        Assert.Equal("NO", PointsOnALine.Solve([[1, 1], [2, 2]]));
+    }
+
+    [Fact]
+    public void PolarAngles_SortsByAngleThenDistance()
+    {
+        int[][] expected = [[1, 0], [1, 1], [2, 2], [0, 1], [-1, 0], [0, -1], [3, -1]];
+        Assert.Equal(expected, PolarAngles.Solve([[0, -1], [2, 2], [-1, 0], [3, -1], [0, 1], [1, 1], [1, 0]]));
+    }
+
+    [Fact]
+    public void TriangleNumbers_MatchesBuiltTriangle()
+    {
+        var row = new[] { 1 };
+        for (int n = 1; n <= 80; n++)
+        {
+            int index = Array.FindIndex(row, v => v % 2 == 0);
+            Assert.Equal(index < 0 ? -1 : index + 1, TriangleNumbers.Solve(n));
+
+            var next = new int[row.Length + 2];
+            for (int j = 0; j < next.Length; j++)
+            {
+                int Above(int i) => i >= 0 && i < row.Length ? row[i] : 0;
+                next[j] = (Above(j - 2) + Above(j - 1) + Above(j)) % 2;
+            }
+
+            row = next;
+        }
+    }
+
+    [Theory]
+    [InlineData(2L, 0L, 9L, 1000L, new[] { 512L, 0L })]
+    [InlineData(0L, 1L, 5L, 10L, new[] { 0L, 1L })]
+    [InlineData(8L, 2L, 10L, 1_000_000_000L, new[] { 880_332_800L, 927_506_432L })]
+    public void RussianPeasantExponentiation_Samples(long a, long b, long k, long m, long[] expected) =>
+        Assert.Equal(expected, RussianPeasantExponentiation.Solve(a, b, k, m));
+
+    [Fact]
+    public void RussianPeasantExponentiation_MatchesRepeatedMultiplication()
+    {
+        const long m = 999_999_937;
+        long re = 1, im = 0;
+
+        for (long k = 1; k <= 200; k++)
+        {
+            (re, im) = ((re * 12345 - im * 6789 % m + m) % m, (re * 6789 + im * 12345) % m);
+            Assert.Equal([re, im], RussianPeasantExponentiation.Solve(12345, 6789, k, m));
+        }
+    }
+
+    [Theory]
+    [InlineData(378, 1)]
+    [InlineData(4, 1)]
+    [InlineData(22, 1)]
+    [InlineData(4_937_775, 1)]
+    [InlineData(10, 0)]
+    [InlineData(7, 0)]
+    public void SmithNumbers_Samples(int n, int expected) =>
+        Assert.Equal(expected, SmithNumbers.Solve(n));
 }

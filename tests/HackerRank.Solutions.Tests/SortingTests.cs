@@ -117,4 +117,17 @@ public class SortingTests
     [InlineData(new[] { 7 }, 0L)]
     public void InsertionSortAdvancedAnalysis_Samples(int[] arr, long expected) =>
         Assert.Equal(expected, InsertionSortAdvancedAnalysis.Solve(arr));
+
+    [Fact]
+    public void BubbleSort_Samples()
+    {
+        Assert.Equal(["Array is sorted in 3 swaps.", "First Element: 1", "Last Element: 3"], BubbleSort.Solve([3, 2, 1]));
+        Assert.Equal(["Array is sorted in 0 swaps.", "First Element: 1", "Last Element: 3"], BubbleSort.Solve([1, 2, 3]));
+    }
+
+    [Fact]
+    public void Comparator_SortsByScoreThenName() =>
+        Assert.Equal(
+            [("aleksa", 150), ("amy", 100), ("david", 100), ("aakansha", 75), ("heraldo", 50)],
+            Comparator.Solve([("amy", 100), ("david", 100), ("heraldo", 50), ("aakansha", 75), ("aleksa", 150)]));
 }

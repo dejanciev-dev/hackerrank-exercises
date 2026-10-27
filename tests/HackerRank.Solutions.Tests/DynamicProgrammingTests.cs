@@ -204,4 +204,81 @@ public class DynamicProgrammingTests
     [InlineData("aaaa", 4L)]
     public void PlayWithWords_Samples(string s, long expected) =>
         Assert.Equal(expected, PlayWithWords.Solve(s));
+
+    [Fact]
+    public void KingdomDivision_Sample() =>
+        Assert.Equal(4L, KingdomDivision.Solve(5, [[1, 2], [1, 3], [3, 4], [3, 5]]));
+
+    [Fact]
+    public void KingdomDivision_MatchesBruteForce()
+    {
+        var random = new Random(9);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            int n = random.Next(2, 11);
+            var roads = Enumerable.Range(2, n - 1).Select(v => new[] { random.Next(1, v), v }).ToArray();
+
+            long expected = 0;
+            for (int mask = 0; mask < 1 << n; mask++)
+            {
+                bool Colour(int city) => (mask & (1 << (city - 1))) != 0;
+                bool valid = Enumerable.Range(1, n).All(city =>
+                    roads.Any(r => (r[0] == city && Colour(r[1]) == Colour(city)) || (r[1] == city && Colour(r[0]) == Colour(city))));
+
+                if (valid)
+                {
+                    expected++;
+                }
+            }
+
+            Assert.Equal(expected, KingdomDivision.Solve(n, roads));
+        }
+    }
+
+    [Theory]
+    [InlineData(3, new[] { 10L, 100L, 300L, 200L, 1000L, 20L, 30L }, 40L)]
+    [InlineData(4, new[] { 1L, 2L, 3L, 4L, 10L, 20L, 30L, 40L, 100L, 200L }, 10L)]
+    [InlineData(2, new[] { 1_000_000_000L, 0L, 999_999_999L }, 1L)]
+    public void AngryChildren2_Samples(int k, long[] packets, long expected) =>
+        Assert.Equal(expected, AngryChildren2.Solve(k, packets));
+
+    [Fact]
+    public void AngryChildren2_MatchesBruteForce()
+    {
+        var random = new Random(13);
+        for (int trial = 0; trial < 100; trial++)
+        {
+            var packets = Enumerable.Range(0, random.Next(2, 9)).Select(_ => (long)random.Next(0, 100)).ToArray();
+            int k = random.Next(2, packets.Length + 1);
+            var sorted = packets.Order().ToArray();
+
+            long expected = Enumerable.Range(0, sorted.Length - k + 1).Min(l =>
+            {
+                var window = sorted.Skip(l).Take(k).ToArray();
+                return window.SelectMany((a, i) => window.Skip(i + 1).Select(b => b - a)).Sum();
+            });
+
+            Assert.Equal(expected, AngryChildren2.Solve(k, packets));
+        }
+    }
+
+    [Fact]
+    public void MrKMarsh_Samples()
+    {
+        Assert.Equal("14", MrKMarsh.Solve([".....", ".x.x.", ".....", "....."]));
+        Assert.Equal("impossible", MrKMarsh.Solve([".x", "x."]));
+        Assert.Equal("4", MrKMarsh.Solve(["..", ".."]));
+    }
+
+    [Fact]
+    public void MrKMarsh_SidesMayEncloseMarsh() =>
+        Assert.Equal("8", MrKMarsh.Solve(["...", ".x.", "..."]));
+
+    [Theory]
+    [InlineData(4, new[] { 1, 2, 3 }, "YES")]
+    [InlineData(2, new[] { 1, 2, 3 }, "NO")]
+    [InlineData(5, new[] { 4, 4, 2 }, "NO")]
+    [InlineData(6, new[] { 4, 4, 2 }, "YES")]
+    public void TheIndianJob_Samples(int g, int[] a, string expected) =>
+        Assert.Equal(expected, TheIndianJob.Solve(g, a));
 }

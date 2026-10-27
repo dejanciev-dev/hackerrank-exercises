@@ -147,4 +147,56 @@ public class GraphTheoryTests
         Assert.Equal(-1, FindTheNearestClone.Solve(4, [1, 1, 4], [2, 3, 2], [1, 2, 3, 4], 2));
         Assert.Equal(3, FindTheNearestClone.Solve(5, [1, 1, 2, 3], [2, 3, 4, 5], [1, 2, 3, 3, 2], 2));
     }
+
+    [Fact]
+    public void KingdomConnectivity_Samples()
+    {
+        Assert.Equal("2", KingdomConnectivity.Solve(5, [[1, 2], [2, 4], [2, 3], [3, 4], [4, 5]]));
+        Assert.Equal("INFINITE PATHS", KingdomConnectivity.Solve(5, [[1, 2], [2, 4], [2, 3], [3, 4], [4, 5], [4, 2]]));
+    }
+
+    [Fact]
+    public void KingdomConnectivity_IgnoresCyclesOffEveryRoute()
+    {
+        Assert.Equal("1", KingdomConnectivity.Solve(4, [[1, 4], [2, 3], [3, 2]]));
+        Assert.Equal("1", KingdomConnectivity.Solve(3, [[1, 3], [3, 2], [2, 2]]));
+        Assert.Equal("0", KingdomConnectivity.Solve(3, [[1, 2]]));
+        Assert.Equal("2", KingdomConnectivity.Solve(2, [[1, 2], [1, 2]]));
+    }
+
+    [Fact]
+    public void SynchronousShopping_Sample() =>
+        Assert.Equal(30, SynchronousShopping.Solve(
+            5, 5, [[1], [2], [3], [4], [5]], [[1, 2, 10], [1, 3, 10], [2, 4, 10], [3, 5, 10], [4, 5, 10]]));
+
+    [Fact]
+    public void SynchronousShopping_OneCatCanDoEverything() =>
+        Assert.Equal(7, SynchronousShopping.Solve(3, 2, [[], [1, 2], []], [[1, 2, 3], [2, 3, 4], [1, 3, 1]]));
+
+    [Fact]
+    public void TheStoryOfATree_Samples()
+    {
+        int[][] edges = [[1, 2], [1, 3], [3, 4]];
+        int[][] guesses = [[1, 2], [3, 4]];
+
+        Assert.Equal("1/2", TheStoryOfATree.Solve(4, edges, guesses, 2));
+        Assert.Equal("1/1", TheStoryOfATree.Solve(4, edges, guesses, 1));
+        Assert.Equal("0/1", TheStoryOfATree.Solve(4, edges, guesses, 3));
+    }
+
+    [Fact]
+    public void JeaniesRoute_Sample() =>
+        Assert.Equal(6L, JeaniesRoute.Solve(5, [1, 3, 4], [[1, 2, 1], [2, 3, 2], [2, 4, 2], [3, 5, 3]]));
+
+    [Fact]
+    public void JeaniesRoute_SingleCityNeedsNoTravel() =>
+        Assert.Equal(0L, JeaniesRoute.Solve(3, [2], [[1, 2, 5], [2, 3, 5]]));
+
+    [Theory]
+    [InlineData(3, 2L, 2)]
+    [InlineData(4, 6L, 4)]
+    [InlineData(5, 7L, 3)]
+    [InlineData(10_000, 1L, 2)]
+    public void Clique_Samples(int n, long m, int expected) =>
+        Assert.Equal(expected, Clique.Solve(n, m));
 }
