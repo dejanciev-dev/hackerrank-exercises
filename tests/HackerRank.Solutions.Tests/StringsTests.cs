@@ -210,4 +210,32 @@ public class StringsTests
     [InlineData("AAAAAAAA", 6)]
     public void BearAndSteadyGene_Samples(string gene, int expected) =>
         Assert.Equal(expected, BearAndSteadyGene.Solve(gene));
+
+    [Theory]
+    [InlineData("JACK", "DANIEL", "DAJACKNIEL")]
+    [InlineData("ABACABA", "ABACABA", "AABABACABACABA")]
+    [InlineData("BA", "B", "BAB")]
+    [InlineData("A", "", "A")]
+    public void MorganAndAString_Samples(string a, string b, string expected) =>
+        Assert.Equal(expected, MorganAndAString.Solve(a, b));
+
+    [Theory]
+    [InlineData("ababaa", 11L)]
+    [InlineData("aa", 3L)]
+    [InlineData("abc", 3L)]
+    public void StringSimilarity_Samples(string s, long expected) =>
+        Assert.Equal(expected, StringSimilarity.Solve(s));
+
+    [Fact]
+    public void MaximumPalindromes_Samples()
+    {
+        Assert.Equal([2L, 1L], MaximumPalindromes.Solve("week", [[1, 4], [2, 3]]));
+        Assert.Equal([2L], MaximumPalindromes.Solve("abab", [[1, 4]]));
+        Assert.Equal([2L], MaximumPalindromes.Solve("madamimadam", [[4, 7]]));
+    }
+
+    [Fact]
+    public void MaximumPalindromes_CountsArrangementsOfPairs() =>
+        // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.
+        Assert.Equal([6L], MaximumPalindromes.Solve("aabbccd", [[1, 7]]));
 }

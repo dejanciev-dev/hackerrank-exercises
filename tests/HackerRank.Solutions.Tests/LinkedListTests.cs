@@ -82,4 +82,26 @@ public class LinkedListTests
     [InlineData(new[] { 1 }, new[] { 1 })]
     public void DeleteDuplicateValueNodes_Samples(int[] values, int[] expected) =>
         Assert.Equal(expected, Build.ToArray(DeleteDuplicateValueNodes.Solve(Build.List(values))));
+
+    [Theory]
+    [InlineData(new[] { 3, 2, 1 }, 2, 3)]
+    [InlineData(new[] { 3, 2, 1 }, 0, 1)]
+    [InlineData(new[] { 1 }, 0, 1)]
+    public void GetNodeValue_Samples(int[] values, int positionFromTail, int expected) =>
+        Assert.Equal(expected, GetNodeValue.Solve(Build.List(values)!, positionFromTail));
+
+    [Theory]
+    [InlineData(new[] { 1, 2 }, new[] { 1 }, false)]
+    [InlineData(new[] { 1, 2 }, new[] { 1, 2 }, true)]
+    [InlineData(new[] { 1, 2 }, new[] { 1, 3 }, false)]
+    [InlineData(new int[0], new int[0], true)]
+    public void CompareTwoLinkedLists_Samples(int[] first, int[] second, bool expected) =>
+        Assert.Equal(expected, CompareTwoLinkedLists.Solve(Build.List(first), Build.List(second)));
+
+    [Theory]
+    [InlineData(new[] { 20, 6, 2, 19, 7, 4, 15, 9 }, 3, new[] { 20, 6, 2, 7, 4, 15, 9 })]
+    [InlineData(new[] { 1, 2, 3 }, 0, new[] { 2, 3 })]
+    [InlineData(new[] { 1, 2, 3 }, 2, new[] { 1, 2 })]
+    public void DeleteNode_Samples(int[] values, int position, int[] expected) =>
+        Assert.Equal(expected, Build.ToArray(DeleteNode.Solve(Build.List(values)!, position)));
 }

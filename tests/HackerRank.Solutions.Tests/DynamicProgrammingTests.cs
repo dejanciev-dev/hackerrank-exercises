@@ -82,4 +82,44 @@ public class DynamicProgrammingTests
     [InlineData(5, new[] { 6 }, 0)]
     public void Knapsack_Samples(int k, int[] arr, int expected) =>
         Assert.Equal(expected, Knapsack.Solve(k, arr));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4 }, new[] { 10L, 10L })]
+    [InlineData(new[] { 2, -1, 2, 3, 4, -5 }, new[] { 10L, 11L })]
+    [InlineData(new[] { -2, -3, -1, -4, -6 }, new[] { -1L, -1L })]
+    [InlineData(new[] { -1, 0, -2 }, new[] { 0L, 0L })]
+    public void MaximumSubarray_Samples(int[] arr, long[] expected) =>
+        Assert.Equal(expected, MaximumSubarray.Solve(arr));
+
+    [Theory]
+    [InlineData(1, 0)]
+    [InlineData(4, 1)]
+    [InlineData(7, 3)]
+    [InlineData(40, 19385)]
+    public void RedJohnIsBack_Samples(int n, int expected) =>
+        Assert.Equal(expected, RedJohnIsBack.Solve(n));
+
+    [Theory]
+    [InlineData(4, 3, 2, 3L)]
+    [InlineData(761, 99, 1, 236568308L)]
+    [InlineData(3, 2, 1, 1L)]
+    [InlineData(3, 2, 2, 0L)]
+    public void ConstructTheArray_Samples(int n, int k, int x, long expected) =>
+        Assert.Equal(expected, ConstructTheArray.Solve(n, k, x));
+
+    [Theory]
+    [InlineData(new[] { 3, 2, 2 }, 10L)]
+    [InlineData(new[] { 3, 2, 5 }, 16L)]
+    [InlineData(new[] { 100 }, 100L)]
+    public void MandragoraForest_Samples(int[] h, long expected) =>
+        Assert.Equal(expected, MandragoraForest.Solve(h));
+
+    [Theory]
+    [InlineData(2, 2, 3L)]
+    [InlineData(3, 2, 7L)]
+    [InlineData(2, 3, 9L)]
+    [InlineData(4, 4, 3375L)]
+    [InlineData(1, 5, 0L)]
+    public void LegoBlocks_Samples(int n, int m, long expected) =>
+        Assert.Equal(expected, LegoBlocks.Solve(n, m));
 }

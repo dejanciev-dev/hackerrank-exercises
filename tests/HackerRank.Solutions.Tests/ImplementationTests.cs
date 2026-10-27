@@ -477,4 +477,48 @@ public class ImplementationTests
     [InlineData(12, 59, "one minute to one")]
     public void TheTimeInWords_Samples(int h, int m, string expected) =>
         Assert.Equal(expected, TheTimeInWords.Solve(h, m));
+
+    private static readonly string[] BombermanGrid =
+        [".......", "...O...", "....O..", ".......", "OO.....", "OO....."];
+
+    [Fact]
+    public void TheBombermanGame_Sample() =>
+        Assert.Equal(
+            ["OOO.OOO", "OO...OO", "OOO...O", "..OO.OO", "...OOOO", "...OOOO"],
+            TheBombermanGame.Solve(3, BombermanGrid));
+
+    [Fact]
+    public void TheBombermanGame_FirstSecondsAndPeriod()
+    {
+        Assert.Equal(BombermanGrid, TheBombermanGame.Solve(1, BombermanGrid));
+        Assert.All(TheBombermanGame.Solve(2, BombermanGrid), row => Assert.Equal("OOOOOOO", row));
+        Assert.Equal(TheBombermanGame.Solve(3, BombermanGrid), TheBombermanGame.Solve(7, BombermanGrid));
+        Assert.Equal(TheBombermanGame.Solve(5, BombermanGrid), TheBombermanGame.Solve(1_000_000_001, BombermanGrid));
+    }
+
+    [Fact]
+    public void EmasSupercomputer_Samples()
+    {
+        Assert.Equal(5, EmasSupercomputer.Solve(["GGGGGG", "GBBBGB", "GGGGGG", "GGBBGB", "GGGGGG"]));
+        Assert.Equal(25, EmasSupercomputer.Solve(["BGBBGB", "GGGGGG", "BGBBGB", "GGGGGG", "BGBBGB", "BGBBGB"]));
+    }
+
+    [Fact]
+    public void MatrixLayerRotation_Samples()
+    {
+        int[][] square = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]];
+        int[][] squareRotated = [[3, 4, 8, 12], [2, 11, 10, 16], [1, 7, 6, 15], [5, 9, 13, 14]];
+        Assert.Equal(squareRotated, MatrixLayerRotation.Solve(square, 2));
+
+        int[][] tall = [[1, 2, 3, 4], [7, 8, 9, 10], [13, 14, 15, 16], [19, 20, 21, 22], [25, 26, 27, 28]];
+        int[][] tallRotated = [[28, 27, 26, 25], [22, 9, 15, 19], [16, 8, 21, 13], [10, 14, 20, 7], [4, 3, 2, 1]];
+        Assert.Equal(tallRotated, MatrixLayerRotation.Solve(tall, 7));
+    }
+
+    [Fact]
+    public void MatrixLayerRotation_FullTurnIsIdentity()
+    {
+        int[][] matrix = [[1, 2], [3, 4]];
+        Assert.Equal(matrix, MatrixLayerRotation.Solve(matrix, 4_000_000));
+    }
 }

@@ -72,4 +72,58 @@ public class SearchTests
     [InlineData(5, new[] { 1 }, 1)]
     public void HackerlandRadioTransmitters_Samples(int k, int[] x, int expected) =>
         Assert.Equal(expected, HackerlandRadioTransmitters.Solve(k, x));
+
+    [Theory]
+    [InlineData(new[] { 3L, 3L, 9L, 9L, 5L }, 7L, 6L)]
+    [InlineData(new[] { 1L, 2L, 3L }, 2L, 1L)]
+    [InlineData(new[] { 1L, 5L, 9L }, 5L, 4L)]
+    public void MaximumSubarraySum_Samples(long[] a, long m, long expected) =>
+        Assert.Equal(expected, MaximumSubarraySum.Solve(a, m));
+
+    [Fact]
+    public void CountLuck_Samples()
+    {
+        Assert.Equal("Impressed", CountLuck.Solve(["*.M", ".X."], 1));
+
+        string[] forest = [".X.X......X", ".X*.X.XXX.X", ".XX.X.XM...", "......XXXX."];
+        Assert.Equal("Impressed", CountLuck.Solve(forest, 3));
+        Assert.Equal("Oops!", CountLuck.Solve(forest, 4));
+    }
+
+    [Fact]
+    public void GridlandMetro_MergesOverlappingTracks()
+    {
+        Assert.Equal(9L, GridlandMetro.Solve(4, 4, [[2, 2, 3], [3, 1, 4], [4, 4, 4]]));
+        Assert.Equal(5L, GridlandMetro.Solve(2, 4, [[1, 1, 2], [1, 2, 3], [1, 2, 2]]));
+    }
+
+    [Fact]
+    public void GridlandMetro_HandlesHugeGrid() =>
+        Assert.Equal(999_999_999_000_000_000L, GridlandMetro.Solve(1_000_000_000, 1_000_000_000, [[1, 1, 1_000_000_000]]));
+
+    [Fact]
+    public void KnightLOnAChessboard_Sample()
+    {
+        int[][] expected =
+        [
+            [4, 4, 2, 8],
+            [4, 2, 4, 4],
+            [2, 4, -1, -1],
+            [8, 4, -1, 1],
+        ];
+
+        Assert.Equal(expected, KnightLOnAChessboard.Solve(5));
+    }
+
+    [Fact]
+    public void CutTheTree_Sample() =>
+        Assert.Equal(400, CutTheTree.Solve([100, 200, 100, 500, 100, 600], [[1, 2], [2, 3], [2, 5], [4, 5], [5, 6]]));
+
+    [Theory]
+    [InlineData(new[] { 1L, 2L, 2L, 4L }, 2L, 2L)]
+    [InlineData(new[] { 1L, 3L, 9L, 9L, 27L, 81L }, 3L, 6L)]
+    [InlineData(new[] { 1L, 5L, 5L, 25L, 125L }, 5L, 4L)]
+    [InlineData(new[] { 1L, 1L, 1L, 1L }, 1L, 4L)]
+    public void CountTriplets_Samples(long[] arr, long r, long expected) =>
+        Assert.Equal(expected, CountTriplets.Solve(arr, r));
 }

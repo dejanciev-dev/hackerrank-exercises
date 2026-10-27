@@ -63,4 +63,55 @@ public class BitManipulationTests
     [InlineData(17L, 23L, 16L)]
     public void AndProduct_Samples(long a, long b, long expected) =>
         Assert.Equal(expected, AndProduct.Solve(a, b));
+
+    [Theory]
+    [InlineData(2L, 4L, 7L)]
+    [InlineData(2L, 8L, 9L)]
+    [InlineData(5L, 9L, 15L)]
+    [InlineData(3L, 5L, 5L)]
+    [InlineData(0L, 0L, 0L)]
+    public void XorSequence_Samples(long l, long r, long expected) =>
+        Assert.Equal(expected, XorSequence.Solve(l, r));
+
+    [Fact]
+    public void XorSequence_MatchesBruteForce()
+    {
+        var a = new long[64];
+        for (int i = 1; i < a.Length; i++)
+        {
+            a[i] = a[i - 1] ^ i;
+        }
+
+        for (int l = 0; l < a.Length; l++)
+        {
+            long expected = 0;
+            for (int r = l; r < a.Length; r++)
+            {
+                expected ^= a[r];
+                Assert.Equal(expected, XorSequence.Solve(l, r));
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData(7, 4, "1110100110", "1001010")]
+    [InlineData(6, 2, "1110001", "101111")]
+    [InlineData(1, 1, "1", "1")]
+    public void Cipher_Samples(int n, int k, string s, string expected) =>
+        Assert.Equal(expected, Cipher.Solve(n, k, s));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4 }, 5)]
+    [InlineData(new[] { 1, 2, 3 }, 2)]
+    [InlineData(new[] { 7, 7, 7 }, 0)]
+    public void YetAnotherMinimax_Samples(int[] a, int expected) =>
+        Assert.Equal(expected, YetAnotherMinimax.Solve(a));
+
+    [Fact]
+    public void WinningLotteryTicket_Sample() =>
+        Assert.Equal(5L, WinningLotteryTicket.Solve(["129300455", "5559948277", "012334556", "56789", "123456879"]));
+
+    [Fact]
+    public void WinningLotteryTicket_PairsCompleteTicketsWithEachOther() =>
+        Assert.Equal(3L, WinningLotteryTicket.Solve(["0123456789", "9876543210", "1023456789"]));
 }

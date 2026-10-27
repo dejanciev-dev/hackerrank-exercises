@@ -72,4 +72,49 @@ public class SortingTests
     [InlineData(6, new[] { 1, 4, 5, 7, 9, 12 }, -1)]
     public void IntroToTutorialChallenges_Samples(int v, int[] arr, int expected) =>
         Assert.Equal(expected, IntroToTutorialChallenges.Solve(v, arr));
+
+    [Fact]
+    public void InsertionSort1_PrintsEachShift() =>
+        Assert.Equal(
+            ["2 4 6 8 8", "2 4 6 6 8", "2 4 4 6 8", "2 3 4 6 8"],
+            InsertionSort1.Solve([2, 4, 6, 8, 3]));
+
+    [Fact]
+    public void InsertionSort1_InsertsAtFront() =>
+        Assert.Equal(["2 2", "1 2"], InsertionSort1.Solve([2, 1]));
+
+    [Fact]
+    public void InsertionSort2_PrintsEachPass() =>
+        Assert.Equal(
+            ["1 4 3 5 6 2", "1 3 4 5 6 2", "1 3 4 5 6 2", "1 3 4 5 6 2", "1 2 3 4 5 6"],
+            InsertionSort2.Solve([1, 4, 3, 5, 6, 2]));
+
+    [Fact]
+    public void CountingSort2_Sorts()
+    {
+        int[] arr = [63, 25, 73, 1, 98, 73, 56, 84, 86, 57, 16, 83, 8, 25, 81, 56, 9, 53, 98, 67, 99, 12, 0, 99];
+        Assert.Equal(arr.Order(), CountingSort2.Solve(arr));
+    }
+
+    [Fact]
+    public void TheFullCountingSort_Sample()
+    {
+        string[][] arr =
+        [
+            ["0", "ab"], ["6", "cd"], ["0", "ef"], ["6", "gh"], ["4", "ij"],
+            ["0", "ab"], ["6", "cd"], ["0", "ef"], ["6", "gh"], ["0", "ij"],
+            ["4", "that"], ["3", "be"], ["0", "to"], ["1", "be"], ["5", "question"],
+            ["1", "or"], ["2", "not"], ["4", "is"], ["2", "to"], ["4", "the"],
+        ];
+
+        Assert.Equal("- - - - - to be or not to be - that is the question - - - -", TheFullCountingSort.Solve(arr));
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 1, 1, 2, 2 }, 0L)]
+    [InlineData(new[] { 2, 1, 3, 1, 2 }, 4L)]
+    [InlineData(new[] { 5, 4, 3, 2, 1 }, 10L)]
+    [InlineData(new[] { 7 }, 0L)]
+    public void InsertionSortAdvancedAnalysis_Samples(int[] arr, long expected) =>
+        Assert.Equal(expected, InsertionSortAdvancedAnalysis.Solve(arr));
 }

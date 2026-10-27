@@ -142,4 +142,76 @@ public class DataStructuresTests
         int[][] third = [[2, 6, 8], [3, 5, 7], [1, 8, 1], [5, 9, 15]];
         Assert.Equal(31L, ArrayManipulation.Solve(10, third));
     }
+
+    [Theory]
+    [InlineData(new[] { 6, 5, 8, 4, 7, 10, 9 }, 2)]
+    [InlineData(new[] { 3, 6, 2, 7, 5 }, 2)]
+    [InlineData(new[] { 4, 3, 7, 5, 6, 4, 2 }, 3)]
+    [InlineData(new[] { 5, 4, 3 }, 0)]
+    public void PoisonousPlants_Samples(int[] p, int expected) =>
+        Assert.Equal(expected, PoisonousPlants.Solve(p));
+
+    [Theory]
+    [InlineData(new[] { 3, 4, 7, 6, 5 }, 1, new[] { 4, 6, 3, 7, 5 })]
+    [InlineData(new[] { 3, 3, 4, 4, 9 }, 2, new[] { 4, 4, 9, 3, 3 })]
+    [InlineData(new[] { 2, 3, 4, 5, 6, 7 }, 3, new[] { 2, 4, 6, 3, 5, 7 })]
+    public void Waiter_Samples(int[] number, int q, int[] expected) =>
+        Assert.Equal(expected, Waiter.Solve(number, q));
+
+    [Theory]
+    [InlineData(new[] { 9, 6, 3, 5, 2 }, 15)]
+    [InlineData(new[] { 1, 2 }, 3)]
+    public void AndXorOr_Samples(int[] a, int expected) =>
+        Assert.Equal(expected, AndXorOr.Solve(a));
+
+    [Theory]
+    [InlineData(0, 0)]
+    [InlineData(1, 1)]
+    [InlineData(2, 2)]
+    [InlineData(3, 3)]
+    [InlineData(4, 3)]
+    public void DownToZeroII_Samples(int n, int expected) =>
+        Assert.Equal(expected, DownToZeroII.Solve(n));
+
+    [Fact]
+    public void CastleOnTheGrid_Samples()
+    {
+        Assert.Equal(3, CastleOnTheGrid.Solve([".X.", ".X.", "..."], 0, 0, 0, 2));
+        Assert.Equal(2, CastleOnTheGrid.Solve(["...", ".X.", "..."], 0, 0, 1, 2));
+        Assert.Equal(0, CastleOnTheGrid.Solve(["."], 0, 0, 0, 0));
+    }
+
+    [Fact]
+    public void SwapNodes_Samples()
+    {
+        Assert.Equal([[3, 1, 2], [2, 1, 3]], SwapNodes.Solve([[2, 3], [-1, -1], [-1, -1]], [1, 1]));
+        Assert.Equal([[4, 2, 1, 5, 3]], SwapNodes.Solve([[2, 3], [-1, 4], [-1, 5], [-1, -1], [-1, -1]], [2]));
+    }
+
+    [Fact]
+    public void FindTheRunningMedian_Sample() =>
+        Assert.Equal([12.0, 8.0, 5.0, 4.5, 5.0, 6.0], FindTheRunningMedian.Solve([12, 4, 5, 3, 8, 7]));
+
+    [Fact]
+    public void MinimumAverageWaitingTime_Samples()
+    {
+        Assert.Equal(9L, MinimumAverageWaitingTime.Solve([[0, 3], [1, 9], [2, 6]]));
+        Assert.Equal(8L, MinimumAverageWaitingTime.Solve([[0, 3], [1, 9], [2, 5]]));
+    }
+
+    [Fact]
+    public void MinimumAverageWaitingTime_WaitsForLateArrival() =>
+        Assert.Equal(2L, MinimumAverageWaitingTime.Solve([[10, 2], [0, 2]]));
+
+    [Fact]
+    public void NoPrefixSet_Samples()
+    {
+        Assert.Equal(["BAD SET", "aabcde"], NoPrefixSet.Solve(["aab", "defgab", "abcde", "aabcde", "bbbbbbbbbb", "jabjjjad"]));
+        Assert.Equal(["BAD SET", "aacghgh"], NoPrefixSet.Solve(["aab", "aac", "aacghgh", "aabghgh"]));
+        Assert.Equal(["GOOD SET"], NoPrefixSet.Solve(["aab", "aac", "b"]));
+    }
+
+    [Fact]
+    public void NoPrefixSet_FlagsWordThatIsPrefixOfEarlierOne() =>
+        Assert.Equal(["BAD SET", "ab"], NoPrefixSet.Solve(["abc", "ab"]));
 }

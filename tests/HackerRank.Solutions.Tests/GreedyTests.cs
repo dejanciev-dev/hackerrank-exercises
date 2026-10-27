@@ -107,4 +107,43 @@ public class GreedyTests
     [InlineData(new[] { 1, 6, 4 }, 3L)]
     public void ChiefHopper_Samples(int[] arr, long expected) =>
         Assert.Equal(expected, ChiefHopper.Solve(arr));
+
+    [Theory]
+    [InlineData(2, new[] { 0, 1, 1, 1, 1, 0 }, 2)]
+    [InlineData(3, new[] { 0, 1, 0, 0, 0, 1, 0, 0, 0, 1 }, 3)]
+    [InlineData(1, new[] { 0, 1 }, -1)]
+    [InlineData(2, new[] { 1, 0, 0, 0, 1 }, -1)]
+    public void GoodlandElectricity_Samples(int k, int[] arr, int expected) =>
+        Assert.Equal(expected, GoodlandElectricity.Solve(k, arr));
+
+    [Theory]
+    [InlineData(new[] { 2L }, new[] { 1L }, 4L)]
+    [InlineData(new[] { 2L, 1L, 3L, 1L, 4L }, new[] { 4L, 1L, 2L }, 42L)]
+    public void CuttingBoards_Samples(long[] costY, long[] costX, long expected) =>
+        Assert.Equal(expected, CuttingBoards.Solve(costY, costX));
+
+    [Fact]
+    public void CuttingBoards_ReducesModulo() =>
+        Assert.Equal(999_999_972L, CuttingBoards.Solve([1_000_000_000L, 1_000_000_000L], [1_000_000_000L]));
+
+    [Theory]
+    [InlineData("eggegg", "egg")]
+    [InlineData("abcdefgabcdefg", "agfedcb")]
+    [InlineData("aeiouuoiea", "aeiou")]
+    public void ReverseShuffleMerge_Samples(string s, string expected) =>
+        Assert.Equal(expected, ReverseShuffleMerge.Solve(s));
+
+    [Fact]
+    public void FlippingTheMatrix_Samples()
+    {
+        Assert.Equal(414, FlippingTheMatrix.Solve([[112, 42, 83, 119], [56, 125, 56, 49], [15, 78, 101, 43], [62, 98, 114, 108]]));
+        Assert.Equal(4, FlippingTheMatrix.Solve([[1, 2], [3, 4]]));
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 1, 1, 3, 3 }, new[] { 1, 3, 3 })]
+    [InlineData(new[] { 1, 2, 3 }, new[] { -1 })]
+    [InlineData(new[] { 1, 1, 1, 2, 3, 5 }, new[] { 1, 1, 1 })]
+    public void MaximumPerimeterTriangle_Samples(int[] sticks, int[] expected) =>
+        Assert.Equal(expected, MaximumPerimeterTriangle.Solve(sticks));
 }

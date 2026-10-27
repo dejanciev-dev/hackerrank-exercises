@@ -65,4 +65,11 @@ public class TreeTests
         var root = new Node(2) { Right = new Node(2) };
         Assert.False(IsBinarySearchTree.Solve(root));
     }
+
+    [Fact]
+    public void TopView_ShowsTopmostNodePerColumn()
+    {
+        Assert.Equal([1, 2, 5, 6], TopView.Solve(Build.Bst(1, 2, 5, 3, 6, 4)));
+        Assert.Equal([1, 2, 4, 6, 7], TopView.Solve(Build.Bst(4, 2, 6, 1, 3, 5, 7)));
+    }
 }
