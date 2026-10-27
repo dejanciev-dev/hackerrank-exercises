@@ -199,4 +199,100 @@ public class GraphTheoryTests
     [InlineData(10_000, 1L, 2)]
     public void Clique_Samples(int n, long m, int expected) =>
         Assert.Equal(expected, Clique.Solve(n, m));
+
+    [Fact]
+    public void RealEstateBroker_Sample() =>
+        Assert.Equal(2, RealEstateBroker.Solve([[5, 110], [9, 500], [20, 400]], [[10, 100], [2, 200], [30, 300]]));
+
+    [Fact]
+    public void RealEstateBroker_NeedsAugmentingPaths() =>
+        // Client 0 accepts both houses, client 1 only house 0: both sell only if client 0 takes house 1.
+        Assert.Equal(2, RealEstateBroker.Solve([[1, 100], [1, 50]], [[5, 50], [5, 100]]));
+
+    [Theory]
+    [InlineData(new[] { 2, 1 }, 2L)]
+    [InlineData(new[] { 2, 2 }, 4L)]
+    [InlineData(new[] { 4 }, 16L)]
+    [InlineData(new[] { 1 }, 1L)]
+    [InlineData(new[] { 1, 1, 1 }, 3L)]
+    public void BeadOrnaments_Samples(int[] b, long expected) =>
+        Assert.Equal(expected, BeadOrnaments.Solve(b));
+
+    [Theory]
+    [InlineData(2, new[] { 5, 3, 4 }, 2)]
+    [InlineData(1, new[] { 3, 4, 5, 1, 2 }, 1)]
+    [InlineData(10, new[] { 1, 2, 3 }, 3)]
+    public void ProblemSolving_Samples(int k, int[] v, int expected) =>
+        Assert.Equal(expected, ProblemSolving.Solve(k, v));
+
+    [Fact]
+    public void DemandingMoney_Sample() =>
+        Assert.Equal([8L, 2L], DemandingMoney.Solve([6, 8, 2], [[1, 2], [3, 2]]));
+
+    [Fact]
+    public void DemandingMoney_CountsZeroMoneyHousesAsDistinctChoices() =>
+        Assert.Equal([5L, 4L], DemandingMoney.Solve([5, 0, 0], []));
+
+    [Fact]
+    public void DemandingMoney_MatchesBruteForce()
+    {
+        var random = new Random(71);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            int n = random.Next(1, 10);
+            var money = Enumerable.Range(0, n).Select(_ => random.Next(0, 6)).ToArray();
+            var roads = Enumerable.Range(0, random.Next(0, 12))
+                .Select(_ => new[] { random.Next(1, n + 1), random.Next(1, n + 1) })
+                .Where(r => r[0] != r[1])
+                .ToArray();
+
+            long best = -1, ways = 0;
+            for (int mask = 0; mask < 1 << n; mask++)
+            {
+                if (roads.Any(r => (mask & (1 << (r[0] - 1))) != 0 && (mask & (1 << (r[1] - 1))) != 0))
+                {
+                    continue;
+                }
+
+                long total = money.Where((_, i) => (mask & (1 << i)) != 0).Sum();
+                if (total > best) { best = total; ways = 1; }
+                else if (total == best) { ways++; }
+            }
+
+            Assert.Equal([best, ways], DemandingMoney.Solve(money, roads));
+        }
+    }
+
+    [Fact]
+    public void Liars_Samples()
+    {
+        Assert.Equal([1, 2], Liars.Solve(3, [[1, 2, 1], [2, 3, 1]]));
+        Assert.Equal(
+            [13, 14],
+            Liars.Solve(20, [[3, 8, 4], [1, 9, 6], [1, 13, 9], [5, 11, 5], [4, 19, 12], [8, 13, 5], [4, 8, 4], [7, 9, 2], [10, 13, 3], [7, 16, 7], [14, 19, 4]]));
+    }
+
+    [Fact]
+    public void Liars_MatchesBruteForce()
+    {
+        var random = new Random(73);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            int n = random.Next(1, 9);
+            int truth = random.Next(1 << n); // a hidden liar assignment keeps the clues consistent
+            var clues = Enumerable.Range(0, random.Next(1, 5)).Select(_ =>
+            {
+                int a = random.Next(1, n + 1), b = random.Next(a, n + 1);
+                int c = Enumerable.Range(a - 1, b - a + 1).Count(i => (truth & (1 << i)) != 0);
+                return new[] { a, b, c };
+            }).ToArray();
+
+            var counts = Enumerable.Range(0, 1 << n)
+                .Where(mask => clues.All(cl => Enumerable.Range(cl[0] - 1, cl[1] - cl[0] + 1).Count(i => (mask & (1 << i)) != 0) == cl[2]))
+                .Select(mask => System.Numerics.BitOperations.PopCount((uint)mask))
+                .ToArray();
+
+            Assert.Equal([counts.Min(), counts.Max()], Liars.Solve(n, clues));
+        }
+    }
 }

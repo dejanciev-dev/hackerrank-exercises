@@ -282,4 +282,127 @@ public class DataStructuresTests
     [Fact]
     public void KunduAndTree_AllRedCountsEveryTriplet() =>
         Assert.Equal(10L, KunduAndTree.Solve(5, ["1 2 r", "2 3 r", "3 4 r", "4 5 r"]));
+
+    [Fact]
+    public void RansomNote_Samples()
+    {
+        Assert.Equal("Yes", RansomNote.Solve("give me one grand today night".Split(' '), "give one grand today".Split(' ')));
+        Assert.Equal("No", RansomNote.Solve("two times three is not four".Split(' '), "two times two is four".Split(' ')));
+        Assert.Equal("No", RansomNote.Solve("ive got a lovely bunch of coconuts".Split(' '), "ive got some coconuts".Split(' ')));
+        Assert.Equal("No", RansomNote.Solve(["Attack"], ["attack"]));
+    }
+
+    [Fact]
+    public void FrequencyQueries_Samples()
+    {
+        Assert.Equal([0, 1], FrequencyQueries.Solve([[1, 5], [1, 6], [3, 2], [1, 10], [1, 10], [1, 6], [2, 5], [3, 2]]));
+        Assert.Equal([0, 1], FrequencyQueries.Solve([[3, 4], [2, 1003], [1, 16], [3, 1]]));
+        Assert.Equal([0, 1, 1], FrequencyQueries.Solve([[1, 3], [2, 3], [3, 2], [1, 4], [1, 5], [1, 5], [1, 4], [3, 2], [2, 4], [3, 2]]));
+    }
+
+    [Theory]
+    [InlineData(new[] { 2L, 6L, 1L, 12L }, new[] { 12L, 2L, 1L, 1L })]
+    [InlineData(new[] { 1L, 2L, 3L, 5L, 1L, 13L, 3L }, new[] { 13L, 3L, 2L, 1L, 1L, 1L, 1L })]
+    [InlineData(new[] { 3L, 5L, 4L, 7L, 6L, 2L }, new[] { 7L, 6L, 4L, 4L, 3L, 2L })]
+    public void MinMaxRiddle_Samples(long[] arr, long[] expected) =>
+        Assert.Equal(expected, MinMaxRiddle.Solve(arr));
+
+    [Fact]
+    public void MinMaxRiddle_MatchesBruteForce()
+    {
+        var random = new Random(41);
+        for (int trial = 0; trial < 100; trial++)
+        {
+            var arr = Enumerable.Range(0, random.Next(1, 10)).Select(_ => (long)random.Next(0, 20)).ToArray();
+            var expected = Enumerable.Range(1, arr.Length)
+                .Select(w => Enumerable.Range(0, arr.Length - w + 1).Max(s => arr.Skip(s).Take(w).Min()))
+                .ToArray();
+
+            Assert.Equal(expected, MinMaxRiddle.Solve(arr));
+        }
+    }
+
+    [Fact]
+    public void MaxCircle_Sample() =>
+        Assert.Equal([2, 2, 4, 4, 4, 7], MaxCircle.Solve([[1, 2], [3, 4], [1, 3], [5, 7], [5, 6], [7, 4]]));
+
+    [Fact]
+    public void MaxCircle_HandlesLargeIds() =>
+        Assert.Equal([2, 2, 4], MaxCircle.Solve([[1_000_000_000, 1], [5, 6], [6, 1]]));
+
+    [Fact]
+    public void SuperMaximumCostQueries_Sample() =>
+        Assert.Equal(
+            [1L, 3L, 5L, 5L, 10L],
+            SuperMaximumCostQueries.Solve(5, [[1, 2, 3], [1, 4, 2], [2, 5, 6], [3, 4, 1]], [[1, 1], [1, 2], [2, 3], [2, 5], [1, 6]]));
+
+    [Fact]
+    public void SuperMaximumCostQueries_HandlesEqualWeights() =>
+        Assert.Equal([3L, 0L], SuperMaximumCostQueries.Solve(3, [[1, 2, 4], [2, 3, 4]], [[4, 4], [5, 9]]));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3 }, new[] { 1, 2, 3 }, 6L)]
+    [InlineData(new[] { 1, 2, 3, 4 }, new[] { 10, 20, 30, 40 }, 100L)]
+    [InlineData(new[] { 1, 2, 3, 4, 1, 2, 3, 4 }, new[] { 10, 20, 30, 40, 15, 15, 15, 50 }, 110L)]
+    [InlineData(new[] { 5, 5, 5 }, new[] { 1, 9, 2 }, 9L)]
+    public void SubsequenceWeighting_Samples(int[] a, int[] w, long expected) =>
+        Assert.Equal(expected, SubsequenceWeighting.Solve(a, w));
+
+    [Fact]
+    public void CubeSummation_Samples()
+    {
+        Assert.Equal(
+            [4L, 4L, 27L],
+            CubeSummation.Solve(4, ["UPDATE 2 2 2 4", "QUERY 1 1 1 3 3 3", "UPDATE 1 1 1 23", "QUERY 2 2 2 4 4 4", "QUERY 1 1 1 3 3 3"]));
+        Assert.Equal(
+            [0L, 1L, 1L],
+            CubeSummation.Solve(2, ["UPDATE 2 2 2 1", "QUERY 1 1 1 1 1 1", "QUERY 1 1 1 2 2 2", "QUERY 2 2 2 2 2 2"]));
+    }
+
+    [Fact]
+    public void CubeSummation_UpdateOverwritesCell() =>
+        Assert.Equal([-5L], CubeSummation.Solve(3, ["UPDATE 1 2 3 10", "UPDATE 1 2 3 -5", "QUERY 1 1 1 3 3 3"]));
+
+    [Fact]
+    public void DirectConnections_Sample() =>
+        Assert.Equal(280L, DirectConnections.Solve([1, 3, 6], [10, 20, 30]));
+
+    [Fact]
+    public void DirectConnections_MatchesBruteForce()
+    {
+        var random = new Random(43);
+        for (int trial = 0; trial < 100; trial++)
+        {
+            int n = random.Next(1, 8);
+            var x = Enumerable.Range(0, n).Select(_ => random.Next(1, 1000)).Distinct().ToArray();
+            var p = x.Select(_ => random.Next(1, 100)).ToArray();
+
+            long expected = 0;
+            for (int i = 0; i < x.Length; i++)
+                for (int j = i + 1; j < x.Length; j++)
+                    expected += (long)Math.Abs(x[i] - x[j]) * Math.Max(p[i], p[j]);
+
+            Assert.Equal(expected % 1_000_000_007, DirectConnections.Solve(x, p));
+        }
+    }
+
+    [Fact]
+    public void MrXAndHisShots_Sample() =>
+        Assert.Equal(9L, MrXAndHisShots.Solve([[1, 2], [2, 3], [4, 5], [6, 7]], [[1, 5], [2, 3], [4, 7], [5, 7]]));
+
+    [Fact]
+    public void MrXAndHisShots_MatchesBruteForce()
+    {
+        var random = new Random(47);
+        int[] Interval() { int a = random.Next(0, 30), b = random.Next(0, 30); return [Math.Min(a, b), Math.Max(a, b)]; }
+
+        for (int trial = 0; trial < 100; trial++)
+        {
+            var shots = Enumerable.Range(0, random.Next(1, 8)).Select(_ => Interval()).ToArray();
+            var players = Enumerable.Range(0, random.Next(1, 8)).Select(_ => Interval()).ToArray();
+            long expected = shots.Sum(s => players.Count(p => s[0] <= p[1] && p[0] <= s[1]));
+
+            Assert.Equal(expected, MrXAndHisShots.Solve(shots, players));
+        }
+    }
 }

@@ -281,4 +281,116 @@ public class DynamicProgrammingTests
     [InlineData(6, new[] { 4, 4, 2 }, "YES")]
     public void TheIndianJob_Samples(int g, int[] a, string expected) =>
         Assert.Equal(expected, TheIndianJob.Solve(g, a));
+
+    [Theory]
+    [InlineData(2, "tabriz", "torino", 4)]
+    [InlineData(0, "abacba", "abcaba", 3)]
+    [InlineData(3, "helloworld", "yellomarin", 8)]
+    public void SubstringDiff_Samples(int k, string s1, string s2, int expected) =>
+        Assert.Equal(expected, SubstringDiff.Solve(k, s1, s2));
+
+    [Fact]
+    public void SubstringDiff_MatchesBruteForce()
+    {
+        var random = new Random(61);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            int n = random.Next(1, 9);
+            string s1 = new(Enumerable.Range(0, n).Select(_ => "ab"[random.Next(2)]).ToArray());
+            string s2 = new(Enumerable.Range(0, n).Select(_ => "ab"[random.Next(2)]).ToArray());
+            int k = random.Next(0, 3);
+
+            int expected = 0;
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++)
+                    for (int length = 1; i + length <= n && j + length <= n; length++)
+                        if (Enumerable.Range(0, length).Count(t => s1[i + t] != s2[j + t]) <= k)
+                            expected = Math.Max(expected, length);
+
+            Assert.Equal(expected, SubstringDiff.Solve(k, s1, s2));
+        }
+    }
+
+    [Fact]
+    public void GridWalking_Sample() =>
+        Assert.Equal(12L, GridWalking.Solve(3, [1, 1], [2, 3]));
+
+    [Fact]
+    public void GridWalking_MatchesFullGridDp()
+    {
+        int[] x = [2, 1, 3];
+        int[] d = [3, 2, 4];
+        const int m = 6;
+
+        var ways = new Dictionary<(int, int, int), long> { [(x[0], x[1], x[2])] = 1 };
+        for (int step = 0; step < m; step++)
+        {
+            var next = new Dictionary<(int, int, int), long>();
+            foreach (var ((a, b, c), count) in ways)
+            {
+                foreach (var (na, nb, nc) in new[] { (a + 1, b, c), (a - 1, b, c), (a, b + 1, c), (a, b - 1, c), (a, b, c + 1), (a, b, c - 1) })
+                {
+                    if (na >= 1 && na <= d[0] && nb >= 1 && nb <= d[1] && nc >= 1 && nc <= d[2])
+                    {
+                        next[(na, nb, nc)] = next.GetValueOrDefault((na, nb, nc)) + count;
+                    }
+                }
+            }
+
+            ways = next;
+        }
+
+        Assert.Equal(ways.Values.Sum(), GridWalking.Solve(m, x, d));
+    }
+
+    [Fact]
+    public void TwoRobots_Sample() =>
+        Assert.Equal(11L, TwoRobots.Solve([[1, 5], [3, 2], [4, 1], [2, 4]]));
+
+    [Fact]
+    public void TwoRobots_MatchesBruteForce()
+    {
+        var random = new Random(67);
+        for (int trial = 0; trial < 100; trial++)
+        {
+            var jobs = Enumerable.Range(0, random.Next(1, 8)).Select(_ => new[] { random.Next(1, 20), random.Next(1, 20) }).ToArray();
+            long expected = long.MaxValue;
+
+            for (int mask = 0; mask < 1 << jobs.Length; mask++)
+            {
+                long total = 0;
+                int?[] at = [null, null];
+                for (int i = 0; i < jobs.Length; i++)
+                {
+                    int robot = (mask >> i) & 1;
+                    total += (at[robot] is int p ? Math.Abs(p - jobs[i][0]) : 0) + Math.Abs(jobs[i][0] - jobs[i][1]);
+                    at[robot] = jobs[i][1];
+                }
+
+                expected = Math.Min(expected, total);
+            }
+
+            Assert.Equal(expected, TwoRobots.Solve(jobs));
+        }
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 1, 1, 4 }, 5, 3, 3L)]
+    [InlineData(new[] { 1, 2 }, 3, 2, 0L)]
+    [InlineData(new[] { 1, 2, 3 }, 4, 0, 1L)]
+    public void WetSharkAndTwoSubsequences_Samples(int[] x, int r, int s, long expected) =>
+        Assert.Equal(expected, WetSharkAndTwoSubsequences.Solve(x, r, s));
+
+    [Fact]
+    public void WetSharkAndTwoSubsequences_MatchesBruteForce()
+    {
+        int[] x = [1, 2, 2, 3, 1, 4];
+        const int r = 8, s = 2;
+        var subsets = Enumerable.Range(1, (1 << x.Length) - 1)
+            .Select(mask => (Length: System.Numerics.BitOperations.PopCount((uint)mask), Sum: x.Where((_, i) => (mask & (1 << i)) != 0).Sum()))
+            .ToArray();
+
+        long expected = subsets.Sum(a => subsets.LongCount(b => a.Length == b.Length && a.Sum + b.Sum == r && a.Sum - b.Sum == s));
+        Assert.Equal(expected, WetSharkAndTwoSubsequences.Solve(x, r, s));
+    }
 }

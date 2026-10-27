@@ -163,6 +163,34 @@ public class SearchTests
         Assert.Equal(4L, SimilarPair.Solve(5, 2, [[3, 2], [3, 1], [1, 4], [1, 5]]));
 
     [Fact]
+    public void GenaPlayingHanoi_Samples()
+    {
+        Assert.Equal(3, GenaPlayingHanoi.Solve([1, 4, 1]));
+        Assert.Equal(0, GenaPlayingHanoi.Solve([1, 1, 1]));
+        Assert.Equal(5, GenaPlayingHanoi.Solve([2, 2, 2]));  // Frame–Stewart: 3 discs on 4 rods
+        Assert.Equal(9, GenaPlayingHanoi.Solve([3, 3, 3, 3]));
+    }
+
+    [Theory]
+    [InlineData(new[] { -1, 2, -3 }, new[] { 1, -2, 3 }, new[] { 5L, 7L, 6L })]
+    [InlineData(new[] { 0 }, new[] { 0, -4 }, new[] { 0L, 4L })]
+    public void AbsoluteElementSums_Samples(int[] arr, int[] queries, long[] expected) =>
+        Assert.Equal(expected, AbsoluteElementSums.Solve(arr, queries));
+
+    [Fact]
+    public void AbsoluteElementSums_MatchesBruteForce()
+    {
+        var random = new Random(53);
+        var arr = Enumerable.Range(0, 20).Select(_ => random.Next(-50, 51)).ToArray();
+        var queries = Enumerable.Range(0, 30).Select(_ => random.Next(-30, 31)).ToArray();
+
+        long shift = 0;
+        var expected = queries.Select(q => { shift += q; return arr.Sum(v => Math.Abs(v + shift)); }).ToArray();
+
+        Assert.Equal(expected, AbsoluteElementSums.Solve(arr, queries));
+    }
+
+    [Fact]
     public void SimilarPair_HandlesDeepChains()
     {
         var chain = Enumerable.Range(1, 99_999).Select(i => new[] { i, i + 1 }).ToArray();

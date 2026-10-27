@@ -515,6 +515,14 @@ public class ImplementationTests
         Assert.Equal(tallRotated, MatrixLayerRotation.Solve(tall, 7));
     }
 
+    [Theory]
+    [InlineData(new[] { 2, 1, 5, 3, 4 }, "3")]
+    [InlineData(new[] { 2, 5, 1, 3, 4 }, "Too chaotic")]
+    [InlineData(new[] { 1, 2, 5, 3, 7, 8, 6, 4 }, "7")]
+    [InlineData(new[] { 1, 2, 3 }, "0")]
+    public void NewYearChaos_Samples(int[] q, string expected) =>
+        Assert.Equal(expected, NewYearChaos.Solve(q));
+
     [Fact]
     public void MatrixLayerRotation_FullTurnIsIdentity()
     {

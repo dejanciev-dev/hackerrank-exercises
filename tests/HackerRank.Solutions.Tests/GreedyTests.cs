@@ -183,6 +183,52 @@ public class GreedyTests
     public void MakingCandies_Samples(long m, long w, long p, long n, long expected) =>
         Assert.Equal(expected, MakingCandies.Solve(m, w, p, n));
 
+    [Theory]
+    [InlineData(new[] { 4, 5, 2, 3, -4, -3, -5 }, 3)]
+    [InlineData(new[] { -4 }, 1)]
+    [InlineData(new[] { 3, 2, 3, 1 }, 1)]
+    [InlineData(new[] { 1, -2, -3, -4, 2, 0, -1 }, 7)]
+    [InlineData(new[] { 1, 2, 2, 3 }, 2)]
+    [InlineData(new int[0], 0)]
+    public void TeamFormation_Samples(int[] skills, int expected) =>
+        Assert.Equal(expected, TeamFormation.Solve(skills));
+
+    [Fact]
+    public void IntervalSelection_Samples()
+    {
+        Assert.Equal(2, IntervalSelection.Solve([[1, 2], [2, 3], [2, 4]]));
+        Assert.Equal(2, IntervalSelection.Solve([[1, 5], [1, 5], [1, 5]]));
+        Assert.Equal(4, IntervalSelection.Solve([[1, 10], [1, 3], [4, 6], [7, 10]]));
+        Assert.Equal(3, IntervalSelection.Solve([[1, 10], [1, 3], [3, 6], [7, 10]]));
+    }
+
+    [Fact]
+    public void IntervalSelection_MatchesBruteForce()
+    {
+        var random = new Random(59);
+        for (int trial = 0; trial < 150; trial++)
+        {
+            var intervals = Enumerable.Range(0, random.Next(1, 9)).Select(_ =>
+            {
+                int a = random.Next(0, 15), b = random.Next(0, 15);
+                return new[] { Math.Min(a, b), Math.Max(a, b) };
+            }).ToArray();
+
+            int expected = 0;
+            for (int mask = 0; mask < 1 << intervals.Length; mask++)
+            {
+                var chosen = intervals.Where((_, i) => (mask & (1 << i)) != 0).ToArray();
+                bool valid = Enumerable.Range(0, 15).All(point => chosen.Count(c => c[0] <= point && point <= c[1]) <= 2);
+                if (valid)
+                {
+                    expected = Math.Max(expected, chosen.Length);
+                }
+            }
+
+            Assert.Equal(expected, IntervalSelection.Solve(intervals));
+        }
+    }
+
     [Fact]
     public void CloudyDay_Sample() =>
         Assert.Equal(110L, CloudyDay.Solve([10, 100], [5, 100], [4], [1]));

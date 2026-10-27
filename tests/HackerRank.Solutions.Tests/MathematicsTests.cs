@@ -445,4 +445,98 @@ public class MathematicsTests
     [InlineData(7, 0)]
     public void SmithNumbers_Samples(int n, int expected) =>
         Assert.Equal(expected, SmithNumbers.Solve(n));
+
+    [Theory]
+    [InlineData(12L, "Not prime")]
+    [InlineData(5L, "Prime")]
+    [InlineData(7L, "Prime")]
+    [InlineData(1L, "Not prime")]
+    [InlineData(2L, "Prime")]
+    [InlineData(1_000_000_007L, "Prime")]
+    [InlineData(999_999_999_989L, "Prime")]
+    [InlineData(1_000_000_007L * 3, "Not prime")]
+    public void Primality_Samples(long n, string expected) =>
+        Assert.Equal(expected, Primality.Solve(n));
+
+    [Theory]
+    [InlineData(new[] { 1L, 2L, 3L }, "YES")]
+    [InlineData(new[] { 2L, 4L }, "NO")]
+    [InlineData(new[] { 6L, 10L, 15L }, "YES")]
+    public void SherlockAndGcd_Samples(long[] a, string expected) =>
+        Assert.Equal(expected, SherlockAndGcd.Solve(a));
+
+    [Fact]
+    public void LuckyNumberEight_Sample() =>
+        Assert.Equal(3L, LuckyNumberEight.Solve("968"));
+
+    [Fact]
+    public void LuckyNumberEight_MatchesBruteForce()
+    {
+        var random = new Random(79);
+        for (int trial = 0; trial < 40; trial++)
+        {
+            string number = new(Enumerable.Range(0, random.Next(1, 12)).Select(_ => (char)('0' + random.Next(10))).ToArray());
+            long expected = 0;
+            for (int mask = 1; mask < 1 << number.Length; mask++)
+            {
+                var digits = number.Where((_, i) => (mask & (1 << i)) != 0);
+                if (System.Numerics.BigInteger.Parse(string.Concat(digits)) % 8 == 0)
+                {
+                    expected++;
+                }
+            }
+
+            Assert.Equal(expected, LuckyNumberEight.Solve(number));
+        }
+    }
+
+    [Theory]
+    [InlineData("61", "YES")]
+    [InlineData("75", "NO")]
+    [InlineData("8", "YES")]
+    [InlineData("123", "YES")]
+    [InlineData("1111", "NO")]
+    public void ManasaLovesMaths_Samples(string n, string expected) =>
+        Assert.Equal(expected, ManasaLovesMaths.Solve(n));
+
+    [Fact]
+    public void ManasaLovesMaths_MatchesPermutationSearch()
+    {
+        for (int value = 1; value < 20_000; value += 7)
+        {
+            string digits = value.ToString();
+            bool expected = Permute(digits).Any(p => long.Parse(p) % 8 == 0);
+            Assert.Equal(expected ? "YES" : "NO", ManasaLovesMaths.Solve(digits));
+        }
+
+        static IEnumerable<string> Permute(string s) => s.Length <= 1
+            ? [s]
+            : Enumerable.Range(0, s.Length).SelectMany(i => Permute(s.Remove(i, 1)).Select(rest => s[i] + rest));
+    }
+
+    [Fact]
+    public void TheChosenOne_DividesAllButExactlyOne()
+    {
+        long[][] cases = [[2, 3], [6, 6, 4], [7], [12, 18, 24, 5], [4, 8, 16, 32, 33]];
+        foreach (var a in cases)
+        {
+            long x = TheChosenOne.Solve(a);
+            Assert.Equal(1, a.Count(v => v % x != 0));
+        }
+    }
+
+    [Theory]
+    [InlineData(0L, 2L, 4L, 0L, 1L)]
+    [InlineData(2L, 2L, 5L, 5L, 2L)]
+    [InlineData(1L, 9L, 8L, 16L, 6L)]
+    [InlineData(0L, 0L, 0L, 7L, 6L)]
+    public void SumarAndTheFloatingRocks_Samples(long x1, long y1, long x2, long y2, long expected) =>
+        Assert.Equal(expected, SumarAndTheFloatingRocks.Solve(x1, y1, x2, y2));
+
+    [Fact]
+    public void EvenOddQuery_Samples()
+    {
+        Assert.Equal(["Odd", "Even"], EvenOddQuery.Solve([3, 2, 7], [[1, 2], [2, 3]]));
+        Assert.Equal(["Odd", "Even", "Odd"], EvenOddQuery.Solve([2, 0, 5], [[1, 2], [1, 1], [3, 2]]));
+    }
 }

@@ -307,6 +307,94 @@ public class StringsTests
     }
 
     [Fact]
+    public void AshtonAndString_Sample() =>
+        Assert.Equal('c', AshtonAndString.Solve("dbac", 3));
+
+    [Fact]
+    public void AshtonAndString_MatchesBruteForce()
+    {
+        var random = new Random(29);
+        for (int trial = 0; trial < 40; trial++)
+        {
+            string s = new(Enumerable.Range(0, random.Next(1, 9)).Select(_ => "abc"[random.Next(3)]).ToArray());
+            string concatenation = string.Concat(
+                Enumerable.Range(0, s.Length)
+                    .SelectMany(i => Enumerable.Range(1, s.Length - i).Select(l => s.Substring(i, l)))
+                    .Distinct()
+                    .Order(StringComparer.Ordinal));
+
+            for (int k = 1; k <= concatenation.Length; k++)
+            {
+                Assert.Equal(concatenation[k - 1], AshtonAndString.Solve(s, k));
+            }
+        }
+    }
+
+    [Theory]
+    [InlineData("aaaaaa", 12L)]
+    [InlineData("abcabcddd", 9L)]
+    [InlineData("z", 1L)]
+    public void StringFunctionCalculation_Samples(string t, long expected) =>
+        Assert.Equal(expected, StringFunctionCalculation.Solve(t));
+
+    [Fact]
+    public void StringFunctionCalculation_MatchesBruteForce()
+    {
+        var random = new Random(31);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            string t = new(Enumerable.Range(0, random.Next(1, 12)).Select(_ => "ab"[random.Next(2)]).ToArray());
+            long expected = 0;
+
+            for (int i = 0; i < t.Length; i++)
+            {
+                for (int length = 1; i + length <= t.Length; length++)
+                {
+                    string sub = t.Substring(i, length);
+                    int occurrences = Enumerable.Range(0, t.Length - length + 1)
+                        .Count(j => string.CompareOrdinal(t, j, sub, 0, length) == 0);
+                    expected = Math.Max(expected, (long)length * occurrences);
+                }
+            }
+
+            Assert.Equal(expected, StringFunctionCalculation.Solve(t));
+        }
+    }
+
+    [Theory]
+    [InlineData("2222222", 7L)]
+    [InlineData("24256", 4L)]
+    [InlineData("65536", 1L)]
+    [InlineData("023223", 4L)]
+    public void TwoTwo_Samples(string a, long expected) =>
+        Assert.Equal(expected, TwoTwo.Solve(a));
+
+    [Fact]
+    public void TwoTwo_MatchesBruteForce()
+    {
+        var powers = Enumerable.Range(0, 801).Select(e => System.Numerics.BigInteger.Pow(2, e).ToString()).ToHashSet();
+        var random = new Random(37);
+
+        for (int trial = 0; trial < 50; trial++)
+        {
+            string a = new(Enumerable.Range(0, random.Next(1, 25)).Select(_ => "0124568"[random.Next(7)]).ToArray());
+            long expected = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                for (int length = 1; i + length <= a.Length; length++)
+                {
+                    if (powers.Contains(a.Substring(i, length)))
+                    {
+                        expected++;
+                    }
+                }
+            }
+
+            Assert.Equal(expected, TwoTwo.Solve(a));
+        }
+    }
+
+    [Fact]
     public void MaximumPalindromes_CountsArrangementsOfPairs() =>
         // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.
         Assert.Equal([6L], MaximumPalindromes.Solve("aabbccd", [[1, 7]]));

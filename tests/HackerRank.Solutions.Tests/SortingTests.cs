@@ -125,6 +125,14 @@ public class SortingTests
         Assert.Equal(["Array is sorted in 0 swaps.", "First Element: 1", "Last Element: 3"], BubbleSort.Solve([1, 2, 3]));
     }
 
+    [Theory]
+    [InlineData(new[] { 4, 3, 1, 2 }, 3)]
+    [InlineData(new[] { 2, 3, 4, 1, 5 }, 3)]
+    [InlineData(new[] { 1, 3, 5, 2, 4, 6, 7 }, 3)]
+    [InlineData(new[] { 1, 2, 3 }, 0)]
+    public void MinimumSwaps2_Samples(int[] arr, int expected) =>
+        Assert.Equal(expected, MinimumSwaps2.Solve(arr));
+
     [Fact]
     public void Comparator_SortsByScoreThenName() =>
         Assert.Equal(

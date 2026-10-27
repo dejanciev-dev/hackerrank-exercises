@@ -440,6 +440,163 @@ public class GameTheoryTests
         }
     }
 
+    [Fact]
+    public void StoneDivision_Sample() =>
+        Assert.Equal("Second", StoneDivision.Solve(15, [5, 2, 3]));
+
+    [Fact]
+    public void StoneDivision_MatchesBruteForce()
+    {
+        long[][] sets = [[2], [3], [2, 3], [2, 4], [5, 2, 3], [3, 6], [2, 3, 4, 5, 6]];
+        foreach (var s in sets)
+        {
+            var memo = new Dictionary<string, bool>();
+
+            // Full game: the position is the multiset of piles.
+            bool Wins(List<long> piles)
+            {
+                string key = string.Join(',', piles.Order());
+                if (memo.TryGetValue(key, out bool known))
+                {
+                    return known;
+                }
+
+                bool wins = false;
+                for (int i = 0; i < piles.Count && !wins; i++)
+                {
+                    foreach (var parts in s.Where(p => p > 1 && piles[i] % p == 0))
+                    {
+                        var next = piles.Where((_, j) => j != i).Concat(Enumerable.Repeat(piles[i] / parts, (int)parts)).ToList();
+                        if (!Wins(next))
+                        {
+                            wins = true;
+                            break;
+                        }
+                    }
+                }
+
+                return memo[key] = wins;
+            }
+
+            for (long n = 1; n <= 24; n++)
+            {
+                Assert.Equal(Wins([n]) ? "First" : "Second", StoneDivision.Solve(n, s));
+            }
+        }
+    }
+
+    [Fact]
+    public void Deforestation_MatchesBruteForce()
+    {
+        var random = new Random(83);
+        for (int trial = 0; trial < 80; trial++)
+        {
+            int n = random.Next(1, 9);
+            var edges = Enumerable.Range(2, n - 1).Select(v => new[] { random.Next(1, v), v }).ToArray();
+            var memo = new Dictionary<int, bool>();
+
+            // alive: mask of edges still attached to the root (edge e joins parent → node e + 2).
+            bool Wins(int alive)
+            {
+                if (memo.TryGetValue(alive, out bool known))
+                {
+                    return known;
+                }
+
+                bool wins = false;
+                for (int e = 0; e < edges.Length && !wins; e++)
+                {
+                    if ((alive & (1 << e)) == 0)
+                    {
+                        continue;
+                    }
+
+                    // Cut e, then drop every edge no longer connected to node 1.
+                    int next = alive & ~(1 << e);
+                    var reached = new HashSet<int> { 1 };
+                    bool grew = true;
+                    while (grew)
+                    {
+                        grew = false;
+                        for (int f = 0; f < edges.Length; f++)
+                        {
+                            if ((next & (1 << f)) != 0 && reached.Contains(edges[f][0]) && reached.Add(edges[f][1]))
+                            {
+                                grew = true;
+                            }
+                        }
+                    }
+
+                    for (int f = 0; f < edges.Length; f++)
+                    {
+                        if (!reached.Contains(edges[f][1]))
+                        {
+                            next &= ~(1 << f);
+                        }
+                    }
+
+                    wins = !Wins(next);
+                }
+
+                return memo[alive] = wins;
+            }
+
+            Assert.Equal(Wins((1 << edges.Length) - 1) ? "Alice" : "Bob", Deforestation.Solve(n, edges));
+        }
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 4 }, new[] { 5, 3, 1 }, "First")]
+    [InlineData(new[] { 1, 1 }, new[] { 1, 1 }, "Tie")]
+    [InlineData(new[] { 2, 2 }, new[] { 3, 3 }, "Second")]
+    public void FunGame_Samples(int[] a, int[] b, string expected) =>
+        Assert.Equal(expected, FunGame.Solve(a, b));
+
+    [Fact]
+    public void FunGame_MatchesMinimax()
+    {
+        var random = new Random(89);
+        for (int trial = 0; trial < 100; trial++)
+        {
+            int n = random.Next(1, 8);
+            var a = Enumerable.Range(0, n).Select(_ => random.Next(1, 10)).ToArray();
+            var b = Enumerable.Range(0, n).Select(_ => random.Next(1, 10)).ToArray();
+            var memo = new Dictionary<int, long>();
+
+            // Best (first's score - second's score) from here, with optimal play by both.
+            long Difference(int used)
+            {
+                if (used == (1 << n) - 1)
+                {
+                    return 0;
+                }
+
+                if (memo.TryGetValue(used, out long known))
+                {
+                    return known;
+                }
+
+                bool firstToMove = System.Numerics.BitOperations.PopCount((uint)used) % 2 == 0;
+                long best = firstToMove ? long.MinValue : long.MaxValue;
+                for (int i = 0; i < n; i++)
+                {
+                    if ((used & (1 << i)) != 0)
+                    {
+                        continue;
+                    }
+
+                    long value = Difference(used | (1 << i)) + (firstToMove ? a[i] : -b[i]);
+                    best = firstToMove ? Math.Max(best, value) : Math.Min(best, value);
+                }
+
+                return memo[used] = best;
+            }
+
+            long difference = Difference(0);
+            Assert.Equal(difference > 0 ? "First" : difference < 0 ? "Second" : "Tie", FunGame.Solve(a, b));
+        }
+    }
+
     private static IEnumerable<int[]> AllPiles(int count, int max)
     {
         if (count == 0)
