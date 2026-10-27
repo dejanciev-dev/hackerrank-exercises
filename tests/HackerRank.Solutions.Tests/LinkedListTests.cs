@@ -104,4 +104,20 @@ public class LinkedListTests
     [InlineData(new[] { 1, 2, 3 }, 2, new[] { 1, 2 })]
     public void DeleteNode_Samples(int[] values, int position, int[] expected) =>
         Assert.Equal(expected, Build.ToArray(DeleteNode.Solve(Build.List(values)!, position)));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4 }, new[] { 4, 3, 2, 1 })]
+    [InlineData(new[] { 7 }, new[] { 7 })]
+    [InlineData(new int[0], new int[0])]
+    public void ReverseDoublyLinkedList_ReversesBothLinks(int[] values, int[] expected) =>
+        Assert.Equal(expected, Build.ToArray(ReverseDoublyLinkedList.Solve(Build.DoublyList(values))));
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 4, 10 }, 5, new[] { 1, 3, 4, 5, 10 })]
+    [InlineData(new[] { 2, 3, 4 }, 1, new[] { 1, 2, 3, 4 })]
+    [InlineData(new[] { 1, 2, 3 }, 9, new[] { 1, 2, 3, 9 })]
+    [InlineData(new[] { 1, 2, 2 }, 2, new[] { 1, 2, 2, 2 })]
+    [InlineData(new int[0], 4, new[] { 4 })]
+    public void SortedInsertDoublyLinkedList_KeepsOrderAndLinks(int[] values, int data, int[] expected) =>
+        Assert.Equal(expected, Build.ToArray(SortedInsertDoublyLinkedList.Solve(Build.DoublyList(values), data)));
 }

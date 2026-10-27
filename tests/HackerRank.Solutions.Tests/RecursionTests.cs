@@ -119,4 +119,13 @@ public class RecursionTests
     [InlineData(7, 44L)]
     public void DavisStaircase_Samples(int n, long expected) =>
         Assert.Equal(expected, DavisStaircase.Solve(n));
+
+    [Theory]
+    [InlineData(new[] { 3, 3, 3 }, 0)]
+    [InlineData(new[] { 2, 2, 2, 2 }, 2)]
+    [InlineData(new[] { 4, 1, 0, 1, 1, 0, 1 }, 3)]
+    [InlineData(new[] { 0, 0, 0, 0 }, 3)]
+    [InlineData(new[] { 5 }, 0)]
+    public void NikitaAndTheGame_Samples(int[] arr, int expected) =>
+        Assert.Equal(expected, NikitaAndTheGame.Solve(arr));
 }

@@ -89,4 +89,62 @@ public class GraphTheoryTests
     [Fact]
     public void ComponentsInAGraph_Sample() =>
         Assert.Equal([2, 4], ComponentsInAGraph.Solve([[1, 6], [2, 7], [3, 8], [4, 9], [2, 6]]));
+
+    [Fact]
+    public void FloydCityOfBlindingLights_Sample() =>
+        Assert.Equal(
+            [5, -1, 11],
+            FloydCityOfBlindingLights.Solve(4, [[1, 2, 5], [1, 4, 24], [2, 4, 6], [3, 4, 4], [3, 2, 7]], [[1, 2], [3, 1], [1, 4]]));
+
+    [Fact]
+    public void FloydCityOfBlindingLights_RepeatedEdgeReplacesEarlierOne() =>
+        Assert.Equal([9, 0], FloydCityOfBlindingLights.Solve(2, [[1, 2, 3], [1, 2, 9]], [[1, 2], [2, 2]]));
+
+    [Fact]
+    public void JackGoesToRapture_Samples()
+    {
+        Assert.Equal("80", JackGoesToRapture.Solve(5, [[1, 2, 60], [3, 5, 70], [1, 4, 120], [4, 5, 150], [2, 3, 80]]));
+        Assert.Equal("NO PATH EXISTS", JackGoesToRapture.Solve(3, [[1, 2, 5]]));
+    }
+
+    [Fact]
+    public void RustAndMurderer_Samples()
+    {
+        Assert.Equal([3, 1, 2], RustAndMurderer.Solve(4, [[1, 2], [2, 3], [1, 4]], 1));
+        Assert.Equal([2, 2, 1], RustAndMurderer.Solve(4, [[1, 2], [2, 3]], 2));
+        Assert.Equal([-1], RustAndMurderer.Solve(2, [[1, 2]], 1));
+    }
+
+    [Fact]
+    public void RoadsInHackerland_Sample() =>
+        Assert.Equal("1000100", RoadsInHackerland.Solve(5, [[1, 3, 5], [4, 5, 0], [2, 1, 3], [3, 2, 1], [4, 3, 4], [4, 2, 2]]));
+
+    [Fact]
+    public void RoadsInHackerland_CarriesIntoHigherBits() =>
+        // A path 1-2-3 with weights 1 and 2: distances 1 + 2 + 3 = 6.
+        Assert.Equal("110", RoadsInHackerland.Solve(3, [[1, 2, 0], [2, 3, 1]]));
+
+    [Fact]
+    public void MinimumPenaltyPath_Samples()
+    {
+        Assert.Equal(3, MinimumPenaltyPath.Solve(3, [[1, 2, 1], [1, 2, 1000], [2, 3, 3], [1, 3, 100]], 1, 3));
+        Assert.Equal(-1, MinimumPenaltyPath.Solve(3, [[1, 2, 1]], 1, 3));
+    }
+
+    [Fact]
+    public void MinimumPenaltyPath_PrefersSmallerOrOverFewerEdges() =>
+        // Direct edge 4 vs. path 1 | 2 = 3.
+        Assert.Equal(3, MinimumPenaltyPath.Solve(3, [[1, 3, 4], [1, 2, 1], [2, 3, 2]], 1, 3));
+
+    [Fact]
+    public void MatrixMachines_Sample() =>
+        Assert.Equal(10L, MatrixMachines.Solve([[2, 1, 8], [1, 0, 5], [2, 4, 5], [1, 3, 4]], [2, 4, 0]));
+
+    [Fact]
+    public void FindTheNearestClone_Samples()
+    {
+        Assert.Equal(1, FindTheNearestClone.Solve(4, [1, 1, 4], [2, 3, 2], [1, 2, 1, 1], 1));
+        Assert.Equal(-1, FindTheNearestClone.Solve(4, [1, 1, 4], [2, 3, 2], [1, 2, 3, 4], 2));
+        Assert.Equal(3, FindTheNearestClone.Solve(5, [1, 1, 2, 3], [2, 3, 4, 5], [1, 2, 3, 3, 2], 2));
+    }
 }

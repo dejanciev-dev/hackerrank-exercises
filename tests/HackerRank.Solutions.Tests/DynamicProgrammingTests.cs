@@ -122,4 +122,86 @@ public class DynamicProgrammingTests
     [InlineData(1, 5, 0L)]
     public void LegoBlocks_Samples(int n, int m, long expected) =>
         Assert.Equal(expected, LegoBlocks.Solve(n, m));
+
+    [Fact]
+    public void LongestCommonSubsequence_ReturnsACommonSubsequenceOfMaxLength()
+    {
+        int[] a = [1, 2, 3, 4, 1];
+        int[] b = [3, 4, 1, 2, 1, 3];
+        var lcs = LongestCommonSubsequence.Solve(a, b);
+
+        Assert.Equal(3, lcs.Length);
+        Assert.True(IsSubsequence(lcs, a));
+        Assert.True(IsSubsequence(lcs, b));
+    }
+
+    [Fact]
+    public void LongestCommonSubsequence_UniqueAnswer()
+    {
+        Assert.Equal([2, 3], LongestCommonSubsequence.Solve([1, 2, 3], [2, 3, 4]));
+        Assert.Empty(LongestCommonSubsequence.Solve([1, 2], [3, 4]));
+    }
+
+    private static bool IsSubsequence(int[] sub, int[] sequence)
+    {
+        int matched = 0;
+        foreach (var value in sequence)
+        {
+            if (matched < sub.Length && sub[matched] == value)
+            {
+                matched++;
+            }
+        }
+
+        return matched == sub.Length;
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 6 }, 73L)]
+    [InlineData(new[] { 4, 2, 9, 10, 1 }, 971L)]
+    [InlineData(new[] { 5 }, 5L)]
+    public void SummingPieces_Samples(int[] arr, long expected) =>
+        Assert.Equal(expected, SummingPieces.Solve(arr));
+
+    [Fact]
+    public void SummingPieces_MatchesBruteForce()
+    {
+        int[] arr = [3, 1, 4, 1, 5, 9, 2, 6];
+        long expected = 0;
+
+        // Each mask chooses which of the n - 1 gaps get a cut.
+        for (int mask = 0; mask < 1 << (arr.Length - 1); mask++)
+        {
+            long sum = 0;
+            int length = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                sum += arr[i];
+                length++;
+                if (i == arr.Length - 1 || (mask & (1 << i)) != 0)
+                {
+                    expected += sum * length;
+                    sum = 0;
+                    length = 0;
+                }
+            }
+        }
+
+        Assert.Equal(expected, SummingPieces.Solve(arr));
+    }
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4, 5 }, 6L)]
+    [InlineData(new[] { 0, 1, 1, 1, 999 }, 999L)]
+    [InlineData(new[] { 999, 1, 1, 1, 0 }, 1001L)]
+    [InlineData(new[] { 7 }, 7L)]
+    public void BricksGame_Samples(int[] arr, long expected) =>
+        Assert.Equal(expected, BricksGame.Solve(arr));
+
+    [Theory]
+    [InlineData("eeegeeksforskeeggeeks", 50L)]
+    [InlineData("ab", 1L)]
+    [InlineData("aaaa", 4L)]
+    public void PlayWithWords_Samples(string s, long expected) =>
+        Assert.Equal(expected, PlayWithWords.Solve(s));
 }

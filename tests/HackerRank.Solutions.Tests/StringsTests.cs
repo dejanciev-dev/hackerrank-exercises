@@ -234,6 +234,34 @@ public class StringsTests
         Assert.Equal([2L], MaximumPalindromes.Solve("madamimadam", [[4, 7]]));
     }
 
+    [Theory]
+    [InlineData("kkkkkkz", 15L)]
+    [InlineData("ghhggh", 4L)]
+    [InlineData("abbaab", 4L)]
+    [InlineData("akakak", 2L)]
+    public void ShortPalindrome_Samples(string s, long expected) =>
+        Assert.Equal(expected, ShortPalindrome.Solve(s));
+
+    [Fact]
+    public void ShortPalindrome_MatchesBruteForce()
+    {
+        var random = new Random(11);
+        for (int trial = 0; trial < 50; trial++)
+        {
+            string s = new(Enumerable.Range(0, random.Next(4, 14)).Select(_ => (char)('a' + random.Next(3))).ToArray());
+            long expected = 0;
+
+            for (int a = 0; a < s.Length; a++)
+                for (int b = a + 1; b < s.Length; b++)
+                    for (int c = b + 1; c < s.Length; c++)
+                        for (int d = c + 1; d < s.Length; d++)
+                            if (s[a] == s[d] && s[b] == s[c])
+                                expected++;
+
+            Assert.Equal(expected, ShortPalindrome.Solve(s));
+        }
+    }
+
     [Fact]
     public void MaximumPalindromes_CountsArrangementsOfPairs() =>
         // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.

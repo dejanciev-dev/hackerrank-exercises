@@ -114,4 +114,33 @@ public class BitManipulationTests
     [Fact]
     public void WinningLotteryTicket_PairsCompleteTicketsWithEachOther() =>
         Assert.Equal(3L, WinningLotteryTicket.Solve(["0123456789", "9876543210", "1023456789"]));
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3 }, 12L)]
+    [InlineData(new[] { 1, 2 }, 6L)]
+    [InlineData(new[] { 5 }, 5L)]
+    public void XoringNinja_Samples(int[] arr, long expected) =>
+        Assert.Equal(expected, XoringNinja.Solve(arr));
+
+    [Fact]
+    public void XoringNinja_MatchesBruteForce()
+    {
+        int[] arr = [7, 12, 3, 0, 9, 21, 5];
+        long expected = 0;
+        for (int mask = 1; mask < 1 << arr.Length; mask++)
+        {
+            int xor = 0;
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if ((mask & (1 << i)) != 0)
+                {
+                    xor ^= arr[i];
+                }
+            }
+
+            expected += xor;
+        }
+
+        Assert.Equal(expected, XoringNinja.Solve(arr));
+    }
 }

@@ -146,4 +146,40 @@ public class GreedyTests
     [InlineData(new[] { 1, 1, 1, 2, 3, 5 }, new[] { 1, 1, 1 })]
     public void MaximumPerimeterTriangle_Samples(int[] sticks, int[] expected) =>
         Assert.Equal(expected, MaximumPerimeterTriangle.Solve(sticks));
+
+    [Theory]
+    [InlineData(new[] { 5, 8, 14 }, 4, 9, 4)]
+    [InlineData(new[] { 3, 5, 7, 9 }, 6, 8, 6)]
+    [InlineData(new[] { 1, 10 }, 1, 10, 5)]
+    [InlineData(new[] { 100 }, 1, 200, 200)]
+    public void SherlockAndMinimax_Samples(int[] arr, int p, int q, int expected) =>
+        Assert.Equal(expected, SherlockAndMinimax.Solve(arr, p, q));
+
+    [Fact]
+    public void SherlockAndMinimax_MatchesBruteForce()
+    {
+        var random = new Random(7);
+        for (int trial = 0; trial < 300; trial++)
+        {
+            var arr = Enumerable.Range(0, random.Next(1, 6)).Select(_ => random.Next(1, 60)).ToArray();
+            int p = random.Next(1, 60);
+            int q = random.Next(p, 70);
+
+            int expected = Enumerable.Range(p, q - p + 1)
+                .OrderByDescending(m => arr.Min(a => Math.Abs(a - m)))
+                .ThenBy(m => m)
+                .First();
+
+            Assert.Equal(expected, SherlockAndMinimax.Solve(arr, p, q));
+        }
+    }
+
+    [Theory]
+    [InlineData(3L, 1L, 2L, 12L, 3L)]
+    [InlineData(1L, 1L, 6L, 45L, 16L)]
+    [InlineData(5_184_889_632L, 5_184_889_632L, 20L, 10_000L, 1L)]
+    [InlineData(1L, 1L, 100L, 10L, 10L)]
+    [InlineData(1L, 1L, 1_000_000_000_000L, 1_000_000_000_000L, 1_000_000_000_000L)]
+    public void MakingCandies_Samples(long m, long w, long p, long n, long expected) =>
+        Assert.Equal(expected, MakingCandies.Solve(m, w, p, n));
 }

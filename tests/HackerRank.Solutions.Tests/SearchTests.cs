@@ -126,4 +126,12 @@ public class SearchTests
     [InlineData(new[] { 1L, 1L, 1L, 1L }, 1L, 4L)]
     public void CountTriplets_Samples(long[] arr, long r, long expected) =>
         Assert.Equal(expected, CountTriplets.Solve(arr, r));
+
+    [Fact]
+    public void RedKnightsShortestPath_Samples()
+    {
+        Assert.Equal(["4", "UL UL UL L"], RedKnightsShortestPath.Solve(7, 6, 6, 0, 1));
+        Assert.Equal(["Impossible"], RedKnightsShortestPath.Solve(6, 5, 1, 0, 5));
+        Assert.Equal(["2", "LR LL"], RedKnightsShortestPath.Solve(7, 0, 3, 4, 3));
+    }
 }

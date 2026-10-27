@@ -31,6 +31,38 @@ internal static class Build
         return values.ToArray();
     }
 
+    public static DoublyLinkedListNode? DoublyList(params int[] values)
+    {
+        DoublyLinkedListNode? head = null;
+        for (int i = values.Length - 1; i >= 0; i--)
+        {
+            var node = new DoublyLinkedListNode(values[i]) { Next = head };
+            if (head is not null)
+            {
+                head.Prev = node;
+            }
+
+            head = node;
+        }
+
+        return head;
+    }
+
+    /// <summary>Reads the values forwards, checking every Prev link on the way.</summary>
+    public static int[] ToArray(DoublyLinkedListNode? head)
+    {
+        var values = new List<int>();
+        DoublyLinkedListNode? previous = null;
+
+        for (var node = head; node is not null; previous = node, node = node.Next)
+        {
+            Assert.Same(previous, node.Prev);
+            values.Add(node.Data);
+        }
+
+        return values.ToArray();
+    }
+
     /// <summary>Builds a BST by inserting the values in order, like HackerRank's tree inputs.</summary>
     public static Node Bst(params int[] values)
     {

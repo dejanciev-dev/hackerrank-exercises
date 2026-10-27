@@ -214,4 +214,31 @@ public class DataStructuresTests
     [Fact]
     public void NoPrefixSet_FlagsWordThatIsPrefixOfEarlierOne() =>
         Assert.Equal(["BAD SET", "ab"], NoPrefixSet.Solve(["abc", "ab"]));
+
+    [Theory]
+    [InlineData(new[] { 3, 2, 1, 2, 3, 3 }, 8L)]
+    [InlineData(new[] { 1, 1000, 1 }, 0L)]
+    [InlineData(new[] { 5, 5, 5 }, 6L)]
+    public void JimAndTheSkyscrapers_Samples(int[] arr, long expected) =>
+        Assert.Equal(expected, JimAndTheSkyscrapers.Solve(arr));
+
+    [Fact]
+    public void QueriesWithFixedLength_Sample() =>
+        Assert.Equal([11, 33, 44, 44, 55], QueriesWithFixedLength.Solve([33, 11, 44, 11, 55], [1, 2, 3, 4, 5]));
+
+    [Fact]
+    public void QueriesWithFixedLength_MatchesBruteForce()
+    {
+        int[] arr = [5, 1, 9, 3, 3, 8, 2, 7, 6, 4, 10, 0];
+        var queries = Enumerable.Range(1, arr.Length).ToArray();
+        var expected = queries
+            .Select(d => Enumerable.Range(0, arr.Length - d + 1).Min(start => arr.Skip(start).Take(d).Max()))
+            .ToArray();
+
+        Assert.Equal(expected, QueriesWithFixedLength.Solve(arr, queries));
+    }
+
+    [Fact]
+    public void MergingCommunities_Sample() =>
+        Assert.Equal([1, 2, 3, 3], MergingCommunities.Solve(3, ["Q 1", "M 1 2", "Q 2", "M 2 3", "Q 3", "Q 2"]));
 }
