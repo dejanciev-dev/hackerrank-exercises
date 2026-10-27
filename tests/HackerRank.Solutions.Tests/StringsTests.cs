@@ -480,6 +480,32 @@ public class StringsTests
         }
     }
 
+    [Theory]
+    [InlineData("abbab", "ba", "1 2")]
+    [InlineData("cgatcg", "gc", "1 3")]
+    [InlineData("hello", "world", "No Match!")]
+    [InlineData("ab", "abc", "No Match!")]
+    public void SaveHumanity_Samples(string p, string v, string expected) =>
+        Assert.Equal(expected, SaveHumanity.Solve(p, v));
+
+    [Fact]
+    public void SaveHumanity_MatchesBruteForce()
+    {
+        var random = new Random(151);
+        for (int trial = 0; trial < 80; trial++)
+        {
+            string p = new(Enumerable.Range(0, random.Next(1, 15)).Select(_ => "ab"[random.Next(2)]).ToArray());
+            string v = new(Enumerable.Range(0, random.Next(1, 5)).Select(_ => "ab"[random.Next(2)]).ToArray());
+
+            var positions = Enumerable.Range(0, Math.Max(0, p.Length - v.Length + 1))
+                .Where(i => Enumerable.Range(0, v.Length).Count(j => p[i + j] != v[j]) <= 1)
+                .ToArray();
+            string expected = positions.Length > 0 ? string.Join(' ', positions) : "No Match!";
+
+            Assert.Equal(expected, SaveHumanity.Solve(p, v));
+        }
+    }
+
     [Fact]
     public void MaximumPalindromes_CountsArrangementsOfPairs() =>
         // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.

@@ -232,6 +232,40 @@ public class BitManipulationTests
     }
 
     [Fact]
+    public void ChangingBits_Sample() =>
+        Assert.Equal("100", ChangingBits.Solve("00000", "11111", ["set_a 0 1", "get_c 5", "get_c 1", "set_b 2 0", "get_c 5"]));
+
+    [Fact]
+    public void ChangingBits_MatchesBigIntegerSum()
+    {
+        var random = new Random(197);
+        const int n = 12;
+        var a = Enumerable.Range(0, n).Select(_ => random.Next(2)).ToArray(); // index = bit position
+        var b = Enumerable.Range(0, n).Select(_ => random.Next(2)).ToArray();
+        string ToBinary(int[] bits) => string.Concat(bits.Reverse());
+
+        string startA = ToBinary(a), startB = ToBinary(b);
+        var queries = new List<string>();
+        var expected = new System.Text.StringBuilder();
+
+        for (int q = 0; q < 300; q++)
+        {
+            int kind = random.Next(3), index = random.Next(n);
+            if (kind == 0) { int x = random.Next(2); queries.Add($"set_a {index} {x}"); a[index] = x; }
+            else if (kind == 1) { int x = random.Next(2); queries.Add($"set_b {index} {x}"); b[index] = x; }
+            else
+            {
+                int bit = random.Next(n + 1);
+                queries.Add($"get_c {bit}");
+                long sum = Convert.ToInt64(ToBinary(a), 2) + Convert.ToInt64(ToBinary(b), 2);
+                expected.Append((sum >> bit) & 1);
+            }
+        }
+
+        Assert.Equal(expected.ToString(), ChangingBits.Solve(startA, startB, queries));
+    }
+
+    [Fact]
     public void TwosComplement_MatchesPopCount()
     {
         for (long a = -40; a <= 40; a += 3)

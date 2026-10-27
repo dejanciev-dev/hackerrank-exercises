@@ -634,6 +634,55 @@ public class GameTheoryTests
         }
     }
 
+    [Fact]
+    public void PlayOnBenders_MatchesTwoTokenSearch()
+    {
+        var random = new Random(193);
+        for (int trial = 0; trial < 30; trial++)
+        {
+            int n = random.Next(1, 8);
+            var edges = Enumerable.Range(0, random.Next(0, 12))
+                .Select(_ => { int u = random.Next(1, n + 1), v = random.Next(1, n + 1); return new[] { Math.Min(u, v), Math.Max(u, v) }; })
+                .Where(e => e[0] != e[1])
+                .ToArray();
+
+            var memo = new Dictionary<(int, int), bool>();
+            bool Wins(int x, int y)
+            {
+                if (memo.TryGetValue((x, y), out bool known)) return known;
+                bool wins = edges.Any(e => e[0] == x && !Wins(e[1], y)) || edges.Any(e => e[0] == y && !Wins(x, e[1]));
+                return memo[(x, y)] = wins;
+            }
+
+            var queries = Enumerable.Range(0, 10).Select(_ => new[] { random.Next(1, n + 1), random.Next(1, n + 1) }).ToArray();
+            var expected = queries.Select(q => Wins(q[0], q[1]) ? "Bumi" : "Iroh").ToArray();
+
+            Assert.Equal(expected, PlayOnBenders.Solve(n, edges, queries));
+        }
+    }
+
+    [Fact]
+    public void ManasaAndPrimeGame_Sample() =>
+        Assert.Equal("Sandy", ManasaAndPrimeGame.Solve([10, 10]));
+
+    [Fact]
+    public void ManasaAndPrimeGame_PeriodMatchesDirectComputation()
+    {
+        int[] moves = [2, 3, 5, 7, 11, 13];
+        var grundy = new int[6000];
+        for (int n = 0; n < grundy.Length; n++)
+        {
+            var reachable = moves.Where(m => m <= n).Select(m => grundy[n - m]).ToHashSet();
+            while (reachable.Contains(grundy[n])) grundy[n]++;
+        }
+
+        for (int pile = 0; pile < grundy.Length; pile += 7)
+        {
+            string expected = grundy[pile] != 0 ? "Manasa" : "Sandy";
+            Assert.Equal(expected, ManasaAndPrimeGame.Solve([pile]));
+        }
+    }
+
     private static IEnumerable<int[]> AllPiles(int count, int max)
     {
         if (count == 0)

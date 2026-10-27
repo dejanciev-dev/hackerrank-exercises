@@ -431,6 +431,86 @@ public class DynamicProgrammingTests
         Assert.Equal(2, CoinOnTheTable.Solve(2, ["UR", "LR", "*R"]));
 
     [Fact]
+    public void DecibinaryNumbers_Sample() =>
+        Assert.Equal([0L, 1L, 2L, 10L, 3L, 11L, 4L, 12L, 20L, 100L], DecibinaryNumbers.Solve([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]));
+
+    [Fact]
+    public void DecibinaryNumbers_MatchesEnumeration()
+    {
+        // Values up to 31 only use positions 0..4, so 5-digit numbers list all of them.
+        var ordered = Enumerable.Range(0, 100_000)
+            .Select(number => (Number: (long)number, Value: number.ToString().Reverse().Select((c, i) => (c - '0') << i).Sum()))
+            .Where(p => p.Value <= 31)
+            .OrderBy(p => p.Value).ThenBy(p => p.Number)
+            .Select(p => p.Number)
+            .ToArray();
+
+        var queries = Enumerable.Range(1, ordered.Length).Select(i => (long)i).ToArray();
+        Assert.Equal(ordered, DecibinaryNumbers.Solve(queries));
+    }
+
+    [Fact]
+    public void DorseyThief_Samples()
+    {
+        Assert.Equal("1140", DorseyThief.Solve(10, [[460, 4], [590, 6], [550, 5], [590, 5]]));
+        Assert.Equal("Got caught!", DorseyThief.Solve(3, [[1, 2]]));
+    }
+
+    [Fact]
+    public void DorseyThief_MatchesBruteForce()
+    {
+        var random = new Random(173);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            var passengers = Enumerable.Range(0, random.Next(1, 9)).Select(_ => new[] { random.Next(1, 50), random.Next(1, 8) }).ToArray();
+            int x = random.Next(1, 20);
+
+            long best = -1;
+            for (int mask = 0; mask < 1 << passengers.Length; mask++)
+            {
+                var chosen = passengers.Where((_, i) => (mask & (1 << i)) != 0).ToArray();
+                if (chosen.Sum(p => p[1]) == x)
+                {
+                    best = Math.Max(best, chosen.Sum(p => p[0]));
+                }
+            }
+
+            Assert.Equal(best >= 0 ? best.ToString() : "Got caught!", DorseyThief.Solve(x, passengers));
+        }
+    }
+
+    [Theory]
+    [InlineData(1, new[] { 3L, 3L, 3L, 1L }, 2L)]
+    [InlineData(2, new[] { 4L, 3L, 1L, 2L }, 6L)]
+    public void FairCut_Samples(int k, long[] a, long expected) =>
+        Assert.Equal(expected, FairCut.Solve(k, a));
+
+    [Fact]
+    public void FairCut_MatchesBruteForce()
+    {
+        var random = new Random(179);
+        for (int trial = 0; trial < 80; trial++)
+        {
+            var a = Enumerable.Range(0, random.Next(2, 10)).Select(_ => (long)random.Next(0, 30)).ToArray();
+            int k = random.Next(1, a.Length);
+
+            long expected = Enumerable.Range(0, 1 << a.Length)
+                .Where(mask => System.Numerics.BitOperations.PopCount((uint)mask) == k)
+                .Min(mask =>
+                {
+                    long unfairness = 0;
+                    for (int i = 0; i < a.Length; i++)
+                        for (int j = 0; j < a.Length; j++)
+                            if ((mask & (1 << i)) != 0 && (mask & (1 << j)) == 0)
+                                unfairness += Math.Abs(a[i] - a[j]);
+                    return unfairness;
+                });
+
+            Assert.Equal(expected, FairCut.Solve(k, a));
+        }
+    }
+
+    [Fact]
     public void WetSharkAndTwoSubsequences_MatchesBruteForce()
     {
         int[] x = [1, 2, 2, 3, 1, 4];

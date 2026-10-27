@@ -662,6 +662,131 @@ public class MathematicsTests
     public void FibonacciGcd_Samples(long[] a, long expected) =>
         Assert.Equal(expected, FibonacciGcd.Solve(a));
 
+    [Theory]
+    [InlineData(new[] { 1, 1, 2 }, 1L)]
+    [InlineData(new[] { 1, 2 }, 2L)]
+    [InlineData(new[] { 1, 2, 2, 1 }, 2L)]
+    public void TarasBeautifulPermutations_Samples(int[] a, long expected) =>
+        Assert.Equal(expected, TarasBeautifulPermutations.Solve(a));
+
+    [Fact]
+    public void TarasBeautifulPermutations_MatchesEnumeration()
+    {
+        int[][] cases = [[1, 1, 2, 2, 3, 3], [1, 2, 3, 1, 4], [5, 5, 6, 6, 7, 8, 9]];
+        foreach (var a in cases)
+        {
+            var arrangements = new HashSet<string>();
+            void Permute(List<int> prefix, List<int> rest)
+            {
+                if (rest.Count == 0)
+                {
+                    arrangements.Add(string.Join(',', prefix));
+                    return;
+                }
+
+                for (int i = 0; i < rest.Count; i++)
+                {
+                    if (prefix.Count > 0 && prefix[^1] == rest[i]) continue;
+                    var next = new List<int>(rest);
+                    next.RemoveAt(i);
+                    Permute([.. prefix, rest[i]], next);
+                }
+            }
+
+            Permute([], a.ToList());
+            Assert.Equal(arrangements.Count, TarasBeautifulPermutations.Solve(a));
+        }
+    }
+
+    [Fact]
+    public void SherlockAndMovingTiles_Sample()
+    {
+        var times = SherlockAndMovingTiles.Solve(10, 1, 2, [50, 100]);
+        Assert.Equal(4.1421, times[0], 4);
+        Assert.Equal(0.0, times[1], 4);
+    }
+
+    [Theory]
+    [InlineData(2L, 3L, 1L, 2L)]
+    [InlineData(1L, 2L, 0L, 0L)]
+    [InlineData(3L, 4L, 11L, 3L)]
+    [InlineData(1L, 5L, 5L, 1L)]
+    [InlineData(1L, 5L, 10L, 2L)]
+    public void BabyStepGiantStep_Samples(long a, long b, long d, long expected) =>
+        Assert.Equal(expected, BabyStepGiantStep.Solve(a, b, d));
+
+    [Fact]
+    public void LittleAshish_MatchesRunningSum()
+    {
+        foreach (long x in new long[] { 1, 6, 7, 14, 1_000, 123_456_789, 10_000_000_000_000_000 })
+        {
+            long days = 0, total = 0;
+            while (total + (days + 1) * (days + 1) <= x)
+            {
+                days++;
+                total += days * days;
+            }
+
+            Assert.Equal(days, LittleAshish.Solve(x));
+        }
+    }
+
+    [Fact]
+    public void CountSolutions_MatchesBruteForce()
+    {
+        Assert.Equal(1L, CountSolutions.Solve(1, 1, 1, 1));
+
+        var random = new Random(191);
+        for (int trial = 0; trial < 40; trial++)
+        {
+            long a = random.Next(1, 40), b = random.Next(1, 40), c = random.Next(1, 40), d = random.Next(1, 40);
+            long expected = 0;
+            for (long x = 1; x <= c; x++)
+                for (long y = 1; y <= d; y++)
+                    if (x * x + y * y == x * a + y * b)
+                        expected++;
+
+            Assert.Equal(expected, CountSolutions.Solve(a, b, c, d));
+        }
+    }
+
+    [Fact]
+    public void ManasaAndSubSequences_Samples()
+    {
+        Assert.Equal(147L, ManasaAndSubSequences.Solve("111"));
+
+        const string number = "90210473";
+        long expected = 0;
+        for (int mask = 1; mask < 1 << number.Length; mask++)
+        {
+            expected += long.Parse(string.Concat(number.Where((_, i) => (mask & (1 << i)) != 0)));
+        }
+
+        Assert.Equal(expected % 1_000_000_007, ManasaAndSubSequences.Solve(number));
+    }
+
+    [Fact]
+    public void WetSharkAnd42_MatchesWalk()
+    {
+        Assert.Equal(6L, WetSharkAnd42.Solve(3));
+        Assert.Equal(8L, WetSharkAnd42.Solve(4));
+
+        for (long s = 1; s <= 200; s++)
+        {
+            long strength = s, square = 0;
+            while (strength > 0)
+            {
+                square++;
+                if (square % 2 == 0 && square % 42 != 0)
+                {
+                    strength--;
+                }
+            }
+
+            Assert.Equal(square, WetSharkAnd42.Solve(s));
+        }
+    }
+
     [Fact]
     public void EvenOddQuery_Samples()
     {

@@ -387,6 +387,123 @@ public class DataStructuresTests
     }
 
     [Fact]
+    public void KthAncestor_MatchesParentWalk()
+    {
+        var random = new Random(157);
+        for (int trial = 0; trial < 20; trial++)
+        {
+            // A random initial tree on 1..8, then random adds, leaf removals and queries.
+            var parent = new Dictionary<int, int> { [1] = 0 };
+            var edges = new List<int[]> { new[] { 1, 0 } };
+            for (int node = 2; node <= 8; node++)
+            {
+                int p = random.Next(1, node);
+                parent[node] = p;
+                edges.Add([node, p]);
+            }
+
+            var queries = new List<string>();
+            var expected = new List<long>();
+            int nextId = 9;
+
+            for (int step = 0; step < 60; step++)
+            {
+                int kind = random.Next(3);
+                if (kind == 0)
+                {
+                    int p = parent.Keys.ElementAt(random.Next(parent.Count));
+                    queries.Add($"0 {p} {nextId}");
+                    parent[nextId++] = p;
+                }
+                else if (kind == 1)
+                {
+                    var leaves = parent.Keys.Where(x => !parent.Values.Contains(x)).ToArray();
+                    if (leaves.Length > 1)
+                    {
+                        int leaf = leaves[random.Next(leaves.Length)];
+                        queries.Add($"1 {leaf}");
+                        parent.Remove(leaf);
+                    }
+                }
+                else
+                {
+                    int x = random.Next(1, nextId + 2);
+                    int k = random.Next(0, 6);
+                    queries.Add($"2 {x} {k}");
+
+                    long answer = 0;
+                    if (parent.ContainsKey(x))
+                    {
+                        int at = x;
+                        for (int i = 0; i < k && at != 0; i++)
+                        {
+                            at = parent[at];
+                        }
+
+                        answer = at;
+                    }
+
+                    expected.Add(answer);
+                }
+            }
+
+            Assert.Equal(expected, KthAncestor.Solve(edges, queries));
+        }
+    }
+
+    [Fact]
+    public void ArrayAndSimpleQueries_Sample()
+    {
+        var (difference, final) = ArrayAndSimpleQueries.Solve([1, 2, 3, 4, 5, 6, 7, 8], [[1, 2, 4], [2, 3, 5], [1, 4, 7], [2, 1, 4]]);
+        Assert.Equal(1L, difference);
+        Assert.Equal([2, 3, 6, 5, 7, 8, 4, 1], final);
+    }
+
+    [Fact]
+    public void ArrayAndSimpleQueries_MatchesListOperations()
+    {
+        var random = new Random(163);
+        var list = Enumerable.Range(1, 30).ToList();
+        var queries = new List<int[]>();
+
+        for (int q = 0; q < 100; q++)
+        {
+            int i = random.Next(1, 31), j = random.Next(i, 31), type = random.Next(1, 3);
+            queries.Add([type, i, j]);
+
+            var segment = list.GetRange(i - 1, j - i + 1);
+            list.RemoveRange(i - 1, j - i + 1);
+            list.InsertRange(type == 1 ? 0 : list.Count, segment);
+        }
+
+        var (difference, final) = ArrayAndSimpleQueries.Solve(Enumerable.Range(1, 30).ToArray(), queries);
+        Assert.Equal(list, final);
+        Assert.Equal(Math.Abs(list[0] - list[^1]), difference);
+    }
+
+    [Fact]
+    public void FindMaximumIndexProduct_Sample() =>
+        Assert.Equal(8L, FindMaximumIndexProduct.Solve([5, 4, 3, 4, 5]));
+
+    [Fact]
+    public void FindMaximumIndexProduct_MatchesBruteForce()
+    {
+        var random = new Random(167);
+        for (int trial = 0; trial < 100; trial++)
+        {
+            var a = Enumerable.Range(0, random.Next(1, 10)).Select(_ => random.Next(1, 6)).ToArray();
+            long expected = Enumerable.Range(0, a.Length).Max(i =>
+            {
+                int left = Enumerable.Range(0, i).Reverse().FirstOrDefault(j => a[j] > a[i], -1) + 1;
+                int right = Enumerable.Range(i + 1, a.Length - i - 1).FirstOrDefault(j => a[j] > a[i], -1) + 1;
+                return (long)left * right;
+            });
+
+            Assert.Equal(expected, FindMaximumIndexProduct.Solve(a));
+        }
+    }
+
+    [Fact]
     public void MrXAndHisShots_Sample() =>
         Assert.Equal(9L, MrXAndHisShots.Solve([[1, 2], [2, 3], [4, 5], [6, 7]], [[1, 5], [2, 3], [4, 7], [5, 7]]));
 

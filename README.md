@@ -3,17 +3,17 @@
 [![build](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml/badge.svg)](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-latest-239120?logo=csharp)
-![Solutions](https://img.shields.io/badge/solutions-403-blue)
-![Tests](https://img.shields.io/badge/tests-1135-brightgreen)
+![Solutions](https://img.shields.io/badge/solutions-421-blue)
+![Tests](https://img.shields.io/badge/tests-1172-brightgreen)
 
 My solutions to [HackerRank](https://www.hackerrank.com/) problems, written in modern C# (.NET 10).
 Every solution has unit tests built from the problem's sample cases, and GitHub Actions runs them on each push.
 
 ## Highlights
 
-- **403 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
-- **1135 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
-- **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
+- **421 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
+- **1172 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
+- **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, implicit treaps, binary lifting, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
 - **Every solution has a doc comment** with the problem statement and a link to the original challenge
 
 ## Project structure
@@ -168,7 +168,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Matrix Layer Rotation](https://www.hackerrank.com/challenges/matrix-rotation-algo) | Hard | Rotate each ring by r mod length | [MatrixLayerRotation.cs](src/HackerRank.Solutions/Implementation/MatrixLayerRotation.cs) |
 | [New Year Chaos](https://www.hackerrank.com/challenges/new-year-chaos) | Medium | Count overtakers in a 2-wide window | [NewYearChaos.cs](src/HackerRank.Solutions/Implementation/NewYearChaos.cs) |
 
-### Strings (39)
+### Strings (40)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -211,8 +211,9 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Build a String](https://www.hackerrank.com/challenges/build-a-string) | Hard | DP + Z-function for the longest copy | [BuildAString.cs](src/HackerRank.Solutions/Strings/BuildAString.cs) |
 | [Circular Palindromes](https://www.hackerrank.com/challenges/circular-palindromes) | Advanced | Manacher per rotation | [CircularPalindromes.cs](src/HackerRank.Solutions/Strings/CircularPalindromes.cs) |
 | [Find Strings](https://www.hackerrank.com/challenges/find-strings) | Expert | Generalised suffix array + prefix counts | [FindStrings.cs](src/HackerRank.Solutions/Strings/FindStrings.cs) |
+| [Save Humanity](https://www.hackerrank.com/challenges/save-humanity) | Expert | Z-function from both ends | [SaveHumanity.cs](src/HackerRank.Solutions/Strings/SaveHumanity.cs) |
 
-### Data Structures (65)
+### Data Structures (68)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -281,6 +282,9 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Cube Summation](https://www.hackerrank.com/challenges/cube-summation) | Medium | 3D Fenwick tree | [CubeSummation.cs](src/HackerRank.Solutions/DataStructures/CubeSummation.cs) |
 | [Tree: Huffman Decoding](https://www.hackerrank.com/challenges/tree-huffman-decoding) | Medium | Walk from the root, restart at leaves | [HuffmanDecoding.cs](src/HackerRank.Solutions/DataStructures/HuffmanDecoding.cs) |
 | [Self Balancing Tree](https://www.hackerrank.com/challenges/self-balancing-tree) | Medium | AVL insertion with rotations | [SelfBalancingTree.cs](src/HackerRank.Solutions/DataStructures/SelfBalancingTree.cs) |
+| [Find Maximum Index Product](https://www.hackerrank.com/challenges/find-maximum-index-product) | Medium | Nearest larger on both sides | [FindMaximumIndexProduct.cs](src/HackerRank.Solutions/DataStructures/FindMaximumIndexProduct.cs) |
+| [Kth Ancestor](https://www.hackerrank.com/challenges/kth-ancestor) | Hard | Binary lifting on a growing tree | [KthAncestor.cs](src/HackerRank.Solutions/DataStructures/KthAncestor.cs) |
+| [Array and simple queries](https://www.hackerrank.com/challenges/array-and-simple-queries) | Hard | Implicit treap | [ArrayAndSimpleQueries.cs](src/HackerRank.Solutions/DataStructures/ArrayAndSimpleQueries.cs) |
 
 ### Sorting (18)
 
@@ -358,7 +362,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Team Formation](https://www.hackerrank.com/challenges/team-formation) | Advanced | Extend the smallest team ending at skill - 1 | [TeamFormation.cs](src/HackerRank.Solutions/Greedy/TeamFormation.cs) |
 | [Interval Selection](https://www.hackerrank.com/challenges/interval-selection) | Medium | By right end, track the doubly-covered point | [IntervalSelection.cs](src/HackerRank.Solutions/Greedy/IntervalSelection.cs) |
 
-### Dynamic Programming (30)
+### Dynamic Programming (33)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -392,6 +396,9 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Wet Shark and Two Subsequences](https://www.hackerrank.com/challenges/wet-shark-and-two-subsequences) | Medium | Knapsack by (length, sum) | [WetSharkAndTwoSubsequences.cs](src/HackerRank.Solutions/DynamicProgramming/WetSharkAndTwoSubsequences.cs) |
 | [Prime XOR](https://www.hackerrank.com/challenges/prime-xor) | Medium | Even/odd counts per value, DP over XOR | [PrimeXor.cs](src/HackerRank.Solutions/DynamicProgramming/PrimeXor.cs) |
 | [Coin on the Table](https://www.hackerrank.com/challenges/coin-on-the-table) | Medium | 0-1 BFS over (cell, time) | [CoinOnTheTable.cs](src/HackerRank.Solutions/DynamicProgramming/CoinOnTheTable.cs) |
+| [Dorsey Thief](https://www.hackerrank.com/challenges/dorsey-thief) | Medium | Exact-weight 0/1 knapsack | [DorseyThief.cs](src/HackerRank.Solutions/DynamicProgramming/DorseyThief.cs) |
+| [Fair Cut](https://www.hackerrank.com/challenges/fair-cut) | Medium | Sorted DP with ± contributions | [FairCut.cs](src/HackerRank.Solutions/DynamicProgramming/FairCut.cs) |
+| [Decibinary Numbers](https://www.hackerrank.com/challenges/decibinary-numbers) | Hard | Counting table, digit-by-digit ranking | [DecibinaryNumbers.cs](src/HackerRank.Solutions/DynamicProgramming/DecibinaryNumbers.cs) |
 
 ### Recursion (9)
 
@@ -407,7 +414,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Arithmetic Expressions](https://www.hackerrank.com/challenges/arithmetic-expressions) | Hard | Search over (position, remainder mod 101) | [ArithmeticExpressions.cs](src/HackerRank.Solutions/Recursion/ArithmeticExpressions.cs) |
 | [K Factorization](https://www.hackerrank.com/challenges/k-factorization) | Hard | BFS over divisors, greedy smallest step | [KFactorization.cs](src/HackerRank.Solutions/Recursion/KFactorization.cs) |
 
-### Bit Manipulation (17)
+### Bit Manipulation (18)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -428,8 +435,9 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [XOR Matrix](https://www.hackerrank.com/challenges/xor-matrix) | Hard | Power-of-two jumps over GF(2) | [XorMatrix.cs](src/HackerRank.Solutions/BitManipulation/XorMatrix.cs) |
 | [Xor and Sum](https://www.hackerrank.com/challenges/xor-and-sum) | Hard | x ⊕ y = x + y - 2(x ∧ y), per-bit counts | [XorAndSum.cs](src/HackerRank.Solutions/BitManipulation/XorAndSum.cs) |
 | [A or B](https://www.hackerrank.com/challenges/aorb) | Medium | Required changes, then shrink A from the top | [AOrB.cs](src/HackerRank.Solutions/BitManipulation/AOrB.cs) |
+| [Changing Bits](https://www.hackerrank.com/challenges/changing-bits) | Hard | Carry from the nearest equal-bit position | [ChangingBits.cs](src/HackerRank.Solutions/BitManipulation/ChangingBits.cs) |
 
-### Graph Theory (29)
+### Graph Theory (30)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -462,8 +470,9 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Journey Scheduling](https://www.hackerrank.com/challenges/journey-scheduling) | Hard | Diameter endpoints | [JourneyScheduling.cs](src/HackerRank.Solutions/GraphTheory/JourneyScheduling.cs) |
 | [Computer Game](https://www.hackerrank.com/challenges/computer-game) | Hard | Bipartite matching on gcd &gt; 1 | [ComputerGame.cs](src/HackerRank.Solutions/GraphTheory/ComputerGame.cs) |
 | [Hacker Country](https://www.hackerrank.com/challenges/hacker-country) | Hard | Karp's minimum mean cycle | [HackerCountry.cs](src/HackerRank.Solutions/GraphTheory/HackerCountry.cs) |
+| [Far Vertices](https://www.hackerrank.com/challenges/far-vertices) | Medium | Best centre vertex or edge | [FarVertices.cs](src/HackerRank.Solutions/GraphTheory/FarVertices.cs) |
 
-### Mathematics (55)
+### Mathematics (62)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -522,8 +531,15 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Equations](https://www.hackerrank.com/challenges/equations) | Medium | Divisors of (n!)², Legendre's formula | [Equations.cs](src/HackerRank.Solutions/Mathematics/Equations.cs) |
 | [Megaprime Numbers](https://www.hackerrank.com/challenges/megaprime-numbers) | Medium | Generate prime-digit numbers, Miller–Rabin | [MegaprimeNumbers.cs](src/HackerRank.Solutions/Mathematics/MegaprimeNumbers.cs) |
 | [Ajob Subsequence](https://www.hackerrank.com/challenges/ajob-subsequence) | Expert | Lucas's theorem | [AjobSubsequence.cs](src/HackerRank.Solutions/Mathematics/AjobSubsequence.cs) |
+| [Baby Step, Giant Step](https://www.hackerrank.com/challenges/baby-step-giant-step) | Easy | Case analysis, ⌈d / b⌉ | [BabyStepGiantStep.cs](src/HackerRank.Solutions/Mathematics/BabyStepGiantStep.cs) |
+| [Little Ashish's Huge Donation](https://www.hackerrank.com/challenges/little-chammys-huge-donation) | Easy | Binary search on the sum of squares | [LittleAshish.cs](src/HackerRank.Solutions/Mathematics/LittleAshish.cs) |
+| [Wet Shark and 42](https://www.hackerrank.com/challenges/wet-shark-and-42) | Easy | Skip one even square in 21 | [WetSharkAnd42.cs](src/HackerRank.Solutions/Mathematics/WetSharkAnd42.cs) |
+| [Sherlock and Moving Tiles](https://www.hackerrank.com/challenges/sherlock-and-moving-tiles) | Easy | Overlap side shrinks linearly | [SherlockAndMovingTiles.cs](src/HackerRank.Solutions/Mathematics/SherlockAndMovingTiles.cs) |
+| [Count Solutions](https://www.hackerrank.com/challenges/count-solutions) | Medium | Quadratic in y per x | [CountSolutions.cs](src/HackerRank.Solutions/Mathematics/CountSolutions.cs) |
+| [Manasa and Sub-sequences](https://www.hackerrank.com/challenges/manasa-and-sub-sequences) | Medium | Running total and count | [ManasaAndSubSequences.cs](src/HackerRank.Solutions/Mathematics/ManasaAndSubSequences.cs) |
+| [Tara's Beautiful Permutations](https://www.hackerrank.com/challenges/taras-beautiful-permutations) | Medium | Inclusion–exclusion over glued pairs | [TarasBeautifulPermutations.cs](src/HackerRank.Solutions/Mathematics/TarasBeautifulPermutations.cs) |
 
-### Game Theory (21)
+### Game Theory (23)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -548,6 +564,8 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Deforestation](https://www.hackerrank.com/challenges/deforestation-1) | Hard | Green Hackenbush, colon principle | [Deforestation.cs](src/HackerRank.Solutions/GameTheory/Deforestation.cs) |
 | [Chocolate in Box](https://www.hackerrank.com/challenges/chocolate-in-box) | Medium | Piles where a ⊕ X &lt; a | [ChocolateInBox.cs](src/HackerRank.Solutions/GameTheory/ChocolateInBox.cs) |
 | [Tower Breakers, Again!](https://www.hackerrank.com/challenges/tower-breakers-again-1) | Medium | Grundy over divisors | [TowerBreakersAgain.cs](src/HackerRank.Solutions/GameTheory/TowerBreakersAgain.cs) |
+| [Play on benders](https://www.hackerrank.com/challenges/benders-play) | Hard | Grundy numbers on a DAG | [PlayOnBenders.cs](src/HackerRank.Solutions/GameTheory/PlayOnBenders.cs) |
+| [Manasa and Prime game](https://www.hackerrank.com/challenges/manasa-and-prime-game) | Hard | Periodic Grundy sequence | [ManasaAndPrimeGame.cs](src/HackerRank.Solutions/GameTheory/ManasaAndPrimeGame.cs) |
 
 ## Adding a new solution
 

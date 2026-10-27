@@ -353,6 +353,46 @@ public class GraphTheoryTests
     }
 
     [Fact]
+    public void FarVertices_MatchesBruteForce()
+    {
+        var random = new Random(181);
+        for (int trial = 0; trial < 60; trial++)
+        {
+            int n = random.Next(1, 10);
+            int k = random.Next(1, 5);
+            var edges = Enumerable.Range(2, n - 1).Select(v => new[] { random.Next(1, v), v }).ToArray();
+
+            var distance = new int[n + 1, n + 1];
+            for (int s = 1; s <= n; s++)
+            {
+                for (int t = 1; t <= n; t++) distance[s, t] = s == t ? 0 : 1000;
+            }
+
+            foreach (var e in edges)
+            {
+                distance[e[0], e[1]] = distance[e[1], e[0]] = 1;
+            }
+
+            for (int m = 1; m <= n; m++)
+                for (int s = 1; s <= n; s++)
+                    for (int t = 1; t <= n; t++)
+                        distance[s, t] = Math.Min(distance[s, t], distance[s, m] + distance[m, t]);
+
+            int kept = 0;
+            for (int mask = 1; mask < 1 << n; mask++)
+            {
+                var nodes = Enumerable.Range(1, n).Where(v => (mask & (1 << (v - 1))) != 0).ToArray();
+                if (nodes.All(u => nodes.All(v => distance[u, v] <= k)))
+                {
+                    kept = Math.Max(kept, nodes.Length);
+                }
+            }
+
+            Assert.Equal(n - kept, FarVertices.Solve(n, k, edges));
+        }
+    }
+
+    [Fact]
     public void ComputerGame_Sample() =>
         Assert.Equal(3, ComputerGame.Solve([2, 5, 6, 7], [4, 9, 10, 23]));
 
