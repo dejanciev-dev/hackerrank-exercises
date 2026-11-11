@@ -510,4 +510,56 @@ public class StringsTests
     public void MaximumPalindromes_CountsArrangementsOfPairs() =>
         // aabbcc -> 3!/(1!1!1!) = 6 left halves; the extra d is the only possible middle.
         Assert.Equal([6L], MaximumPalindromes.Solve("aabbccd", [[1, 7]]));
+
+    [Theory]
+    [InlineData("ababa", 5L)]
+    [InlineData("aaa", 4L)]
+    [InlineData("abc", 0L)]
+    [InlineData("a", 0L)]
+    public void PalindromicBorder_Samples(string s, long expected) =>
+        Assert.Equal(expected, PalindromicBorder.Solve(s));
+
+    [Fact]
+    public void PalindromicBorder_MatchesBorderScan()
+    {
+        var random = new Random(5);
+        for (int round = 0; round < 150; round++)
+        {
+            int n = random.Next(1, 16), letters = random.Next(1, 4);
+            var s = string.Concat(Enumerable.Range(0, n).Select(_ => (char)('a' + random.Next(letters))));
+
+            long expected = 0;
+            for (int start = 0; start < n; start++)
+            {
+                for (int end = start + 1; end <= n; end++)
+                {
+                    var sub = s[start..end];
+                    for (int len = 1; len < sub.Length; len++)
+                    {
+                        var border = sub[..len];
+                        if (sub.EndsWith(border, StringComparison.Ordinal) && border.SequenceEqual(border.Reverse()))
+                        {
+                            expected++;
+                        }
+                    }
+                }
+            }
+
+            Assert.Equal(expected, PalindromicBorder.Solve(s));
+        }
+    }
+
+    [Fact]
+    public void PalindromicBorder_HandlesLongRuns()
+    {
+        // Every one of the n palindromes a^len occurs n − len + 1 times.
+        const int n = 100_000;
+        long expected = 0;
+        for (long occ = 1; occ <= n; occ++)
+        {
+            expected = (expected + occ * (occ - 1) / 2) % 1_000_000_007;
+        }
+
+        Assert.Equal(expected, PalindromicBorder.Solve(new string('a', n)));
+    }
 }
