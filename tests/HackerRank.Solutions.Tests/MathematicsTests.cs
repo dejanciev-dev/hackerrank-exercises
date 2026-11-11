@@ -801,4 +801,40 @@ public class MathematicsTests
     [InlineData(1_000L, 999L, 250_000L)]
     public void GameWithCells_Samples(long n, long m, long expected) =>
         Assert.Equal(expected, GameWithCells.Solve(n, m));
+
+    [Theory]
+    [InlineData(349L, 1L, 4L, 348L)]
+    [InlineData(395L, 1L, 7L, 392L)]
+    [InlineData(4L, -2L, 2L, 0L)]
+    [InlineData(1L, -5L, 1L, 1L)]
+    [InlineData(2L, 3L, 16L, 0L)]
+    [InlineData(1L, 1_000_000_000L, 3L, 0L)]
+    [InlineData(10L, 9L, 3L, 999_999_999L)]
+    public void ClosestNumber_Samples(long a, long b, long x, long expected) =>
+        Assert.Equal(expected, ClosestNumber.Solve(a, b, x));
+
+    [Fact]
+    public void ClosestNumber_MatchesScanOfMultiples()
+    {
+        for (long a = 1; a <= 6; a++)
+        {
+            for (long b = 0; b <= 5; b++)
+            {
+                long value = (long)Math.Pow(a, b);
+                for (long x = 1; x <= 12; x++)
+                {
+                    long best = 0;
+                    for (long multiple = 0; multiple <= value + x; multiple += x)
+                    {
+                        if (Math.Abs(multiple - value) < Math.Abs(best - value))
+                        {
+                            best = multiple;
+                        }
+                    }
+
+                    Assert.Equal(best, ClosestNumber.Solve(a, b, x));
+                }
+            }
+        }
+    }
 }

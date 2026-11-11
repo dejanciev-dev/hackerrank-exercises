@@ -3,16 +3,16 @@
 [![build](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml/badge.svg)](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-latest-239120?logo=csharp)
-![Solutions](https://img.shields.io/badge/solutions-422-blue)
-![Tests](https://img.shields.io/badge/tests-1176-brightgreen)
+![Solutions](https://img.shields.io/badge/solutions-423-blue)
+![Tests](https://img.shields.io/badge/tests-1184-brightgreen)
 
 My solutions to [HackerRank](https://www.hackerrank.com/) problems, written in modern C# (.NET 10).
 Every solution has unit tests built from the problem's sample cases, and GitHub Actions runs them on each push.
 
 ## Highlights
 
-- **422 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
-- **1176 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
+- **423 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
+- **1184 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
 - **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, implicit treaps, binary lifting, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
 - **Every solution has a doc comment** with the problem statement and a link to the original challenge
 
@@ -472,7 +472,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Hacker Country](https://www.hackerrank.com/challenges/hacker-country) | Hard | Karp's minimum mean cycle | [HackerCountry.cs](src/HackerRank.Solutions/GraphTheory/HackerCountry.cs) |
 | [Far Vertices](https://www.hackerrank.com/challenges/far-vertices) | Medium | Best centre vertex or edge | [FarVertices.cs](src/HackerRank.Solutions/GraphTheory/FarVertices.cs) |
 
-### Mathematics (63)
+### Mathematics (64)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -539,6 +539,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Manasa and Sub-sequences](https://www.hackerrank.com/challenges/manasa-and-sub-sequences) | Medium | Running total and count | [ManasaAndSubSequences.cs](src/HackerRank.Solutions/Mathematics/ManasaAndSubSequences.cs) |
 | [Tara's Beautiful Permutations](https://www.hackerrank.com/challenges/taras-beautiful-permutations) | Medium | Inclusion–exclusion over glued pairs | [TarasBeautifulPermutations.cs](src/HackerRank.Solutions/Mathematics/TarasBeautifulPermutations.cs) |
 | [Game With Cells](https://www.hackerrank.com/challenges/game-with-cells) | Easy | ⌈n / 2⌉ · ⌈m / 2⌉, O(1) | [GameWithCells.cs](src/HackerRank.Solutions/Mathematics/GameWithCells.cs) |
+| [Closest Number](https://www.hackerrank.com/challenges/closest-number) | Easy | Exact power, compare neighbouring multiples | [ClosestNumber.cs](src/HackerRank.Solutions/Mathematics/ClosestNumber.cs) |
 
 ### Game Theory (23)
 
