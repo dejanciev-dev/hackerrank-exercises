@@ -196,4 +196,42 @@ public class SearchTests
         var chain = Enumerable.Range(1, 99_999).Select(i => new[] { i, i + 1 }).ToArray();
         Assert.Equal(99_999L, SimilarPair.Solve(100_000, 1, chain));
     }
+
+    [Theory]
+    [InlineData(1, 2, 3, 4, 11L)]
+    [InlineData(1, 1, 1, 1, 0L)]
+    [InlineData(4, 3, 2, 1, 11L)]
+    public void BeautifulQuadruples_Samples(int a, int b, int c, int d, long expected) =>
+        Assert.Equal(expected, BeautifulQuadruples.Solve(a, b, c, d));
+
+    [Fact]
+    public void BeautifulQuadruples_MatchesMultisetEnumeration()
+    {
+        var random = new Random(11);
+        for (int round = 0; round < 40; round++)
+        {
+            int a = random.Next(1, 7), b = random.Next(1, 7), c = random.Next(1, 7), d = random.Next(1, 7);
+            var seen = new HashSet<(int, int, int, int)>();
+            for (int w = 1; w <= a; w++)
+            {
+                for (int x = 1; x <= b; x++)
+                {
+                    for (int y = 1; y <= c; y++)
+                    {
+                        for (int z = 1; z <= d; z++)
+                        {
+                            if ((w ^ x ^ y ^ z) != 0)
+                            {
+                                int[] sorted = [w, x, y, z];
+                                Array.Sort(sorted);
+                                seen.Add((sorted[0], sorted[1], sorted[2], sorted[3]));
+                            }
+                        }
+                    }
+                }
+            }
+
+            Assert.Equal(seen.Count, BeautifulQuadruples.Solve(a, b, c, d));
+        }
+    }
 }
