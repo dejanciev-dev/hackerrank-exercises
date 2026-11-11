@@ -28,7 +28,7 @@ public static class SherlockAndProbability
         }
 
         long total = (long)n * n;
-        long gcd = favourable == 0 ? total : (long)System.Numerics.BigInteger.GreatestCommonDivisor(favourable, total);
+        long gcd = ModularMath.Gcd(favourable, total);
         return $"{favourable / gcd}/{total / gcd}";
     }
 }

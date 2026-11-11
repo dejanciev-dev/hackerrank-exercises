@@ -904,4 +904,44 @@ public class MathematicsTests
             Assert.Equal(1L, (long)System.Numerics.BigInteger.GreatestCommonDivisor(parts[0], parts[1]));
         }
     }
+
+    [Theory]
+    [InlineData(2, "0")]
+    [InlineData(8, "1/3")]
+    [InlineData(36, "1/8")]
+    [InlineData(1, "0")]
+    [InlineData(4, "0")]
+    [InlineData(16, "1/4")]
+    public void MehtaAndHisLaziness_Samples(int n, string expected) =>
+        Assert.Equal(expected, MehtaAndHisLaziness.Solve(n));
+
+    [Fact]
+    public void MehtaAndHisLaziness_MatchesDivisorScan()
+    {
+        for (int n = 1; n <= 2000; n++)
+        {
+            long proper = 0, evenSquares = 0;
+            for (int d = 1; d < n; d++)
+            {
+                if (n % d != 0)
+                {
+                    continue;
+                }
+
+                proper++;
+                int root = (int)Math.Round(Math.Sqrt(d));
+                if (d % 2 == 0 && root * root == d)
+                {
+                    evenSquares++;
+                }
+            }
+
+            string expected = evenSquares == 0
+                ? "0"
+                : $"{evenSquares / Gcd(evenSquares, proper)}/{proper / Gcd(evenSquares, proper)}";
+            Assert.Equal(expected, MehtaAndHisLaziness.Solve(n));
+        }
+
+        static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
+    }
 }
