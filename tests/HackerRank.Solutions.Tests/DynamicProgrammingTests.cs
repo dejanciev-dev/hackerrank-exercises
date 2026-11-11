@@ -569,4 +569,49 @@ public class DynamicProgrammingTests
             return dp[x.Length, y.Length];
         }
     }
+
+    [Theory]
+    [InlineData("aaa", 3L)]
+    [InlineData("abab", 3L)]
+    [InlineData("baaba", 6L)]
+    [InlineData("a", 0L)]
+    public void SquareSubsequences_Samples(string s, long expected) =>
+        Assert.Equal(expected, SquareSubsequences.Solve(s));
+
+    [Fact]
+    public void SquareSubsequences_MatchesSubsetEnumeration()
+    {
+        var random = new Random(9);
+        for (int round = 0; round < 60; round++)
+        {
+            int n = random.Next(1, 13);
+            var s = string.Concat(Enumerable.Range(0, n).Select(_ => (char)('a' + random.Next(2))));
+
+            long expected = 0;
+            for (int mask = 1; mask < 1 << n; mask++)
+            {
+                var picked = string.Concat(Enumerable.Range(0, n).Where(i => (mask & (1 << i)) != 0).Select(i => s[i]));
+                int half = picked.Length / 2;
+                if (picked.Length % 2 == 0 && picked[..half] == picked[half..])
+                {
+                    expected++;
+                }
+            }
+
+            Assert.Equal(expected, SquareSubsequences.Solve(s));
+        }
+    }
+
+    [Fact]
+    public void SquareSubsequences_HandlesTheMaximumLength()
+    {
+        // Every even-length pick from a run of one letter is a square: 2^(n−1) − 1 of them.
+        long expected = 1;
+        for (int i = 0; i < 199; i++)
+        {
+            expected = expected * 2 % 1_000_000_007;
+        }
+
+        Assert.Equal((expected - 1 + 1_000_000_007) % 1_000_000_007, SquareSubsequences.Solve(new string('a', 200)));
+    }
 }
