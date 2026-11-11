@@ -837,4 +837,36 @@ public class MathematicsTests
             }
         }
     }
+
+    [Theory]
+    [InlineData(10L, 4L, 10L)]
+    [InlineData(7L, 3L, 7L)]
+    [InlineData(1L, 1L, 0L)]
+    [InlineData(1_000_000_000L, 1L, 499_999_999_500_000_000L)]
+    public void HelpMike_Samples(long n, long k, long expected) =>
+        Assert.Equal(expected, HelpMike.Solve(n, k));
+
+    [Fact]
+    public void HelpMike_MatchesPairCount()
+    {
+        for (long n = 1; n <= 30; n++)
+        {
+            for (long k = 1; k <= 35; k++)
+            {
+                long expected = 0;
+                for (long i = 1; i <= n; i++)
+                {
+                    for (long j = i + 1; j <= n; j++)
+                    {
+                        if ((i + j) % k == 0)
+                        {
+                            expected++;
+                        }
+                    }
+                }
+
+                Assert.Equal(expected, HelpMike.Solve(n, k));
+            }
+        }
+    }
 }
