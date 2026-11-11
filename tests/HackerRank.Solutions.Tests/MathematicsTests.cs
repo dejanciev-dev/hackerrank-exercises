@@ -944,4 +944,30 @@ public class MathematicsTests
 
         static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
     }
+
+    [Theory]
+    [InlineData("2", 2, "1")]
+    [InlineData("3", 2, "0")]
+    [InlineData("4", 3, "1")]
+    [InlineData("0", 5, "0")]
+    // 2^100 − 1 is all ones in binary, so no C(n, k) is even; 2^100 leaves only k = 0 and k = n.
+    [InlineData("1267650600228229401496703205375", 2, "0")]
+    [InlineData("1267650600228229401496703205376", 2, "1267650600228229401496703205375")]
+    public void BinomialCoefficients_Samples(string n, int p, string expected) =>
+        Assert.Equal(expected, BinomialCoefficients.Solve(n, p));
+
+    [Fact]
+    public void BinomialCoefficients_MatchesPascalsTriangle()
+    {
+        foreach (int p in new[] { 2, 3, 5, 7, 11 })
+        {
+            var row = new System.Numerics.BigInteger[] { 1 };
+            for (int n = 0; n <= 60; n++)
+            {
+                int divisible = row.Count(c => c % p == 0);
+                Assert.Equal(divisible.ToString(), BinomialCoefficients.Solve(n.ToString(), p));
+                row = Enumerable.Range(0, n + 2).Select(k => (k > 0 ? row[k - 1] : 0) + (k <= n ? row[k] : 0)).ToArray();
+            }
+        }
+    }
 }
