@@ -699,4 +699,77 @@ public class GameTheoryTests
             }
         }
     }
+
+    [Fact]
+    public void MoveTheCoins_Sample() =>
+        Assert.Equal(
+            ["NO", "YES", "INVALID"],
+            MoveTheCoins.Solve(
+                [0, 2, 2, 1, 3, 2],
+                [[1, 2], [1, 3], [3, 4], [3, 5], [4, 6]],
+                [[6, 2], [4, 1], [3, 6]]));
+
+    [Fact]
+    public void MoveTheCoins_MatchesPlayingTheGame()
+    {
+        var random = new Random(23);
+        for (int round = 0; round < 60; round++)
+        {
+            int n = random.Next(2, 6);
+            var coins = Enumerable.Range(0, n).Select(_ => random.Next(0, 3)).ToArray();
+            var parents = Enumerable.Range(0, n).Select(v => v == 0 ? -1 : random.Next(0, v)).ToArray();
+            var edges = Enumerable.Range(1, n - 1).Select(v => (IReadOnlyList<int>)[parents[v] + 1, v + 1]).ToList();
+
+            var queries = new List<IReadOnlyList<int>>();
+            var expected = new List<string>();
+            for (int u = 1; u < n; u++)
+            {
+                for (int v = 0; v < n; v++)
+                {
+                    queries.Add([u + 1, v + 1]);
+                    bool inSubtree = false;
+                    for (int w = v; w >= 0; w = parents[w])
+                    {
+                        inSubtree |= w == u;
+                    }
+
+                    if (inSubtree)
+                    {
+                        expected.Add("INVALID");
+                        continue;
+                    }
+
+                    var newParents = (int[])parents.Clone();
+                    newParents[u] = v;
+                    expected.Add(FirstPlayerWins(newParents, coins, []) ? "YES" : "NO");
+                }
+            }
+
+            Assert.Equal(expected, MoveTheCoins.Solve(coins, edges, queries));
+        }
+
+        static bool FirstPlayerWins(int[] parents, int[] coins, Dictionary<string, bool> memo)
+        {
+            string key = string.Join(',', coins);
+            if (memo.TryGetValue(key, out bool known))
+            {
+                return known;
+            }
+
+            bool wins = false;
+            for (int node = 1; node < coins.Length && !wins; node++)
+            {
+                for (int moved = 1; moved <= coins[node] && !wins; moved++)
+                {
+                    var next = (int[])coins.Clone();
+                    next[node] -= moved;
+                    next[parents[node]] += moved;
+                    wins = !FirstPlayerWins(parents, next, memo);
+                }
+            }
+
+            memo[key] = wins;
+            return wins;
+        }
+    }
 }
