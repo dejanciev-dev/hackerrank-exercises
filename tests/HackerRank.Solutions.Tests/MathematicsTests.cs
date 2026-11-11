@@ -793,4 +793,12 @@ public class MathematicsTests
         Assert.Equal(["Odd", "Even"], EvenOddQuery.Solve([3, 2, 7], [[1, 2], [2, 3]]));
         Assert.Equal(["Odd", "Even", "Odd"], EvenOddQuery.Solve([2, 0, 5], [[1, 2], [1, 1], [3, 2]]));
     }
+
+    [Theory]
+    [InlineData(2L, 2L, 1L)]
+    [InlineData(1L, 1L, 1L)]
+    [InlineData(3L, 5L, 6L)]
+    [InlineData(1_000L, 999L, 250_000L)]
+    public void GameWithCells_Samples(long n, long m, long expected) =>
+        Assert.Equal(expected, GameWithCells.Solve(n, m));
 }
