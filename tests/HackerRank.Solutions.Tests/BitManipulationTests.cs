@@ -282,4 +282,49 @@ public class BitManipulationTests
             }
         }
     }
+
+    [Fact]
+    public void WhatsNext_Samples()
+    {
+        // 1111 0 1 (61) → 111110 (62).
+        Assert.Equal([5L, 1L], WhatsNext.Solve([4, 1, 1]));
+        // 1111 0 111 00 1111 → 1111 0 111 0 1 0 111.
+        Assert.Equal([4L, 1L, 3L, 1L, 1L, 1L, 3L], WhatsNext.Solve([4, 1, 3, 2, 4]));
+        // All ones: 111 → 1011.
+        Assert.Equal([1L, 1L, 2L], WhatsNext.Solve([3]));
+    }
+
+    [Fact]
+    public void WhatsNext_MatchesNextSameBitCount()
+    {
+        for (long x = 1; x < 1 << 12; x++)
+        {
+            long next = x + 1;
+            while (long.PopCount(next) != long.PopCount(x))
+            {
+                next++;
+            }
+
+            Assert.Equal(ToRuns(next), WhatsNext.Solve(ToRuns(x)));
+        }
+
+        static long[] ToRuns(long value)
+        {
+            var bits = Convert.ToString(value, 2);
+            var runs = new List<long>();
+            for (int i = 0; i < bits.Length; i++)
+            {
+                if (i > 0 && bits[i] == bits[i - 1])
+                {
+                    runs[^1]++;
+                }
+                else
+                {
+                    runs.Add(1);
+                }
+            }
+
+            return [.. runs];
+        }
+    }
 }
