@@ -428,4 +428,77 @@ public class GraphTheoryTests
             Assert.Equal([counts.Min(), counts.Max()], Liars.Solve(n, clues));
         }
     }
+
+    [Fact]
+    public void TollCostDigits_Sample() =>
+        Assert.Equal(
+            [0L, 2L, 1L, 1L, 2L, 0L, 2L, 1L, 1L, 2L],
+            TollCostDigits.Solve(3, [[1, 3, 602], [1, 2, 256], [2, 3, 411]]));
+
+    [Fact]
+    public void TollCostDigits_MatchesStateSearch()
+    {
+        var random = new Random(13);
+        for (int round = 0; round < 100; round++)
+        {
+            int n = random.Next(1, 8);
+            var roads = new List<IReadOnlyList<int>>();
+            for (int e = random.Next(0, 10); e > 0; e--)
+            {
+                int x = random.Next(1, n + 1), y = random.Next(1, n + 1);
+                if (x != y)
+                {
+                    roads.Add([x, y, random.Next(1, 1000)]);
+                }
+            }
+
+            // Search over (junction, digit) states from every source.
+            var expected = new long[10];
+            for (int source = 1; source <= n; source++)
+            {
+                var seen = new bool[n + 1, 10];
+                var queue = new Queue<(int, int)>();
+                seen[source, 0] = true;
+                queue.Enqueue((source, 0));
+                while (queue.Count > 0)
+                {
+                    var (v, digit) = queue.Dequeue();
+                    foreach (var road in roads)
+                    {
+                        if (road[0] == v)
+                        {
+                            Visit(road[1], (digit + road[2]) % 10);
+                        }
+
+                        if (road[1] == v)
+                        {
+                            Visit(road[0], (digit + 1000 - road[2]) % 10);
+                        }
+                    }
+                }
+
+                for (int target = 1; target <= n; target++)
+                {
+                    for (int d = 0; d < 10; d++)
+                    {
+                        if (target != source && seen[target, d])
+                        {
+                            expected[d]++;
+                        }
+                    }
+                }
+
+                void Visit(int to, int digit)
+                {
+                    if (!seen[to, digit])
+                    {
+                        seen[to, digit] = true;
+                        queue.Enqueue((to, digit));
+                    }
+                }
+            }
+
+            Assert.Equal(expected, TollCostDigits.Solve(n, roads));
+        }
+    }
 }
