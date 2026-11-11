@@ -522,4 +522,73 @@ public class DataStructuresTests
             Assert.Equal(expected, MrXAndHisShots.Solve(shots, players));
         }
     }
+
+    [Fact]
+    public void BalancedForest_Samples()
+    {
+        Assert.Equal(2L, BalancedForest.Solve([1, 2, 2, 1, 1], [[1, 2], [1, 3], [3, 5], [1, 4]]));
+        Assert.Equal(-1L, BalancedForest.Solve([1, 3, 5], [[1, 3], [1, 2]]));
+        Assert.Equal(-1L, BalancedForest.Solve([7], []));
+    }
+
+    [Fact]
+    public void BalancedForest_MatchesCuttingEveryEdgePair()
+    {
+        var random = new Random(19);
+        for (int round = 0; round < 300; round++)
+        {
+            int n = random.Next(1, 9);
+            var values = Enumerable.Range(0, n).Select(_ => random.Next(1, 6)).ToArray();
+            var edges = Enumerable.Range(2, n - 1).Select(v => (IReadOnlyList<int>)[random.Next(1, v), v]).ToList();
+
+            long best = long.MaxValue;
+            for (int first = 0; first < edges.Count; first++)
+            {
+                var halves = Components(edges.Where((_, i) => i != first));
+                if (halves.Length == 2 && halves[0] == halves[1])
+                {
+                    best = Math.Min(best, halves[0]);
+                }
+
+                for (int second = first + 1; second < edges.Count; second++)
+                {
+                    var parts = Components(edges.Where((_, i) => i != first && i != second));
+                    Array.Sort(parts);
+                    if (parts[1] == parts[2])
+                    {
+                        best = Math.Min(best, parts[2] - parts[0]);
+                    }
+                }
+            }
+
+            Assert.Equal(best == long.MaxValue ? -1 : best, BalancedForest.Solve(values, edges));
+
+            long[] Components(IEnumerable<IReadOnlyList<int>> kept)
+            {
+                var label = Enumerable.Range(0, n).ToArray();
+                var keptEdges = kept.ToList();
+                for (bool changed = true; changed;)
+                {
+                    changed = false;
+                    foreach (var edge in keptEdges)
+                    {
+                        int low = Math.Min(label[edge[0] - 1], label[edge[1] - 1]);
+                        changed |= label[edge[0] - 1] != low || label[edge[1] - 1] != low;
+                        label[edge[0] - 1] = label[edge[1] - 1] = low;
+                    }
+                }
+
+                return Enumerable.Range(0, n).GroupBy(v => label[v]).Select(g => g.Sum(v => (long)values[v])).ToArray();
+            }
+        }
+    }
+
+    [Fact]
+    public void BalancedForest_HandlesADeepPath()
+    {
+        // A path of 50 000 ones splits into three runs of 16 667 after adding a node of value 1.
+        const int n = 50_000;
+        var edges = Enumerable.Range(1, n - 1).Select(v => (IReadOnlyList<int>)[v, v + 1]).ToList();
+        Assert.Equal(1L, BalancedForest.Solve(Enumerable.Repeat(1, n).ToArray(), edges));
+    }
 }
