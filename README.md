@@ -3,16 +3,16 @@
 [![build](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml/badge.svg)](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-latest-239120?logo=csharp)
-![Solutions](https://img.shields.io/badge/solutions-433-blue)
-![Tests](https://img.shields.io/badge/tests-1232-brightgreen)
+![Solutions](https://img.shields.io/badge/solutions-434-blue)
+![Tests](https://img.shields.io/badge/tests-1234-brightgreen)
 
 My solutions to [HackerRank](https://www.hackerrank.com/) problems, written in modern C# (.NET 10).
 Every solution has unit tests built from the problem's sample cases, and GitHub Actions runs them on each push.
 
 ## Highlights
 
-- **433 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
-- **1232 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
+- **434 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
+- **1234 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
 - **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, implicit treaps, binary lifting, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
 - **Every solution has a doc comment** with the problem statement and a link to the original challenge
 
@@ -442,7 +442,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Changing Bits](https://www.hackerrank.com/challenges/changing-bits) | Hard | Carry from the nearest equal-bit position | [ChangingBits.cs](src/HackerRank.Solutions/BitManipulation/ChangingBits.cs) |
 | [What's Next?](https://www.hackerrank.com/challenges/whats-next) | Medium | Rewrite the last runs: 0 1^k 0^m → 1 0^(m+1) 1^(k−1) | [WhatsNext.cs](src/HackerRank.Solutions/BitManipulation/WhatsNext.cs) |
 
-### Graph Theory (31)
+### Graph Theory (32)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -477,6 +477,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Hacker Country](https://www.hackerrank.com/challenges/hacker-country) | Hard | Karp's minimum mean cycle | [HackerCountry.cs](src/HackerRank.Solutions/GraphTheory/HackerCountry.cs) |
 | [Far Vertices](https://www.hackerrank.com/challenges/far-vertices) | Medium | Best centre vertex or edge | [FarVertices.cs](src/HackerRank.Solutions/GraphTheory/FarVertices.cs) |
 | [Toll Cost Digits](https://www.hackerrank.com/challenges/toll-cost-digits) | Hard | BFS potentials mod 10, cycle subgroup gcd | [TollCostDigits.cs](src/HackerRank.Solutions/GraphTheory/TollCostDigits.cs) |
+| [Jim and his LAN Party](https://www.hackerrank.com/challenges/jim-and-his-lan-party) | Hard | Union-find with small-to-large game counts | [JimAndHisLanParty.cs](src/HackerRank.Solutions/GraphTheory/JimAndHisLanParty.cs) |
 
 ### Mathematics (68)
 

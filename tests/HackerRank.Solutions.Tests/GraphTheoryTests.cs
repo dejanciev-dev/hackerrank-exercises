@@ -501,4 +501,53 @@ public class GraphTheoryTests
             Assert.Equal(expected, TollCostDigits.Solve(n, roads));
         }
     }
+
+    [Fact]
+    public void JimAndHisLanParty_Examples()
+    {
+        // Game 1 is played by people 1, 2 and 4; game 2 only by person 3; game 3 by nobody.
+        Assert.Equal([3, 0, 0], JimAndHisLanParty.Solve(3, [1, 1, 2, 1], [[1, 2], [2, 3], [3, 4]]));
+        Assert.Equal([-1, 1], JimAndHisLanParty.Solve(2, [1, 2, 2, 1], [[2, 3]]));
+    }
+
+    [Fact]
+    public void JimAndHisLanParty_MatchesReplayingWires()
+    {
+        var random = new Random(17);
+        for (int round = 0; round < 100; round++)
+        {
+            int n = random.Next(1, 9), m = random.Next(1, 4);
+            var games = Enumerable.Range(0, n).Select(_ => random.Next(1, m + 1)).ToArray();
+            var wires = Enumerable.Range(0, random.Next(0, 10))
+                .Select(_ => (IReadOnlyList<int>)[random.Next(1, n + 1), random.Next(1, n + 1)])
+                .ToList();
+
+            var expected = new int[m];
+            for (int game = 1; game <= m; game++)
+            {
+                expected[game - 1] = -1;
+                for (int used = 0; used <= wires.Count && expected[game - 1] < 0; used++)
+                {
+                    var label = Enumerable.Range(0, n).ToArray();
+                    for (bool changed = true; changed;)
+                    {
+                        changed = false;
+                        foreach (var wire in wires.Take(used))
+                        {
+                            int low = Math.Min(label[wire[0] - 1], label[wire[1] - 1]);
+                            changed |= label[wire[0] - 1] != low || label[wire[1] - 1] != low;
+                            label[wire[0] - 1] = label[wire[1] - 1] = low;
+                        }
+                    }
+
+                    if (Enumerable.Range(0, n).Where(p => games[p] == game).Select(p => label[p]).Distinct().Count() <= 1)
+                    {
+                        expected[game - 1] = used;
+                    }
+                }
+            }
+
+            Assert.Equal(expected, JimAndHisLanParty.Solve(m, games, wires));
+        }
+    }
 }
