@@ -522,4 +522,51 @@ public class DynamicProgrammingTests
         long expected = subsets.Sum(a => subsets.LongCount(b => a.Length == b.Length && a.Sum + b.Sum == r && a.Sum - b.Sum == s));
         Assert.Equal(expected, WetSharkAndTwoSubsequences.Solve(x, r, s));
     }
+
+    [Theory]
+    [InlineData("aa", "baaa", 4)]
+    [InlineData("abc", "abc", 0)]
+    [InlineData("a", "b", 2)]
+    public void LcsReturns_Samples(string a, string b, int expected) =>
+        Assert.Equal(expected, LcsReturns.Solve(a, b));
+
+    [Fact]
+    public void LcsReturns_MatchesTryingEveryInsertion()
+    {
+        var random = new Random(3);
+        for (int round = 0; round < 150; round++)
+        {
+            string a = RandomString(random.Next(0, 7)), b = RandomString(random.Next(1, 7));
+            int lcs = Lcs(a, b), expected = 0;
+            for (int i = 0; i <= a.Length; i++)
+            {
+                for (char c = 'a'; c <= 'c'; c++)
+                {
+                    if (Lcs(a.Insert(i, c.ToString()), b) == lcs + 1)
+                    {
+                        expected++;
+                    }
+                }
+            }
+
+            Assert.Equal(expected, LcsReturns.Solve(a, b));
+        }
+
+        string RandomString(int length) =>
+            string.Concat(Enumerable.Range(0, length).Select(_ => (char)('a' + random.Next(3))));
+
+        static int Lcs(string x, string y)
+        {
+            var dp = new int[x.Length + 1, y.Length + 1];
+            for (int i = 1; i <= x.Length; i++)
+            {
+                for (int j = 1; j <= y.Length; j++)
+                {
+                    dp[i, j] = x[i - 1] == y[j - 1] ? dp[i - 1, j - 1] + 1 : Math.Max(dp[i - 1, j], dp[i, j - 1]);
+                }
+            }
+
+            return dp[x.Length, y.Length];
+        }
+    }
 }
