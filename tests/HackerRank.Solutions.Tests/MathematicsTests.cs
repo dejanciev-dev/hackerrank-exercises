@@ -869,4 +869,39 @@ public class MathematicsTests
             }
         }
     }
+
+    [Theory]
+    [InlineData(3, "1011", "9/16")]
+    [InlineData(1, "1011", "5/16")]
+    [InlineData(2, "0000", "0/1")]
+    [InlineData(0, "1", "1/1")]
+    public void SherlockAndProbability_Samples(int k, string s, string expected) =>
+        Assert.Equal(expected, SherlockAndProbability.Solve(k, s));
+
+    [Fact]
+    public void SherlockAndProbability_MatchesPairCount()
+    {
+        var random = new Random(7);
+        for (int round = 0; round < 200; round++)
+        {
+            int n = random.Next(1, 12), k = random.Next(0, n + 1);
+            var s = string.Concat(Enumerable.Range(0, n).Select(_ => random.Next(2) == 0 ? '0' : '1'));
+
+            long favourable = 0;
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (s[i] == '1' && s[j] == '1' && Math.Abs(i - j) <= k)
+                    {
+                        favourable++;
+                    }
+                }
+            }
+
+            var parts = SherlockAndProbability.Solve(k, s).Split('/').Select(long.Parse).ToArray();
+            Assert.Equal(favourable * parts[1], parts[0] * n * n);
+            Assert.Equal(1L, (long)System.Numerics.BigInteger.GreatestCommonDivisor(parts[0], parts[1]));
+        }
+    }
 }
