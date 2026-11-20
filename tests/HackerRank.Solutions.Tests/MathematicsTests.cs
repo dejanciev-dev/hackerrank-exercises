@@ -1225,4 +1225,40 @@ public class MathematicsTests
     [Fact]
     public void Twins_WorksHighUpInTheRange() =>
         Assert.True(Twins.Solve(999_000_000, 1_000_000_000) > 0);
+
+    [Theory]
+    [InlineData("3", "2", 9L)]
+    [InlineData("1", "1", 1L)]
+    [InlineData("2", "10", 1024L)]
+    [InlineData("1000000007", "5", 0L)]
+    [InlineData("1000000006", "1000000006", 1L)]
+    [InlineData("5", "1000000006", 1L)]
+    public void PowerOfLargeNumbers_Samples(string a, string b, long expected) =>
+        Assert.Equal(expected, PowerOfLargeNumbers.Solve(a, b));
+
+    [Fact]
+    public void PowerOfLargeNumbers_MatchesBigIntegerOnLongInputs()
+    {
+        var random = new Random(3);
+        for (int round = 0; round < 20; round++)
+        {
+            string a = RandomDigits(random, random.Next(1, 40));
+            string b = RandomDigits(random, random.Next(1, 6));
+            var expected = (long)System.Numerics.BigInteger.ModPow(
+                System.Numerics.BigInteger.Parse(a), System.Numerics.BigInteger.Parse(b), 1_000_000_007);
+
+            Assert.Equal(expected, PowerOfLargeNumbers.Solve(a, b));
+        }
+    }
+
+    [Fact]
+    public void PowerOfLargeNumbers_ReadsHundredThousandDigits()
+    {
+        var digits = new string('7', 100_000);
+
+        Assert.InRange(PowerOfLargeNumbers.Solve(digits, digits), 1L, 1_000_000_006L);
+    }
+
+    private static string RandomDigits(Random random, int length) =>
+        string.Concat(Enumerable.Range(0, length).Select(i => (char)('0' + (i == 0 ? random.Next(1, 10) : random.Next(10)))));
 }
