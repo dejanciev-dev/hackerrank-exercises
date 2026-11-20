@@ -629,4 +629,46 @@ public class DataStructuresTests
             Assert.Equal(worst, actual[count - 1]);
         }
     }
+
+    [Theory]
+    [InlineData(new[] { 1, 1, 2, 4, 2 }, 8L)]
+    [InlineData(new[] { 5 }, 0L)]
+    [InlineData(new[] { 3, 3 }, 0L)]
+    [InlineData(new[] { 1, 1 }, 1L)]
+    [InlineData(new[] { 1000000000, 1000000000, 1 }, 2L)]
+    public void ArrayPairs_Samples(int[] a, long expected) =>
+        Assert.Equal(expected, ArrayPairs.Solve(a));
+
+    [Theory]
+    [InlineData(1, 6)]
+    [InlineData(2, 40)]
+    [InlineData(3, 500)]
+    public void ArrayPairs_MatchesBruteForce(int seed, int maxValue)
+    {
+        var random = new Random(seed);
+        for (int round = 0; round < 25; round++)
+        {
+            var a = Enumerable.Range(0, random.Next(2, 90)).Select(_ => random.Next(1, maxValue)).ToArray();
+
+            long expected = 0;
+            for (int i = 0; i < a.Length; i++)
+            {
+                int max = a[i];
+                for (int j = i + 1; j < a.Length; j++)
+                {
+                    max = Math.Max(max, a[j]);
+                    if ((long)a[i] * a[j] <= max)
+                    {
+                        expected++;
+                    }
+                }
+            }
+
+            Assert.Equal(expected, ArrayPairs.Solve(a));
+        }
+    }
+
+    [Fact]
+    public void ArrayPairs_AllOnesPairsEveryone() =>
+        Assert.Equal(100_000L * 99_999 / 2, ArrayPairs.Solve(Enumerable.Repeat(1, 100_000).ToArray()));
 }
