@@ -221,4 +221,29 @@ public class SortingTests
             }
         }
     }
+
+    [Fact]
+    public void QuicksortInPlace_Sample() =>
+        Assert.Equal(
+            ["1 3 2 5 9 7 8", "1 2 3 5 9 7 8", "1 2 3 5 7 8 9"],
+            QuicksortInPlace.Solve([1, 3, 9, 8, 2, 7, 5]));
+
+    [Fact]
+    public void QuicksortInPlace_ShortInputs()
+    {
+        Assert.Empty(QuicksortInPlace.Solve([4]));
+        Assert.Equal(["1 2"], QuicksortInPlace.Solve([2, 1]));
+        Assert.Equal(["1 2"], QuicksortInPlace.Solve([1, 2]));
+    }
+
+    [Fact]
+    public void QuicksortInPlace_EndsSorted()
+    {
+        var random = new Random(21);
+        var arr = Enumerable.Range(0, 50).OrderBy(_ => random.Next()).ToArray();
+
+        var lines = QuicksortInPlace.Solve(arr);
+
+        Assert.Equal(string.Join(' ', Enumerable.Range(0, 50)), lines[^1]);
+    }
 }
