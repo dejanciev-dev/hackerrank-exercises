@@ -254,4 +254,71 @@ public class GreedyTests
             Assert.Equal(expected, CloudyDay.Solve(p, x, y, r));
         }
     }
+
+    [Theory]
+    [InlineData(12L, 8L, 3L)]
+    [InlineData(10L, 3L, 3L)]
+    [InlineData(2L, 1L, 1L)]
+    [InlineData(5L, 3L, 10L)]
+    public void Bonetrousle_ImpossibleCases(long n, long k, long b) =>
+        Assert.Equal([-1L], Bonetrousle.Solve(n, k, b));
+
+    [Fact]
+    public void Bonetrousle_Samples()
+    {
+        // Any valid answer is accepted; this one raises the largest box.
+        Assert.Equal([1L, 2L, 6L], Bonetrousle.Solve(9, 3, 10));
+        Assert.Equal([1L, 2L, 3L, 4L], Bonetrousle.Solve(10, 4, 4));
+        Assert.Equal([1L], Bonetrousle.Solve(1, 1, 1));
+    }
+
+    [Fact]
+    public void Bonetrousle_AgreesWithSubsetEnumerationOnSmallInputs()
+    {
+        for (int b = 1; b <= 9; b++)
+        {
+            for (int k = 1; k <= b; k++)
+            {
+                var reachable = new HashSet<int>();
+                for (int mask = 0; mask < 1 << b; mask++)
+                {
+                    if (int.PopCount(mask) != k)
+                    {
+                        continue;
+                    }
+
+                    reachable.Add(Enumerable.Range(0, b).Where(bit => (mask >> bit & 1) == 1).Sum(bit => bit + 1));
+                }
+
+                for (int n = 1; n <= b * (b + 1) / 2 + 2; n++)
+                {
+                    var boxes = Bonetrousle.Solve(n, k, b);
+                    if (!reachable.Contains(n))
+                    {
+                        Assert.Equal([-1L], boxes);
+                        continue;
+                    }
+
+                    Assert.Equal(k, boxes.Length);
+                    Assert.Equal(k, boxes.Distinct().Count());
+                    Assert.All(boxes, size => Assert.InRange(size, 1, b));
+                    Assert.Equal(n, boxes.Sum());
+                }
+            }
+        }
+    }
+
+    [Fact]
+    public void Bonetrousle_HugeInputsStayInRange()
+    {
+        const long k = 1_000_000;
+        const long b = 1_000_000_000_000;
+        long n = k * b / 2;
+
+        var boxes = Bonetrousle.Solve(n, k, b);
+
+        Assert.Equal(k, boxes.Length);
+        Assert.Equal(n, boxes.Sum());
+        Assert.Equal(k, boxes.Distinct().Count());
+    }
 }
