@@ -3,16 +3,16 @@
 [![build](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml/badge.svg)](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-latest-239120?logo=csharp)
-![Solutions](https://img.shields.io/badge/solutions-443-blue)
-![Tests](https://img.shields.io/badge/tests-1277-brightgreen)
+![Solutions](https://img.shields.io/badge/solutions-444-blue)
+![Tests](https://img.shields.io/badge/tests-1284-brightgreen)
 
 My solutions to [HackerRank](https://www.hackerrank.com/) problems, written in modern C# (.NET 10).
 Every solution has unit tests built from the problem's sample cases, and GitHub Actions runs them on each push.
 
 ## Highlights
 
-- **443 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
-- **1277 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
+- **444 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
+- **1284 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
 - **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, palindromic trees, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, implicit treaps, binary lifting, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, staircase Nim, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
 - **Every solution has a doc comment** with the problem statement and a link to the original challenge
 
@@ -342,7 +342,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Gena Playing Hanoi](https://www.hackerrank.com/challenges/gena) | Medium | BFS over base-4 states | [GenaPlayingHanoi.cs](src/HackerRank.Solutions/Search/GenaPlayingHanoi.cs) |
 | [Beautiful Quadruples](https://www.hackerrank.com/challenges/xor-quadruples) | Medium | Sweep the third value, XOR-count table of the first two | [BeautifulQuadruples.cs](src/HackerRank.Solutions/Search/BeautifulQuadruples.cs) |
 
-### Greedy (23)
+### Greedy (24)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -369,6 +369,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Cloudy Day](https://www.hackerrank.com/challenges/cloudy-day) | Medium | Sweep line, credit single-cloud towns | [CloudyDay.cs](src/HackerRank.Solutions/Greedy/CloudyDay.cs) |
 | [Team Formation](https://www.hackerrank.com/challenges/team-formation) | Advanced | Extend the smallest team ending at skill - 1 | [TeamFormation.cs](src/HackerRank.Solutions/Greedy/TeamFormation.cs) |
 | [Interval Selection](https://www.hackerrank.com/challenges/interval-selection) | Medium | By right end, track the doubly-covered point | [IntervalSelection.cs](src/HackerRank.Solutions/Greedy/IntervalSelection.cs) |
+| [Bonetrousle](https://www.hackerrank.com/challenges/bonetrousle) | Medium | Start from 1..k and raise the largest boxes | [Bonetrousle.cs](src/HackerRank.Solutions/Greedy/Bonetrousle.cs) |
 
 ### Dynamic Programming (35)
 
