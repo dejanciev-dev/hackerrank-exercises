@@ -3,16 +3,16 @@
 [![build](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml/badge.svg)](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-latest-239120?logo=csharp)
-![Solutions](https://img.shields.io/badge/solutions-451-blue)
-![Tests](https://img.shields.io/badge/tests-1334-brightgreen)
+![Solutions](https://img.shields.io/badge/solutions-452-blue)
+![Tests](https://img.shields.io/badge/tests-1341-brightgreen)
 
 My solutions to [HackerRank](https://www.hackerrank.com/) problems, written in modern C# (.NET 10).
 Every solution has unit tests built from the problem's sample cases, and GitHub Actions runs them on each push.
 
 ## Highlights
 
-- **451 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
-- **1334 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
+- **452 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
+- **1341 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
 - **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, palindromic trees, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, implicit treaps, binary lifting, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, staircase Nim, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
 - **Every solution has a doc comment** with the problem statement and a link to the original challenge
 
@@ -290,7 +290,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Task Scheduling](https://www.hackerrank.com/challenges/task-scheduling) | Hard | Segment tree: range add, global maximum | [TaskScheduling.cs](src/HackerRank.Solutions/DataStructures/TaskScheduling.cs) |
 | [Array Pairs](https://www.hackerrank.com/challenges/array-pairs) | Advanced | Cartesian-tree split, offline Fenwick range counting | [ArrayPairs.cs](src/HackerRank.Solutions/DataStructures/ArrayPairs.cs) |
 
-### Sorting (22)
+### Sorting (23)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -316,6 +316,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Counting Sort 3](https://www.hackerrank.com/challenges/countingsort3) | Easy | Cumulative frequency array | [CountingSort3.cs](src/HackerRank.Solutions/Sorting/CountingSort3.cs) |
 | [Zig Zag Sequence](https://www.hackerrank.com/challenges/zig-zag-sequence) | Medium | Sort, maximum in the middle, reverse the tail | [ZigZagSequence.cs](src/HackerRank.Solutions/Sorting/ZigZagSequence.cs) |
 | [Quicksort In-Place](https://www.hackerrank.com/challenges/quicksort3) | Medium | Lomuto partition, print after each partition | [QuicksortInPlace.cs](src/HackerRank.Solutions/Sorting/QuicksortInPlace.cs) |
+| [Running Time of Quicksort](https://www.hackerrank.com/challenges/quicksort4) | Medium | Count insertion-sort shifts and Lomuto swaps | [RunningTimeOfQuicksort.cs](src/HackerRank.Solutions/Sorting/RunningTimeOfQuicksort.cs) |
 
 ### Search (21)
 
