@@ -246,4 +246,23 @@ public class SortingTests
 
         Assert.Equal(string.Join(' ', Enumerable.Range(0, 50)), lines[^1]);
     }
+
+    [Theory]
+    [InlineData(new[] { 1, 3, 9, 8, 2, 7, 5 }, 1)]
+    [InlineData(new[] { 5 }, 0)]
+    [InlineData(new[] { 1, 2 }, -2)]
+    [InlineData(new[] { 2, 1 }, 0)]
+    [InlineData(new[] { 3, 2, 1 }, 0)]
+    [InlineData(new[] { 1, 2, 3, 4 }, -9)]
+    public void RunningTimeOfQuicksort_Samples(int[] arr, int expected) =>
+        Assert.Equal(expected, RunningTimeOfQuicksort.Solve(arr));
+
+    [Fact]
+    public void RunningTimeOfQuicksort_ReversedArrayCostsInsertionSortMore()
+    {
+        // Reversed input: insertion sort shifts n(n-1)/2 = 435 times, far more than quicksort swaps.
+        int[] arr = Enumerable.Range(1, 30).Reverse().ToArray();
+
+        Assert.True(RunningTimeOfQuicksort.Solve(arr) > 0);
+    }
 }
