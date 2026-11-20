@@ -970,4 +970,17 @@ public class MathematicsTests
             }
         }
     }
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3 }, 0L)]
+    [InlineData(new[] { 1, 1, 2 }, 2L)]
+    [InlineData(new[] { 1, 1, 1 }, 6L)]
+    [InlineData(new[] { 2, 2, 1, 1, 3 }, 4L)]
+    [InlineData(new int[0], 0L)]
+    public void SherlockAndPairs_Samples(int[] a, long expected) =>
+        Assert.Equal(expected, SherlockAndPairs.Solve(a));
+
+    [Fact]
+    public void SherlockAndPairs_DoesNotOverflowInt() =>
+        Assert.Equal(100_000L * 99_999, SherlockAndPairs.Solve(Enumerable.Repeat(7, 100_000).ToArray()));
 }

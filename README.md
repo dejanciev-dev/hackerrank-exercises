@@ -3,16 +3,16 @@
 [![build](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml/badge.svg)](https://github.com/dejanciev-dev/hackerrank-exercises/actions/workflows/build.yml)
 ![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)
 ![C#](https://img.shields.io/badge/C%23-latest-239120?logo=csharp)
-![Solutions](https://img.shields.io/badge/solutions-441-blue)
-![Tests](https://img.shields.io/badge/tests-1264-brightgreen)
+![Solutions](https://img.shields.io/badge/solutions-442-blue)
+![Tests](https://img.shields.io/badge/tests-1270-brightgreen)
 
 My solutions to [HackerRank](https://www.hackerrank.com/) problems, written in modern C# (.NET 10).
 Every solution has unit tests built from the problem's sample cases, and GitHub Actions runs them on each push.
 
 ## Highlights
 
-- **441 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
-- **1264 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
+- **442 problems** in thirteen categories: Warmup, Implementation, Strings, Data Structures, Sorting, Search, Greedy, Dynamic Programming, Recursion, Bit Manipulation, Graph Theory, Mathematics and Game Theory
+- **1270 xUnit tests** covering the official samples and extra edge cases (overflow, empty results, off-by-one boundaries). Closed-form answers, such as the game theory patterns, are also checked against brute-force solvers
 - **Classic techniques**: sliding windows, two pointers, monotonic stacks and deques, heaps, tries, Aho–Corasick, suffix arrays, Manacher, palindromic trees, Fenwick trees (up to 3D), linked lists, BSTs, AVL trees, implicit treaps, binary lifting, difference arrays, dynamic programming (including on trees), backtracking, BFS, Dijkstra, Floyd–Warshall, union-find, minimum spanning trees, bipartite matching, difference constraints, Karp's minimum mean cycle, Lucas's theorem, Miller–Rabin, Sprague–Grundy, staircase Nim, modular arithmetic, bit tricks and closed-form math. Most solutions run in O(n) or O(n log n)
 - **Every solution has a doc comment** with the problem statement and a link to the original challenge
 
@@ -485,7 +485,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Toll Cost Digits](https://www.hackerrank.com/challenges/toll-cost-digits) | Hard | BFS potentials mod 10, cycle subgroup gcd | [TollCostDigits.cs](src/HackerRank.Solutions/GraphTheory/TollCostDigits.cs) |
 | [Jim and his LAN Party](https://www.hackerrank.com/challenges/jim-and-his-lan-party) | Hard | Union-find with small-to-large game counts | [JimAndHisLanParty.cs](src/HackerRank.Solutions/GraphTheory/JimAndHisLanParty.cs) |
 
-### Mathematics (68)
+### Mathematics (69)
 
 | Problem | Difficulty | Approach | Solution |
 |---|---|---|---|
@@ -557,6 +557,7 @@ dotnet test --filter "FullyQualifiedName~ClimbingTheLeaderboard"
 | [Sherlock and Probability](https://www.hackerrank.com/challenges/sherlock-and-probability) | Medium | Prefix counts of '1's, reduced fraction | [SherlockAndProbability.cs](src/HackerRank.Solutions/Mathematics/SherlockAndProbability.cs) |
 | [Mehta and his Laziness](https://www.hackerrank.com/challenges/mehta-and-his-laziness) | Medium | Count even square divisors from the factorisation | [MehtaAndHisLaziness.cs](src/HackerRank.Solutions/Mathematics/MehtaAndHisLaziness.cs) |
 | [Binomial Coefficients](https://www.hackerrank.com/challenges/binomial-coefficients) | Hard | Lucas's theorem on base-p digits, BigInteger | [BinomialCoefficients.cs](src/HackerRank.Solutions/Mathematics/BinomialCoefficients.cs) |
+| [Sherlock and Pairs](https://www.hackerrank.com/challenges/sherlock-and-pairs) | Easy | Counting equal values, c·(c−1) ordered pairs | [SherlockAndPairs.cs](src/HackerRank.Solutions/Mathematics/SherlockAndPairs.cs) |
 
 ### Game Theory (24)
 
