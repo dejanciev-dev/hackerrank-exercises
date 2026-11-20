@@ -1073,4 +1073,60 @@ public class MathematicsTests
 
         return [.. seen.SelectMany(s => new[] { s.Item1, s.Item2 })];
     }
+
+    [Theory]
+    [InlineData(new[] { 0, 0, 0 }, 6L)]
+    [InlineData(new[] { 0, 0, 1 }, 4L)]
+    [InlineData(new[] { 0, 3, 3 }, 0L)]
+    [InlineData(new[] { 0, 1, 2, 3 }, 1L)]
+    [InlineData(new[] { 1, 1, 1 }, 0L)]
+    [InlineData(new[] { 0 }, 1L)]
+    public void PickingCards_Samples(int[] c, long expected) =>
+        Assert.Equal(expected, PickingCards.Solve(c));
+
+    [Fact]
+    public void PickingCards_MatchesEnumeratingEveryOrder()
+    {
+        var random = new Random(5);
+        for (int round = 0; round < 60; round++)
+        {
+            int n = random.Next(1, 8);
+            var c = Enumerable.Range(0, n).Select(_ => random.Next(0, Math.Min(n, 4))).ToArray();
+
+            Assert.Equal(CountOrders(c), PickingCards.Solve(c));
+        }
+    }
+
+    // Picks cards one at a time: card i may be picked once at least c[i] cards are gone.
+    private static long CountOrders(int[] c, int mask = 0, int picked = 0)
+    {
+        if (picked == c.Length)
+        {
+            return 1;
+        }
+
+        long total = 0;
+        for (int i = 0; i < c.Length; i++)
+        {
+            if ((mask >> i & 1) == 0 && c[i] <= picked)
+            {
+                total += CountOrders(c, mask | 1 << i, picked + 1);
+            }
+        }
+
+        return total;
+    }
+
+    [Fact]
+    public void PickingCards_LargeAnswerIsReducedModulo()
+    {
+        var c = new int[100_000];
+        long expected = 1;
+        for (int i = 2; i <= c.Length; i++)
+        {
+            expected = expected * i % 1_000_000_007;
+        }
+
+        Assert.Equal(expected, PickingCards.Solve(c));
+    }
 }
