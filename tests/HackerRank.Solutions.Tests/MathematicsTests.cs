@@ -983,4 +983,40 @@ public class MathematicsTests
     [Fact]
     public void SherlockAndPairs_DoesNotOverflowInt() =>
         Assert.Equal(100_000L * 99_999, SherlockAndPairs.Solve(Enumerable.Repeat(7, 100_000).ToArray()));
+
+    [Theory]
+    [InlineData(1L, 1L, 1L)]
+    [InlineData(2L, 2L, 2L)]
+    [InlineData(3L, 3L, 6L)]
+    [InlineData(4L, 4L, 96L)]
+    [InlineData(1L, 100L, 1L)]
+    public void GcdProduct_Samples(long n, long m, long expected) =>
+        Assert.Equal(expected, GcdProduct.Solve(n, m));
+
+    [Fact]
+    public void GcdProduct_MatchesDirectProduct()
+    {
+        for (int n = 1; n <= 12; n++)
+        {
+            for (int m = 1; m <= 12; m++)
+            {
+                long expected = 1;
+                for (int i = 1; i <= n; i++)
+                {
+                    for (int j = 1; j <= m; j++)
+                    {
+                        expected = expected * Gcd(i, j) % 1_000_000_007;
+                    }
+                }
+
+                Assert.Equal(expected, GcdProduct.Solve(n, m));
+            }
+        }
+    }
+
+    [Fact]
+    public void GcdProduct_HandlesTenMillion() =>
+        Assert.InRange(GcdProduct.Solve(10_000_000, 10_000_000), 1L, 1_000_000_006L);
+
+    private static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
 }
