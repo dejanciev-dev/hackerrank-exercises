@@ -1129,4 +1129,58 @@ public class MathematicsTests
 
         Assert.Equal(expected, PickingCards.Solve(c));
     }
+
+    [Theory]
+    [InlineData(1L, 5L)]
+    [InlineData(2L, 10L)]
+    [InlineData(3L, 15L)]
+    [InlineData(4L, 20L)]
+    [InlineData(5L, 25L)]
+    [InlineData(6L, 25L)]
+    [InlineData(7L, 30L)]
+    public void ManasaAndFactorials_Samples(long z, long expected) =>
+        Assert.Equal(expected, ManasaAndFactorials.Solve(z));
+
+    [Fact]
+    public void ManasaAndFactorials_MatchesFactorialDigits()
+    {
+        var factorial = System.Numerics.BigInteger.One;
+        var zerosByNumber = new List<int> { 0 };
+        for (int n = 1; n <= 400; n++)
+        {
+            factorial *= n;
+            int zeros = 0;
+            for (var rest = factorial; rest % 10 == 0; rest /= 10)
+            {
+                zeros++;
+            }
+
+            zerosByNumber.Add(zeros);
+        }
+
+        for (int z = 1; z <= zerosByNumber[^1]; z++)
+        {
+            Assert.Equal(zerosByNumber.FindIndex(zeros => zeros >= z), ManasaAndFactorials.Solve(z));
+        }
+    }
+
+    [Fact]
+    public void ManasaAndFactorials_HandlesTenToTheSixteenth()
+    {
+        long n = ManasaAndFactorials.Solve(10_000_000_000_000_000L);
+
+        Assert.True(CountFives(n) >= 10_000_000_000_000_000L);
+        Assert.True(CountFives(n - 1) < 10_000_000_000_000_000L);
+    }
+
+    private static long CountFives(long n)
+    {
+        long total = 0;
+        for (long power = 5; power <= n; power *= 5)
+        {
+            total += n / power;
+        }
+
+        return total;
+    }
 }
