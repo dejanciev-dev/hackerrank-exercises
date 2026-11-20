@@ -140,4 +140,26 @@ public class LinkedListTests
     [InlineData(new int[0], new int[0])]
     public void PrintLinkedList_ReadsHeadToTail(int[] values, int[] expected) =>
         Assert.Equal(expected, PrintLinkedList.Solve(Build.List(values)));
+
+    [Theory]
+    [InlineData(new[] { 16, 12, 4, 2, 5 }, new[] { 5, 2, 4, 12, 16 })]
+    [InlineData(new[] { 1, 2 }, new[] { 2, 1 })]
+    [InlineData(new[] { 9 }, new[] { 9 })]
+    [InlineData(new int[0], new int[0])]
+    public void PrintLinkedListInReverse_ReadsTailToHead(int[] values, int[] expected) =>
+        Assert.Equal(expected, PrintLinkedListInReverse.Solve(Build.List(values)));
+
+    [Fact]
+    public void PrintLinkedListInReverse_LeavesTheListIntact()
+    {
+        var head = Build.List(1, 2, 3);
+
+        PrintLinkedListInReverse.Solve(head);
+
+        Assert.Equal([1, 2, 3], Build.ToArray(head));
+    }
+
+    [Fact]
+    public void PrintLinkedListInReverse_HandlesLongLists() =>
+        Assert.Equal(Enumerable.Range(1, 200_000).Reverse().ToArray(), PrintLinkedListInReverse.Solve(Build.List(Enumerable.Range(1, 200_000).ToArray())));
 }
