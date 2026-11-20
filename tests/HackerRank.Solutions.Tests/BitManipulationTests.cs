@@ -327,4 +327,28 @@ public class BitManipulationTests
             return [.. runs];
         }
     }
+
+    [Fact]
+    public void MaximumXor_Sample() =>
+        Assert.Equal([3, 7, 3], MaximumXor.Solve([0, 1, 2], [3, 7, 2]));
+
+    [Fact]
+    public void MaximumXor_SingleElementIsPlainXor() =>
+        Assert.Equal([5, 0, 1_000_000_000 ^ 5], MaximumXor.Solve([5], [0, 5, 1_000_000_000]));
+
+    [Fact]
+    public void MaximumXor_UsesTheHighestBits() =>
+        Assert.Equal([int.MaxValue], MaximumXor.Solve([0, int.MaxValue], [0]));
+
+    [Fact]
+    public void MaximumXor_MatchesBruteForce()
+    {
+        var random = new Random(9);
+        var arr = Enumerable.Range(0, 300).Select(_ => random.Next(0, 1_000_000_000)).ToArray();
+        var queries = Enumerable.Range(0, 300).Select(_ => random.Next(0, 1_000_000_000)).ToArray();
+
+        var expected = queries.Select(x => arr.Max(a => x ^ a)).ToArray();
+
+        Assert.Equal(expected, MaximumXor.Solve(arr, queries));
+    }
 }
