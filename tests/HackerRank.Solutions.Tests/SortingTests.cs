@@ -182,4 +182,43 @@ public class SortingTests
     [Fact]
     public void CountingSort3_UsesTheTopOfTheRange() =>
         Assert.Equal([0, 0, 2], [CountingSort3.Solve([99, 99])[97], CountingSort3.Solve([99, 99])[98], CountingSort3.Solve([99, 99])[99]]);
+
+    [Theory]
+    [InlineData(new[] { 1, 2, 3, 4, 5, 6, 7 }, new[] { 1, 2, 3, 7, 6, 5, 4 })]
+    [InlineData(new[] { 5, 2, 3, 1, 4 }, new[] { 1, 2, 5, 4, 3 })]
+    [InlineData(new[] { 9 }, new[] { 9 })]
+    [InlineData(new[] { 3, 1, 2 }, new[] { 1, 3, 2 })]
+    public void ZigZagSequence_Samples(int[] a, int[] expected) =>
+        Assert.Equal(expected, ZigZagSequence.Solve(a));
+
+    [Fact]
+    public void ZigZagSequence_IsTheSmallestValidArrangement()
+    {
+        // Brute force: among all permutations that rise to the middle and then fall, take the smallest.
+        int[] a = [4, 9, 1, 7, 3];
+        var best = Permutations(a)
+            .Where(p => p[0] < p[1] && p[1] < p[2] && p[2] > p[3] && p[3] > p[4])
+            .OrderBy(p => string.Join(',', p.Select(x => x.ToString("D3"))))
+            .First();
+
+        Assert.Equal(best, ZigZagSequence.Solve(a));
+    }
+
+    private static IEnumerable<int[]> Permutations(int[] items)
+    {
+        if (items.Length == 1)
+        {
+            yield return items;
+            yield break;
+        }
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            var rest = items.Where((_, index) => index != i).ToArray();
+            foreach (var tail in Permutations(rest))
+            {
+                yield return [items[i], .. tail];
+            }
+        }
+    }
 }
