@@ -1293,4 +1293,36 @@ public class MathematicsTests
         Assert.Equal("NO", SmartNumber.Solve(root * root - 1));
         Assert.Equal("NO", SmartNumber.Solve(root * root + 1));
     }
+
+    [Theory]
+    [InlineData(1L, 0L)]
+    [InlineData(4L, 0L)]
+    [InlineData(5L, 2L)]
+    [InlineData(6L, 3L)]
+    [InlineData(10L, 7L)]
+    public void SherlockAndCounting_Samples(long n, long expected) =>
+        Assert.Equal(expected, SherlockAndCounting.Solve(n));
+
+    [Fact]
+    public void SherlockAndCounting_MatchesDirectCount()
+    {
+        for (long n = 1; n <= 3_000; n++)
+        {
+            long expected = Enumerable.Range(1, (int)n).LongCount(k => k * (n - k) > n);
+
+            Assert.Equal(expected, SherlockAndCounting.Solve(n));
+        }
+    }
+
+    [Fact]
+    public void SherlockAndCounting_HandlesOneBillion()
+    {
+        long n = 1_000_000_000;
+        long count = SherlockAndCounting.Solve(n);
+
+        // The count is the length of a block [m, n - m]; its ends qualify and the values just outside do not.
+        long m = (n - count + 1) / 2;
+        Assert.True(m * (n - m) > n);
+        Assert.False((m - 1) * (n - m + 1) > n);
+    }
 }
