@@ -1261,4 +1261,36 @@ public class MathematicsTests
 
     private static string RandomDigits(Random random, int length) =>
         string.Concat(Enumerable.Range(0, length).Select(i => (char)('0' + (i == 0 ? random.Next(1, 10) : random.Next(10)))));
+
+    [Theory]
+    [InlineData(1L, "YES")]
+    [InlineData(2L, "NO")]
+    [InlineData(7L, "NO")]
+    [InlineData(169L, "YES")]
+    [InlineData(1_000_000_000_000L, "YES")]
+    [InlineData(999_999_999_999L, "NO")]
+    [InlineData(0L, "NO")]
+    public void SmartNumber_Samples(long n, string expected) =>
+        Assert.Equal(expected, SmartNumber.Solve(n));
+
+    [Fact]
+    public void SmartNumber_MatchesCountingDivisors()
+    {
+        for (long n = 1; n <= 2_000; n++)
+        {
+            int divisors = Enumerable.Range(1, (int)n).Count(d => n % d == 0);
+
+            Assert.Equal(divisors % 2 == 1 ? "YES" : "NO", SmartNumber.Solve(n));
+        }
+    }
+
+    [Fact]
+    public void SmartNumber_NearLargeSquaresIsExact()
+    {
+        const long root = 3_037_000_499L; // largest value whose square fits in a long
+
+        Assert.Equal("YES", SmartNumber.Solve(root * root));
+        Assert.Equal("NO", SmartNumber.Solve(root * root - 1));
+        Assert.Equal("NO", SmartNumber.Solve(root * root + 1));
+    }
 }
