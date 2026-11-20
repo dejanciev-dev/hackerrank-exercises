@@ -1183,4 +1183,46 @@ public class MathematicsTests
 
         return total;
     }
+
+    [Theory]
+    [InlineData(3L, 5L, 1)]
+    [InlineData(5L, 7L, 1)]
+    [InlineData(1L, 10L, 2)]
+    [InlineData(2L, 4L, 0)]
+    [InlineData(1L, 1L, 0)]
+    [InlineData(1L, 100L, 8)]
+    [InlineData(1_000_000_000L - 100, 1_000_000_000L, 0)]
+    public void Twins_Samples(long n, long m, int expected) =>
+        Assert.Equal(expected, Twins.Solve(n, m));
+
+    [Fact]
+    public void Twins_MatchesTrialDivision()
+    {
+        bool IsPrime(long v) => v >= 2 && Enumerable.Range(2, (int)Math.Sqrt(v)).All(d => d >= v || v % d != 0);
+
+        for (long n = 1; n <= 60; n += 7)
+        {
+            for (long m = n; m <= 400; m += 13)
+            {
+                int expected = 0;
+                for (long p = n; p + 2 <= m; p++)
+                {
+                    if (IsPrime(p) && IsPrime(p + 2))
+                    {
+                        expected++;
+                    }
+                }
+
+                Assert.Equal(expected, Twins.Solve(n, m));
+            }
+        }
+    }
+
+    [Fact]
+    public void Twins_CountsTheFirstMillion() =>
+        Assert.Equal(8169, Twins.Solve(1, 1_000_000));
+
+    [Fact]
+    public void Twins_WorksHighUpInTheRange() =>
+        Assert.True(Twins.Solve(999_000_000, 1_000_000_000) > 0);
 }
