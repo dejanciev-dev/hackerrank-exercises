@@ -591,4 +591,42 @@ public class DataStructuresTests
         var edges = Enumerable.Range(1, n - 1).Select(v => (IReadOnlyList<int>)[v, v + 1]).ToList();
         Assert.Equal(1L, BalancedForest.Solve(Enumerable.Repeat(1, n).ToArray(), edges));
     }
+
+    [Fact]
+    public void TaskScheduling_Sample() =>
+        Assert.Equal(
+            [0, 1, 2, 2, 3],
+            TaskScheduling.Solve([(2, 2), (1, 1), (4, 3), (10, 1), (2, 1)]));
+
+    [Fact]
+    public void TaskScheduling_RoomyDeadlinesNeverOvershoot() =>
+        Assert.Equal([0, 0, 0], TaskScheduling.Solve([(100, 5), (100, 5), (50, 1)]));
+
+    [Fact]
+    public void TaskScheduling_NoTasks() =>
+        Assert.Empty(TaskScheduling.Solve([]));
+
+    [Fact]
+    public void TaskScheduling_MatchesSortingEveryPrefix()
+    {
+        var random = new Random(11);
+        var tasks = Enumerable.Range(0, 200)
+            .Select(_ => (Deadline: random.Next(1, 120), Minutes: random.Next(1, 8)))
+            .ToArray();
+
+        var actual = TaskScheduling.Solve(tasks);
+
+        for (int count = 1; count <= tasks.Length; count++)
+        {
+            int finish = 0;
+            int worst = 0;
+            foreach (var (deadline, minutes) in tasks.Take(count).OrderBy(t => t.Deadline))
+            {
+                finish += minutes;
+                worst = Math.Max(worst, finish - deadline);
+            }
+
+            Assert.Equal(worst, actual[count - 1]);
+        }
+    }
 }
