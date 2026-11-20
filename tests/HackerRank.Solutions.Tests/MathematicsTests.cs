@@ -1019,4 +1019,58 @@ public class MathematicsTests
         Assert.InRange(GcdProduct.Solve(10_000_000, 10_000_000), 1L, 1_000_000_006L);
 
     private static long Gcd(long a, long b) => b == 0 ? a : Gcd(b, a % b);
+
+    [Theory]
+    [InlineData(5, 3, 4, "YES")]
+    [InlineData(3, 6, 9, "NO")]
+    [InlineData(3, 6, 6, "YES")]
+    [InlineData(3, 6, 4, "NO")]
+    [InlineData(4, 6, 8, "NO")]
+    [InlineData(7, 5, 0, "YES")]
+    [InlineData(5, 7, 12, "NO")]
+    public void DieHard3_Samples(int a, int b, int c, string expected) =>
+        Assert.Equal(expected, DieHard3.Solve(a, b, c));
+
+    [Fact]
+    public void DieHard3_MatchesSearchOverJugStates()
+    {
+        for (int a = 1; a <= 9; a++)
+        {
+            for (int b = 1; b <= 9; b++)
+            {
+                var measurable = ReachableLiters(a, b);
+                for (int c = 0; c <= 12; c++)
+                {
+                    Assert.Equal(measurable.Contains(c) ? "YES" : "NO", DieHard3.Solve(a, b, c));
+                }
+            }
+        }
+    }
+
+    // Breadth-first search over (jug A, jug B) contents; any amount that appears in a jug counts.
+    private static HashSet<int> ReachableLiters(int a, int b)
+    {
+        var seen = new HashSet<(int, int)> { (0, 0) };
+        var queue = new Queue<(int, int)>();
+        queue.Enqueue((0, 0));
+
+        while (queue.Count > 0)
+        {
+            var (x, y) = queue.Dequeue();
+            int pourAb = Math.Min(x, b - y);
+            int pourBa = Math.Min(y, a - x);
+            foreach (var next in new[]
+            {
+                (a, y), (x, b), (0, y), (x, 0), (x - pourAb, y + pourAb), (x + pourBa, y - pourBa),
+            })
+            {
+                if (seen.Add(next))
+                {
+                    queue.Enqueue(next);
+                }
+            }
+        }
+
+        return [.. seen.SelectMany(s => new[] { s.Item1, s.Item2 })];
+    }
 }
