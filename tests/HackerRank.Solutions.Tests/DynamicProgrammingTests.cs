@@ -614,4 +614,59 @@ public class DynamicProgrammingTests
 
         Assert.Equal((expected - 1 + 1_000_000_007) % 1_000_000_007, SquareSubsequences.Solve(new string('a', 200)));
     }
+
+    [Theory]
+    [InlineData(1L, 20L, 4L)]
+    [InlineData(1L, 1L, 0L)]
+    [InlineData(11L, 11L, 1L)]
+    [InlineData(10L, 10L, 0L)]
+    public void LuckyNumbers_Samples(long a, long b, long expected) =>
+        Assert.Equal(expected, LuckyNumbers.Solve(a, b));
+
+    [Fact]
+    public void LuckyNumbers_MatchesDigitByDigitCheck()
+    {
+        static bool IsPrime(int n) => n >= 2 && Enumerable.Range(2, Math.Max(0, (int)Math.Sqrt(n) - 1)).All(d => n % d != 0);
+
+        static bool IsLucky(long n)
+        {
+            int sum = 0, squares = 0;
+            for (; n > 0; n /= 10)
+            {
+                int digit = (int)(n % 10);
+                sum += digit;
+                squares += digit * digit;
+            }
+
+            return IsPrime(sum) && IsPrime(squares);
+        }
+
+        long running = 0;
+        for (long n = 1; n <= 20_000; n++)
+        {
+            if (IsLucky(n))
+            {
+                running++;
+            }
+
+            if (n < 40 || n % 997 == 0)
+            {
+                Assert.Equal(running, LuckyNumbers.Solve(1, n));
+            }
+        }
+
+        Assert.Equal(running - LuckyNumbers.Solve(1, 999), LuckyNumbers.Solve(1_000, 20_000));
+    }
+
+    [Fact]
+    public void LuckyNumbers_RangesAreAdditive()
+    {
+        const long top = 1_000_000_000_000_000_000L;
+        const long half = 500_000_000_000_000_000L;
+
+        long whole = LuckyNumbers.Solve(1, top);
+
+        Assert.True(whole > 0);
+        Assert.Equal(whole, LuckyNumbers.Solve(1, half) + LuckyNumbers.Solve(half + 1, top));
+    }
 }
