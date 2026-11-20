@@ -132,4 +132,12 @@ public class LinkedListTests
     [InlineData(new int[0], 7, new[] { 7 })]
     public void InsertNodeAtHead_Prepends(int[] values, int data, int[] expected) =>
         Assert.Equal(expected, Build.ToArray(InsertNodeAtHead.Solve(Build.List(values), data)));
+
+    [Theory]
+    [InlineData(new[] { 16, 13 }, new[] { 16, 13 })]
+    [InlineData(new[] { 1, 2, 3, 4, 5 }, new[] { 1, 2, 3, 4, 5 })]
+    [InlineData(new[] { 7 }, new[] { 7 })]
+    [InlineData(new int[0], new int[0])]
+    public void PrintLinkedList_ReadsHeadToTail(int[] values, int[] expected) =>
+        Assert.Equal(expected, PrintLinkedList.Solve(Build.List(values)));
 }
