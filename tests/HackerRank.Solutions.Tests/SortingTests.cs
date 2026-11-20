@@ -265,4 +265,36 @@ public class SortingTests
 
         Assert.True(RunningTimeOfQuicksort.Solve(arr) > 0);
     }
+
+    [Theory]
+    [InlineData(new[] { 7, 4, 3, 5, 6, 2 }, new[] { 2, 3, 4, 5, 6, 7 })]
+    [InlineData(new[] { 1, 2, 3 }, new[] { 1, 2, 3 })]
+    [InlineData(new[] { 3, 2, 1 }, new[] { 1, 2, 3 })]
+    [InlineData(new[] { 4 }, new[] { 4 })]
+    [InlineData(new[] { 5, 5, 1, 5 }, new[] { 1, 5, 5, 5 })]
+    [InlineData(new int[0], new int[0])]
+    public void CorrectnessAndTheLoopInvariant_Samples(int[] arr, int[] expected) =>
+        Assert.Equal(expected, CorrectnessAndTheLoopInvariant.Solve(arr));
+
+    [Fact]
+    public void CorrectnessAndTheLoopInvariant_DoesNotModifyTheInput()
+    {
+        int[] arr = [3, 1, 2];
+
+        CorrectnessAndTheLoopInvariant.Solve(arr);
+
+        Assert.Equal([3, 1, 2], arr);
+    }
+
+    [Fact]
+    public void CorrectnessAndTheLoopInvariant_MatchesLibrarySortOnRandomData()
+    {
+        var random = new Random(4);
+        for (int round = 0; round < 50; round++)
+        {
+            var arr = Enumerable.Range(0, random.Next(0, 60)).Select(_ => random.Next(-20, 20)).ToArray();
+
+            Assert.Equal(arr.Order().ToArray(), CorrectnessAndTheLoopInvariant.Solve(arr));
+        }
+    }
 }
