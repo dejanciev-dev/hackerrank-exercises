@@ -138,4 +138,30 @@ public class SortingTests
         Assert.Equal(
             [("aleksa", 150), ("amy", 100), ("david", 100), ("aakansha", 75), ("heraldo", 50)],
             Comparator.Solve([("amy", 100), ("david", 100), ("heraldo", 50), ("aakansha", 75), ("aleksa", 150)]));
+
+    [Fact]
+    public void Quicksort2_Sample() =>
+        Assert.Equal(
+            ["2 3", "1 2 3", "7 8 9", "1 2 3 5 7 8 9"],
+            Quicksort2.Solve([5, 8, 1, 3, 7, 9, 2]));
+
+    [Fact]
+    public void Quicksort2_AlreadySortedPrintsEveryNestedSuffix() =>
+        Assert.Equal(["3 4", "2 3 4", "1 2 3 4"], Quicksort2.Solve([1, 2, 3, 4]));
+
+    [Fact]
+    public void Quicksort2_SingleElementPrintsNothing() =>
+        Assert.Empty(Quicksort2.Solve([42]));
+
+    [Fact]
+    public void Quicksort2_LastLineIsTheSortedArray()
+    {
+        var random = new Random(7);
+        var arr = Enumerable.Range(-50, 101).OrderBy(_ => random.Next()).Take(60).ToArray();
+
+        var lines = Quicksort2.Solve(arr);
+
+        Assert.Equal(string.Join(' ', arr.Order()), lines[^1]);
+        Assert.InRange(lines.Length, 1, arr.Length - 1);
+    }
 }
