@@ -164,4 +164,22 @@ public class SortingTests
         Assert.Equal(string.Join(' ', arr.Order()), lines[^1]);
         Assert.InRange(lines.Length, 1, arr.Length - 1);
     }
+
+    [Fact]
+    public void CountingSort3_CumulativeCounts()
+    {
+        var result = CountingSort3.Solve([1, 1, 3, 2, 1]);
+
+        Assert.Equal(100, result.Length);
+        Assert.Equal([0, 3, 4, 5], result[..4]);
+        Assert.All(result[3..], count => Assert.Equal(5, count));
+    }
+
+    [Fact]
+    public void CountingSort3_EmptyInputIsAllZeros() =>
+        Assert.All(CountingSort3.Solve([]), count => Assert.Equal(0, count));
+
+    [Fact]
+    public void CountingSort3_UsesTheTopOfTheRange() =>
+        Assert.Equal([0, 0, 2], [CountingSort3.Solve([99, 99])[97], CountingSort3.Solve([99, 99])[98], CountingSort3.Solve([99, 99])[99]]);
 }
